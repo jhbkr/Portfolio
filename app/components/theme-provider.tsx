@@ -30,11 +30,13 @@ export function ThemeProvider({
   storageKey = "theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () =>
-      (typeof localStorage !== "undefined" ? (localStorage.getItem(storageKey) as Theme) : defaultTheme) ||
-      defaultTheme,
-  )
+  const getInitialTheme = () => {
+    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+      return (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    }
+    return defaultTheme
+  }
+  const [theme, setTheme] = useState<Theme>(getInitialTheme)
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -67,6 +69,12 @@ export function ThemeProvider({
     if (theme === "beastboy") document.body.classList.add("beastboy-effect")
     if (theme === "raven") document.body.classList.add("raven-effect")
     if (theme === "deathstroke") document.body.classList.add("deathstroke-effect")
+  }, [theme])
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+      localStorage.setItem(storageKey, theme)
+    }
   }, [theme])
 
   const value = {
