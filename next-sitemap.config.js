@@ -1,4 +1,4 @@
 module.exports = {
-  siteUrl: "https://ton-domaine.com",
+  siteUrl: "https://portfolio-karimbkr269200-gmailcoms-projects.vercel.app",
   generateRobotsTxt: true,
 };
