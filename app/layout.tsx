@@ -58,6 +58,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
+      <head>
+        <meta name="google-site-verification" content="ahBvM2RMPN-Cb-6zirTdwSb6_FANOhD_3XWnFlepkFo" />
+      </head>
       <body className={`${montserrat.variable} ${poppins.variable} font-montserrat`}>
         <ThemeProvider defaultTheme="system" storageKey="teen-titans-theme">
           {children}
