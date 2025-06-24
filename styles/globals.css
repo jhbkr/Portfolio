@@ -1,0 +1,496 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+    --font-montserrat: "Montserrat", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+
+  /* Robin Theme - Gotham-inspired with black, red and yellow */
+  .robin {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 100% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 60 100% 50%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 0 100% 50%;
+  }
+
+  /* Starfire Theme - Space-inspired with purples and pinks */
+  .starfire {
+    --background: 280 50% 5%;
+    --foreground: 0 0% 98%;
+    --card: 280 50% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 280 50% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 330 100% 71%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 280 100% 65%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 280 30% 15%;
+    --muted-foreground: 280 10% 70%;
+    --accent: 320 100% 75%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 280 30% 20%;
+    --input: 280 30% 20%;
+    --ring: 330 100% 71%;
+  }
+
+  /* Cyborg Theme - Futuristic with blues and silvers */
+  .cyborg {
+    --background: 220 50% 10%;
+    --foreground: 0 0% 98%;
+    --card: 220 50% 15%;
+    --card-foreground: 0 0% 98%;
+    --popover: 220 50% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 225 73% 57%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 220 30% 80%;
+    --secondary-foreground: 220 50% 10%;
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 10% 70%;
+    --accent: 195 100% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 20% 30%;
+    --input: 220 20% 30%;
+    --ring: 225 73% 57%;
+  }
+
+  /* Beast Boy Theme - Animal-inspired with greens and earthy tones */
+  .beastboy {
+    --background: 120 30% 15%;
+    --foreground: 0 0% 98%;
+    --card: 120 30% 20%;
+    --card-foreground: 0 0% 98%;
+    --popover: 120 30% 20%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 120 61% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 80 70% 40%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 120 20% 25%;
+    --muted-foreground: 120 10% 70%;
+    --accent: 40 100% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 120 20% 30%;
+    --input: 120 20% 30%;
+    --ring: 120 61% 50%;
+  }
+
+  /* Raven Theme - Dark magic with deep purples and mystical elements */
+  .raven {
+    --background: 270 50% 5%;
+    --foreground: 0 0% 98%;
+    --card: 270 50% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 270 50% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 270 70% 40%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 250 50% 30%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 270 30% 15%;
+    --muted-foreground: 270 10% 70%;
+    --accent: 300 100% 25%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 270 30% 20%;
+    --input: 270 30% 20%;
+    --ring: 270 70% 40%;
+  }
+
+  /* Deathstroke Theme - Orange, black and blue */
+  .deathstroke {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 30 100% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 210 100% 50%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 30 100% 50%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 30 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    /* Prévenir le déplacement de la navbar lors des changements de thème */
+    overflow-x: hidden;
+    /* Forcer la scrollbar à être toujours présente pour éviter les changements de layout */
+    overflow-y: scroll;
+  }
+  /* Prévenir les changements de layout sur les éléments fixes */
+  header, nav, .fixed {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-montserrat font-bold;
+  }
+  p,
+  span,
+  a,
+  button,
+  input,
+  textarea {
+    @apply font-poppins;
+  }
+}
+
+/*
+.theme-transition {
+animation: theme-fade 0.5s ease-in-out;
+}
+
+@keyframes theme-fade {
+0% {
+  opacity: 0.5;
+}
+100% {
+  opacity: 1;
+}
+}
+*/
+
+/* Ajouter ces styles pour les effets de défilement */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* Robin theme specific styles */
+.robin .hero-gradient {
+  background: radial-gradient(circle at center, rgba(255, 0, 0, 0.3), rgba(0, 0, 0, 0.8)),
+    url("/images/placeholder.jpg");
+  background-size: cover;
+}
+
+.robin .card-glow {
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+/* Starfire theme specific styles */
+.starfire .hero-gradient {
+  background: radial-gradient(circle at center, rgba(255, 105, 180, 0.4), rgba(40, 0, 80, 0.9)),
+    url("/images/placeholder.jpg");
+  background-size: cover;
+}
+
+.starfire .card-glow {
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+}
+
+/* Cyborg theme specific styles */
+.cyborg .hero-gradient {
+  background: linear-gradient(135deg, rgba(65, 105, 225, 0.3), rgba(0, 20, 40, 0.9)), url("/images/placeholder.jpg");
+  background-size: cover;
+}
+
+.cyborg .card-glow {
+  box-shadow: 0 0 15px rgba(65, 105, 225, 0.5);
+}
+
+/* Beast Boy theme specific styles */
+.beastboy .hero-gradient {
+  background: linear-gradient(135deg, rgba(50, 205, 50, 0.3), rgba(20, 40, 10, 0.9)), url("/images/placeholder.jpg");
+  background-size: cover;
+}
+
+.beastboy .card-glow {
+  box-shadow: 0 0 15px rgba(50, 205, 50, 0.5);
+}
+
+/* Raven theme specific styles */
+.raven .hero-gradient {
+  background: radial-gradient(circle at center, rgba(102, 51, 153, 0.3), rgba(10, 0, 20, 0.9)),
+    url("/images/placeholder.jpg");
+  background-size: cover;
+}
+
+.raven .card-glow {
+  box-shadow: 0 0 15px rgba(102, 51, 153, 0.5);
+}
+
+/* Deathstroke theme specific styles */
+.deathstroke .hero-gradient {
+  background: radial-gradient(circle at center, rgba(255, 140, 0, 0.3), rgba(0, 0, 0, 0.9)),
+    url("/images/placeholder.jpg");
+  background-size: cover;
+}
+
+.deathstroke .card-glow {
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+}
+
+/* Timeline styles */
+.timeline-container {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  margin-left: -2px;
+  background-color: hsl(var(--primary));
+  z-index: 1;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+  z-index: 2;
+}
+
+.timeline-item:nth-child(odd) {
+  padding-right: calc(50% + 2rem);
+  text-align: right;
+}
+
+.timeline-item:nth-child(even) {
+  padding-left: calc(50% + 2rem);
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+  z-index: 3;
+}
+
+.timeline-item:nth-child(odd) .timeline-dot {
+  right: calc(50% - 0.75rem);
+}
+
+.timeline-item:nth-child(even) .timeline-dot {
+  left: calc(50% - 0.75rem);
+}
+
+@media (max-width: 768px) {
+  .timeline-line {
+    left: 1rem;
+  }
+
+  .timeline-item {
+    padding-left: 3rem !important;
+    padding-right: 0 !important;
+    text-align: left !important;
+  }
+
+  .timeline-item .timeline-dot {
+    left: 0.25rem !important;
+    right: auto !important;
+  }
+}
+
+/* Fix for projects carousel */
+.projects-carousel-container {
+  height: auto;
+  min-height: 600px;
+  position: relative;
+}
+
+.projects-carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: auto;
+}
+
+/* Mouse effects for each theme */
+.robin-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 8C18 6 16 4 14 4'/%3E%3Cpath d='M14 8C14 6 12 4 10 4'/%3E%3Cpath d='M10 8C10 6 8 4 6 4'/%3E%3Cpath d='M18 16C18 14 16 12 14 12'/%3E%3Cpath d='M14 16C14 12 10 12 10 12'/%3E%3Cpath d='M10 16C10 14 8 12 6 12'/%3E%3Cpath d='M6 8C6 6 4 4 2 4'/%3E%3Cpath d='M6 16C6 14 4 12 2 12'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.starfire-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF69B4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.beastboy-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2332CD32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z'/%3E%3Cpath d='M8 14s1.5 2 4 2 4-2 4-2'/%3E%3Cline x1='9' y1='9' x2='9.01' y2='9'/%3E%3Cline x1='15' y1='9' x2='15.01' y2='9'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.raven-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23663399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.cyborg-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234169E1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='2' width='20' height='8' rx='2' ry='2'/%3E%3Crect x='2' y='14' width='20' height='8' rx='2' ry='2'/%3E%3Cline x1='6' y1='6' x2='6.01' y2='6'/%3E%3Cline x1='10' y1='6' x2='10.01' y2='6'/%3E%3Cline x1='6' y1='18' x2='6.01' y2='18'/%3E%3Cline x1='10' y1='18' x2='10.01' y2='18'/%3E%3Cline x1='14' y1='6' x2='14.01' y2='6'/%3E%3Cline x1='18' y1='6' x2='18.01' y2='6'/%3E%3Cline x1='14' y1='18' x2='14.01' y2='18'/%3E%3Cline x1='18' y1='18' x2='18.01' y2='18'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.deathstroke-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF8C00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E"),
+    auto;
+}
+
+/* Fix pour prévenir le déplacement de la navbar lors des changements de thème */
+html {
+  /* Forcer la scrollbar à être toujours présente */
+  overflow-y: scroll;
+  /* Prévenir les changements de layout */
+  scrollbar-gutter: stable;
+}
+
+/* Stabiliser spécifiquement la navbar */
+header[class*="fixed"] {
+  /* Forcer la création d'un nouveau contexte de pile */
+  transform: translateZ(0) !important;
+  /* Optimiser le rendu */
+  backface-visibility: hidden !important;
+  perspective: 1000px !important;
+  /* Prévenir les changements de layout */
+  will-change: auto !important;
+  /* S'assurer que la position est stable */
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 50 !important;
+}
+
+/* Prévenir les changements de scrollbar */
+body {
+  /* Forcer la scrollbar à être toujours présente */
+  overflow-y: scroll;
+  /* Prévenir les changements de layout */
+  scrollbar-gutter: stable;
+  /* Optimiser les transitions */
+  transition: background-color 0.25s ease-out, color 0.25s ease-out;
+}
+
+/* Fix pour les transitions de thème */
+.theme-transition {
+  /* Prévenir les changements de layout pendant la transition */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Classe spécifique pour stabiliser la navbar */
+.navbar-stable {
+  /* Forcer la création d'un nouveau contexte de pile */
+  transform: translateZ(0) !important;
+  /* Optimiser le rendu */
+  backface-visibility: hidden !important;
+  perspective: 1000px !important;
+  /* Prévenir les changements de layout */
+  will-change: auto !important;
+  /* S'assurer que la position est stable */
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 50 !important;
+  /* Prévenir les changements de taille */
+  width: 100% !important;
+  height: auto !important;
+  /* Optimiser les transitions */
+  transition: background-color 0.25s ease-out, 
+              color 0.25s ease-out, 
+              border-color 0.25s ease-out !important;
+}

@@ -1,0 +1,534 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* Blanc pur */
+    --foreground: 220 18% 18%; /* Gris-bleu très foncé, quasi noir */
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 18% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 18% 18%;
+
+    --primary: 222 80% 48%; /* Bleu doux mais bien visible */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 20% 97%; /* Gris très clair, pour contraste subtil */
+    --secondary-foreground: 220 18% 18%;
+
+    --muted: 220 16% 93%;
+    --muted-foreground: 220 10% 40%;
+
+    --accent: 265 80% 92%; /* Violet très pâle pour accent subtil */
+    --accent-foreground: 220 18% 18%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 16% 90%; /* Gris très clair pour border */
+    --input: 220 16% 90%;
+    --ring: 222 80% 48%;
+
+    --radius: 0.5rem;
+    --font-montserrat: "Montserrat", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+    --font-creepster: "Creepster", cursive;
+  }
+
+  .dark {
+    --background: 230 18% 13%; /* Deep blue-gray, less harsh than pure black */
+    --foreground: 220 20% 96%; /* Soft off-white */
+
+    --card: 230 16% 18%;
+    --card-foreground: 220 20% 96%;
+
+    --popover: 230 16% 18%;
+    --popover-foreground: 220 20% 96%;
+
+    --primary: 222 60% 60%; /* Muted blue accent */
+    --primary-foreground: 230 18% 13%;
+
+    --secondary: 220 16% 22%; /* Slightly lighter blue-gray */
+    --secondary-foreground: 220 20% 96%;
+
+    --muted: 220 12% 18%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 210 60% 35%; /* Deep blue accent */
+    --accent-foreground: 220 20% 96%;
+
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 220 20% 96%;
+
+    --border: 220 16% 22%;
+    --input: 220 16% 22%;
+    --ring: 222 60% 60%;
+  }
+
+  /* Robin Theme - Gotham-inspired with black, red and yellow */
+  .robin {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 100% 50%; /* Red */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 60 100% 50%; /* Yellow */
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 60 100% 50%; /* Yellow */
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 0 100% 50%; /* Red */
+  }
+
+  /* Starfire Theme - Cosmic purples, pinks, oranges */
+  .starfire {
+    --background: 275 60% 8%; /* Deep cosmic purple */
+    --foreground: 0 0% 98%;
+    --card: 275 55% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 275 55% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 320 100% 70%; /* Bright Pink */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 25 100% 60%; /* Cosmic Orange */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 275 40% 18%;
+    --muted-foreground: 275 15% 70%;
+    --accent: 300 100% 75%; /* Magenta */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 275 40% 22%;
+    --input: 275 40% 22%;
+    --ring: 320 100% 70%; /* Bright Pink */
+  }
+
+  /* Cyborg Theme - Futuristic blues, silvers, teals */
+  .cyborg {
+    --background: 220 40% 9%; /* Darker tech blue */
+    --foreground: 0 0% 98%;
+    --card: 220 35% 14%;
+    --card-foreground: 0 0% 98%;
+    --popover: 220 35% 14%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 210 100% 60%; /* Bright Cyan/Blue */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 180 100% 50%; /* Teal for neutron effects */
+    --secondary-foreground: 0 0% 10%;
+    --muted: 220 25% 19%;
+    --muted-foreground: 220 15% 70%;
+    --accent: 195 100% 55%; /* Electric Blue */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 25% 24%;
+    --input: 220 25% 24%;
+    --ring: 210 100% 60%; /* Bright Cyan/Blue */
+  }
+
+  /* Beast Boy Theme - Vibrant greens, earthy browns */
+  .beastboy {
+    --background: 120 40% 12%; /* Deeper jungle green */
+    --foreground: 0 0% 98%;
+    --card: 120 35% 17%;
+    --card-foreground: 0 0% 98%;
+    --popover: 120 35% 17%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 100 65% 55%; /* Vibrant Leaf Green */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 30 50% 40%; /* Earthy Brown */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 120 25% 22%;
+    --muted-foreground: 120 15% 70%;
+    --accent: 80 70% 50%; /* Bright Lime Green */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 120 25% 27%;
+    --input: 120 25% 27%;
+    --ring: 100 65% 55%; /* Vibrant Leaf Green */
+  }
+
+  /* Raven Theme - Deep indigos, purples, blacks */
+  .raven {
+    --background: 270 60% 7%; /* Very dark indigo/purple */
+    --foreground: 0 0% 98%;
+    --card: 270 55% 11%;
+    --card-foreground: 0 0% 98%;
+    --popover: 270 55% 11%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 280 80% 55%; /* Mystical Purple */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 260 70% 45%; /* Deep Indigo */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 270 40% 16%;
+    --muted-foreground: 270 15% 70%;
+    --accent: 300 100% 35%; /* Dark Magenta/Violet */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 270 40% 21%;
+    --input: 270 40% 21%;
+    --ring: 280 80% 55%; /* Mystical Purple */
+  }
+
+  /* Deathstroke Theme - Burnt orange, tactical black, steely blue */
+  .deathstroke {
+    --background: 0 0% 8%; /* Darker, more tactical black */
+    --foreground: 0 0% 98%;
+    --card: 0 0% 13%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 25 100% 50%; /* Burnt Orange */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 205 80% 50%; /* Steely Blue */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 25 100% 50%; /* Burnt Orange */
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 23%;
+    --input: 0 0% 23%;
+    --ring: 25 100% 50%; /* Burnt Orange */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-montserrat font-bold;
+  }
+  p,
+  span,
+  a,
+  button,
+  input,
+  textarea {
+    @apply font-poppins;
+  }
+}
+
+/* Custom animation for Deathstroke reticle pulse */
+@keyframes pulse-fast {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+.animate-pulse-fast {
+  animation: pulse-fast 0.8s infinite ease-in-out; /* Slightly faster pulse */
+}
+
+/* Custom animation for Cyborg cannon spin */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 4s linear infinite; /* Slightly faster spin */
+}
+
+/* Import for Cyborg's "BOOYAH!" text and Beast Boy's "RAWR!" */
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Creepster&display=swap");
+
+.theme-transition {
+  animation: theme-fade 0.5s ease-in-out;
+}
+
+@keyframes theme-fade {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Ajouter ces styles pour les effets de défilement */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* Robin theme specific styles */
+.robin .hero-gradient {
+  background: radial-gradient(circle at center, rgba(255, 0, 0, 0.3), rgba(0, 0, 0, 0.8)),
+    url("/placeholder.svg?height=800&width=1200");
+  background-size: cover;
+}
+
+.robin .card-glow {
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+/* Starfire theme specific styles */
+.starfire .hero-gradient {
+  background: radial-gradient(circle at center, rgba(255, 105, 180, 0.4), rgba(75, 0, 130, 0.9)), /* Pink to Deep Purple */
+    url("/placeholder.svg?height=800&width=1200");
+  background-size: cover;
+}
+
+.starfire .card-glow {
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+}
+
+/* Cyborg theme specific styles */
+.cyborg .hero-gradient {
+  background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(10, 20, 50, 0.9)), /* Cyan to Dark Blue */
+    url("/placeholder.svg?height=800&width=1200");
+  background-size: cover;
+}
+
+.cyborg .card-glow {
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+}
+
+/* Beast Boy theme specific styles */
+.beastboy .hero-gradient {
+  background: linear-gradient(135deg, rgba(50, 205, 50, 0.3), rgba(20, 60, 10, 0.9)), /* Lime Green to Dark Jungle Green */
+    url("/placeholder.svg?height=800&width=1200");
+  background-size: cover;
+}
+
+.beastboy .card-glow {
+  box-shadow: 0 0 15px rgba(50, 205, 50, 0.5);
+}
+
+/* Raven theme specific styles */
+.raven .hero-gradient {
+  background: radial-gradient(circle at center, rgba(138, 43, 226, 0.3), rgba(20, 0, 40, 0.9)), /* BlueViolet to Deepest Purple */
+    url("/placeholder.svg?height=800&width=1200");
+  background-size: cover;
+}
+
+.raven .card-glow {
+  box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+}
+
+/* Deathstroke theme specific styles */
+.deathstroke .hero-gradient {
+  background: radial-gradient(circle at center, rgba(255, 140, 0, 0.3), rgba(10, 10, 10, 0.9)), /* Burnt Orange to Tactical Black */
+    url("/placeholder.svg?height=800&width=1200");
+  background-size: cover;
+}
+
+.deathstroke .card-glow {
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+}
+
+/* Timeline styles */
+.timeline-container {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  margin-left: -2px;
+  background-color: hsl(var(--primary));
+  z-index: 1;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+  z-index: 2;
+}
+
+.timeline-item:nth-child(odd) {
+  padding-right: calc(50% + 2rem);
+  text-align: right;
+}
+
+.timeline-item:nth-child(even) {
+  padding-left: calc(50% + 2rem);
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+  z-index: 3;
+}
+
+.timeline-item:nth-child(odd) .timeline-dot {
+  right: calc(50% - 0.75rem);
+}
+
+.timeline-item:nth-child(even) .timeline-dot {
+  left: calc(50% - 0.75rem);
+}
+
+@media (max-width: 768px) {
+  .timeline-line {
+    left: 1rem;
+  }
+
+  .timeline-item {
+    padding-left: 3rem !important;
+    padding-right: 0 !important;
+    text-align: left !important;
+  }
+
+  .timeline-item .timeline-dot {
+    left: 0.25rem !important;
+    right: auto !important;
+  }
+}
+
+/* Fix for projects carousel */
+.projects-carousel-container {
+  height: auto;
+  min-height: 600px;
+  position: relative;
+}
+
+.projects-carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: auto;
+}
+
+/* Mouse effects for each theme */
+.robin-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 8C18 6 16 4 14 4'/%3E%3Cpath d='M14 8C14 6 12 4 10 4'/%3E%3Cpath d='M10 8C10 6 8 4 6 4'/%3E%3Cpath d='M18 16C18 14 16 12 14 12'/%3E%3Cpath d='M14 16C14 12 12 12 10 12'/%3E%3Cpath d='M10 16C10 14 8 12 6 12'/%3E%3Cpath d='M6 8C6 6 4 4 2 4'/%3E%3Cpath d='M6 16C6 14 4 12 2 12'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.starfire-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF69B4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.beastboy-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2332CD32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z'/%3E%3Cpath d='M8 14s1.5 2 4 2 4-2 4-2'/%3E%3Cline x1='9' y1='9' x2='9.01' y2='9'/%3E%3Cline x1='15' y1='9' x2='15.01' y2='9'/%3E%3C/svg%3E"),
+    auto;
+}
+
+.raven-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238A2BE2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z'/%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E"), /* Combined elements for Raven */
+    auto;
+}
+
+.cyborg-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300BFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='10' rx='2' ry='2'/%3E%3Ccircle cx='7' cy='12' r='1'/%3E%3Ccircle cx='17' cy='12' r='1'/%3E%3Cpath d='M2 12h2m16 0h2M12 2v2m0 16v2'/%3E%3C/svg%3E"), /* More techy cursor for Cyborg */
+    auto;
+}
+
+.deathstroke-effect {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF8C00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2v20M2 12h20'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23000000'/%3E%3C/svg%3E"), /* Reticle with black center */
+    auto;
+}
+
+/* Styles pour le batsignal */
+.batsignal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+  visibility: hidden;
+}
+
+.batsignal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Animation de fumée pour le thème Robin */
+@keyframes smokeAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(-30px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(1.6);
+  }
+}
+
+.smoke-particle {
+  animation: smokeAnimation 4s ease-out forwards;
+}
+
+/* Animation des chauves-souris */
+@keyframes batFly {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(100px, -50px) rotate(15deg);
+  }
+  50% {
+    transform: translate(200px, -100px) rotate(-15deg);
+  }
+  75% {
+    transform: translate(300px, -50px) rotate(15deg);
+  }
+  100% {
+    transform: translate(400px, 0) rotate(0deg);
+  }
+}
+
+.bat-animation {
+  animation: batFly 5s ease-in-out forwards;
+}
+
+/* Gradient radial pour Raven */
+.bg-gradient-radial {
+  background-image: radial-gradient(var(--tw-gradient-stops));
+}
