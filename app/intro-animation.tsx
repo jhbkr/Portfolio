@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
@@ -60,35 +60,36 @@ export default function IntroAnimation() {
     },
   ]
 
-  // Projecteur qui se déplace aléatoirement
+  // Projecteur qui se déplace de façon fluide
   useEffect(() => {
     if (!showIntro || foundTarget) return
-
-    const moveSpotlight = () => {
-      const randomX = Math.random() * 80 - 40 // -40 à 40
-      const randomY = Math.random() * 80 - 40 // -40 à 40
-
-      setSpotlightPosition({ x: randomX, y: randomY })
+    let frame: number
+    let start: number | null = null
+    const duration = 5000 // spotlight duration
+    const animateSpotlight = (timestamp: number) => {
+      if (!start) start = timestamp
+      const progress = Math.min((timestamp - start) / duration, 1)
+      // Mouvement fluide en cercle
+      const angle = progress * 2 * Math.PI
+      const radius = 30
+      setSpotlightPosition({
+        x: Math.cos(angle) * radius,
+        y: Math.sin(angle) * radius,
+      })
+      if (progress < 1) {
+        frame = requestAnimationFrame(animateSpotlight)
+      } else {
+        setSpotlightPosition({ x: 0, y: 0 })
+        setFoundTarget(true)
+        setTimeout(() => {
+          setCurrentCharacter(0)
+          setWaitingForClick(true)
+        }, 500)
+      }
     }
-
-    const interval = setInterval(moveSpotlight, 1000)
-
-    // Après quelques secondes, le projecteur "trouve" sa cible
-    const targetTimer = setTimeout(() => {
-      setSpotlightPosition({ x: 0, y: 0 })
-      setFoundTarget(true)
-      clearInterval(interval)
-
-      // Commencer à afficher les personnages
-      setTimeout(() => {
-        setCurrentCharacter(0)
-        setWaitingForClick(true)
-      }, 1000)
-    }, 5000)
-
+    frame = requestAnimationFrame(animateSpotlight)
     return () => {
-      clearInterval(interval)
-      clearTimeout(targetTimer)
+      cancelAnimationFrame(frame)
     }
   }, [showIntro, foundTarget])
 
@@ -134,6 +135,16 @@ export default function IntroAnimation() {
   const handleEnterSite = () => {
     setShowIntro(false)
   }
+
+  // Générer les positions aléatoires une seule fois pour les effets
+  const smokePositions = useMemo(() =>
+    Array.from({ length: 10 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      size: 30 + Math.random() * 50,
+    })),
+    []
+  )
 
   // Générer des éléments d'effet en fonction du personnage actuel
   const renderEffects = () => {
@@ -194,16 +205,16 @@ export default function IntroAnimation() {
             ))}
             {/* Fumée de Gotham */}
             <div className="absolute inset-0 pointer-events-none">
-              {[...Array(10)].map((_, i) => (
+              {smokePositions.map((position, i) => (
                 <motion.div
                   key={`smoke-${i}`}
                   className="absolute rounded-full"
                   style={{
                     background: "radial-gradient(circle, rgba(100,100,100,0.3) 0%, rgba(100,100,100,0) 70%)",
-                    width: `${30 + Math.random() * 50}px`,
-                    height: `${30 + Math.random() * 50}px`,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
+                    width: `${position.size}px`,
+                    height: `${position.size}px`,
+                    left: `${position.left}%`,
+                    top: `${position.top}%`,
                   }}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{
