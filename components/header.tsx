@@ -25,7 +25,7 @@ export default function Header() {
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId)
     if (section) {
-      const offsetTop = section.offsetTop - 80 // Adjust for header height
+      const offsetTop = section.offsetTop - 80
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",

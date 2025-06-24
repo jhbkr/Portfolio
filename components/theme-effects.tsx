@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 
 export default function ThemeEffects() {
   // const { theme } = useTheme()
-  const theme: any = "robin" // Force Robin theme for validation, bypass type errors
+  const theme: any = "robin"
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isClient, setIsClient] = useState(false)
 
