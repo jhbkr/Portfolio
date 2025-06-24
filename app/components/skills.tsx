@@ -152,7 +152,7 @@ export default function Skills() {
         return "border-[#32CD32]"
       case "raven":
         return "border-[#663399]"
-      case "deathstrow":
+      case "deathstroke":
         return "border-[#FF8C00]"
       default:
         return "border-primary"
