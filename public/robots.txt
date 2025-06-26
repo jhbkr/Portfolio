@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://ton-domaine.com
+Host: https://portfolio-karimbkr269200-gmailcoms-projects.vercel.app
 
 # Sitemaps
-Sitemap: https://ton-domaine.com/sitemap.xml
+Sitemap: https://portfolio-karimbkr269200-gmailcoms-projects.vercel.app/sitemap.xml

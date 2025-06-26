@@ -218,7 +218,7 @@ export default function ProjectsCarousel() {
                           className={project.title === "My Snapchat" ? "object-contain" : "object-cover"}
                         />
                       )}
-                    </div>
+          </div>
                   </Card>
                 </motion.div>
               );
@@ -262,12 +262,12 @@ export default function ProjectsCarousel() {
                         poster="/placeholder.svg?height=300&width=500"
                       />
                     ) : (
-                      <Image
-                        src={projects[currentIndex].image || "/placeholder.svg"}
-                        alt={projects[currentIndex].title}
-                        fill
+                    <Image
+                      src={projects[currentIndex].image || "/placeholder.svg"}
+                      alt={projects[currentIndex].title}
+                      fill
                         className={projects[currentIndex].title === "My Snapchat" ? "object-contain" : "object-cover"}
-                      />
+                    />
                     )}
                     <div
                       className={cn("absolute bottom-0 left-0 h-2 transition-all duration-500", getThemeColor())}
@@ -374,7 +374,7 @@ export default function ProjectsCarousel() {
               </Button>
             </div>
           </div>
-        </div>
+          </div>
 
         {/* Indicateurs positionnés en dessous du carrousel */}
         <motion.div 
