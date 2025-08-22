@@ -156,29 +156,16 @@ export default function FreelanceMaintenance() {
                 plan.recommended && isClient && theme === "deathstroke" && "ring-[#FF8C00]",
               )}>
                 {plan.recommended && (
-                  <div className="absolute top-0 right-0 overflow-hidden">
-                    {/* Banderolle principale */}
-                    <div className={cn(
-                      "relative bg-gradient-to-r from-primary to-primary/90 text-white text-center py-2 px-6 text-sm font-bold shadow-lg transform rotate-45 translate-x-8 -translate-y-2 z-10",
-                      isClient && theme === "robin" && "from-[#FF0000] to-[#CC0000]",
-                      isClient && theme === "starfire" && "from-[#FF69B4] to-[#FF1493]",
-                      isClient && theme === "cyborg" && "from-[#4169E1] to-[#0000CD]",
-                      isClient && theme === "beastboy" && "from-[#32CD32] to-[#228B22]",
-                      isClient && theme === "raven" && "from-[#663399] to-[#4B0082]",
-                      isClient && theme === "deathstroke" && "from-[#FF8C00] to-[#FF4500]",
-                    )}>
-                      ⭐ RECOMMANDÉ
-                    </div>
-                    {/* Effet de pli */}
-                    <div className={cn(
-                      "absolute top-0 right-0 w-0 h-0 border-l-[20px] border-l-transparent border-t-[20px] border-t-primary/70 transform rotate-45 translate-x-6 -translate-y-1 z-5",
-                      isClient && theme === "robin" && "border-t-[#CC0000]",
-                      isClient && theme === "starfire" && "border-t-[#FF1493]",
-                      isClient && theme === "cyborg" && "border-t-[#0000CD]",
-                      isClient && theme === "beastboy" && "border-t-[#228B22]",
-                      isClient && theme === "raven" && "border-t-[#4B0082]",
-                      isClient && theme === "deathstroke" && "border-t-[#FF4500]",
-                    )}></div>
+                  <div className={cn(
+                    "absolute -top-3 -right-3 bg-gradient-to-r from-primary to-primary/80 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg border-2 border-white/20 transform rotate-3 z-10",
+                    isClient && theme === "robin" && "from-[#FF0000] to-[#CC0000]",
+                    isClient && theme === "starfire" && "from-[#FF69B4] to-[#FF1493]",
+                    isClient && theme === "cyborg" && "from-[#4169E1] to-[#0000CD]",
+                    isClient && theme === "beastboy" && "from-[#32CD32] to-[#228B22]",
+                    isClient && theme === "raven" && "from-[#663399] to-[#4B0082]",
+                    isClient && theme === "deathstroke" && "from-[#FF8C00] to-[#FF4500]",
+                  )}>
+                    ⭐ Recommandé
                   </div>
                 )}
                 
