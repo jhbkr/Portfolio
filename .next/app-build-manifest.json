@@ -25,6 +25,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/mentions-legales/page.js"
+    ],
+    "/politique-confidentialite/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/politique-confidentialite/page.js"
     ]
   }
 }
