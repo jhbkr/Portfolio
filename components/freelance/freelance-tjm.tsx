@@ -61,7 +61,7 @@ export default function FreelanceTJM() {
         >
           <h2 className="text-3xl md:text-5xl font-bold mb-4">TJM de Lancement</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Tarif journalier pour missions en régie - Junior Lyon, formation EPITECH
+            Tarif journalier pour missions en régie
           </p>
         </motion.div>
 
@@ -96,7 +96,7 @@ export default function FreelanceTJM() {
                   </div>
                 </div>
                 <CardTitle className="text-4xl mb-2">260 €</CardTitle>
-                <p className="text-xl text-muted-foreground">TJM recommandé (Lyon, junior)</p>
+                <p className="text-xl text-muted-foreground">TJM recommandé</p>
               </CardHeader>
               
               <CardContent className="space-y-6">
@@ -122,7 +122,7 @@ export default function FreelanceTJM() {
                       isClient && theme === "raven" && "text-[#663399]",
                       isClient && theme === "deathstroke" && "text-[#FF8C00]",
                     )} />
-                    <span className="text-sm">Aligné sur référentiel junior local (JS, Node, WP ~243–260 €/j)</span>
+                    <span className="text-sm">Tarif aligné sur le marché local</span>
                   </div>
                   <div className="flex items-start gap-3">
                     <Calculator className={cn(
@@ -134,7 +134,7 @@ export default function FreelanceTJM() {
                       isClient && theme === "raven" && "text-[#663399]",
                       isClient && theme === "deathstroke" && "text-[#FF8C00]",
                     )} />
-                    <span className="text-sm">Rappel marché : moyenne France ≈ 576 €/j (positionnement compétitif)</span>
+                    <span className="text-sm">Tarif compétitif sur le marché français</span>
                   </div>
                 </div>
                 
@@ -156,7 +156,7 @@ export default function FreelanceTJM() {
             className="space-y-6"
           >
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">Références Marché</h3>
+              <h3 className="text-xl font-bold">Informations Marché</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-3 border rounded-lg">
@@ -171,7 +171,7 @@ export default function FreelanceTJM() {
                 <div className="p-3 border rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
                     <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium text-sm">Juniors Lyon</span>
+                    <span className="font-medium text-sm">Développeurs Lyon</span>
                   </div>
                   <p className="text-xl font-bold text-muted-foreground">240–260 €/j</p>
                   <p className="text-xs text-muted-foreground">JS/Node/WordPress</p>
@@ -179,21 +179,7 @@ export default function FreelanceTJM() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-muted/20 rounded-lg">
-                <h4 className="font-semibold mb-2 text-sm">Astuce Marge</h4>
-                <p className="text-xs text-muted-foreground">
-                  Vise <strong>2–3 jours par 1 000 €</strong> vendus pour la rentabilité.
-                </p>
-              </div>
 
-              <div className="p-4 bg-card border rounded-lg">
-                <h4 className="font-semibold mb-2 text-sm">Charges Sociales</h4>
-                <p className="text-xs text-muted-foreground">
-                  Micro BNC ≈ <strong>24,6 %</strong> du CA. Garde ~30 %.
-                </p>
-              </div>
-            </div>
           </motion.div>
         </div>
 

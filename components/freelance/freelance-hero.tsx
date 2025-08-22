@@ -138,6 +138,10 @@ export default function FreelanceHero() {
                 </span>
               </h1>
               
+              <div className="text-xl md:text-2xl text-foreground/60 font-medium">
+                Pixel Web
+              </div>
+              
               <p className="text-xl md:text-2xl text-foreground/80">
                 Lyon, France – Remote
               </p>
@@ -196,7 +200,15 @@ export default function FreelanceHero() {
             </div>
             <div className="flex items-center gap-2 px-3 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full">
               <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-              SIRET [à insérer]
+              SIRET 98981801800016
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-full">
+              <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+              APE 62.01Z - Programmation informatique
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full">
+              <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
+              69 - Rhône, France
             </div>
           </motion.div>
         </div>

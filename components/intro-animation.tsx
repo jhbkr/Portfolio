@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 export default function IntroAnimation() {
-  const [showIntro, setShowIntro] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
   const [hasCheckedSession, setHasCheckedSession] = useState(false)
   const [currentCharacter, setCurrentCharacter] = useState(-1)
   const [spotlightPosition, setSpotlightPosition] = useState({ x: 0, y: 0 })
@@ -18,16 +18,16 @@ export default function IntroAnimation() {
   const [waitingForClick, setWaitingForClick] = useState(false)
 
   // Utiliser useRef au niveau supérieur du composant
-  const mousePositionRef = useRef(mousePosition)
+  const mousePositionRef = useRef({ ...mousePosition, throttle: false })
 
   // Vérifier si l'intro a déjà été jouée dans cette session
   useEffect(() => {
     if (hasCheckedSession || typeof window === 'undefined') return
     
+    // Vérifier immédiatement pour éviter l'affichage du contenu principal
     const sessionIntroPlayed = sessionStorage.getItem('introAnimationPlayed')
-    if (!sessionIntroPlayed) {
-      setShowIntro(true)
-      sessionStorage.setItem('introAnimationPlayed', 'true')
+    if (sessionIntroPlayed) {
+      setShowIntro(false)
     }
     setHasCheckedSession(true)
   }, [hasCheckedSession])
@@ -76,7 +76,7 @@ export default function IntroAnimation() {
     },
   ]
 
-  // Projecteur qui se déplace aléatoirement
+  // Projecteur qui se déplace aléatoirement - Optimisé et fluidifié
   useEffect(() => {
     if (!showIntro || foundTarget) return
 
@@ -87,7 +87,7 @@ export default function IntroAnimation() {
       setSpotlightPosition({ x: randomX, y: randomY })
     }
 
-    const interval = setInterval(moveSpotlight, 1000)
+    const interval = setInterval(moveSpotlight, 600) // Plus fluide
 
     // Après quelques secondes, le projecteur "trouve" sa cible
     const targetTimer = setTimeout(() => {
@@ -95,12 +95,12 @@ export default function IntroAnimation() {
       setFoundTarget(true)
       clearInterval(interval)
 
-      // Commencer à afficher les personnages
+      // Commencer à afficher les personnages plus rapidement
       setTimeout(() => {
         setCurrentCharacter(0)
         setWaitingForClick(true)
-      }, 1000)
-    }, 5000)
+      }, 300) // Plus rapide
+    }, 2000) // Plus rapide
 
     return () => {
       clearInterval(interval)
@@ -108,10 +108,18 @@ export default function IntroAnimation() {
     }
   }, [showIntro, foundTarget])
 
-  // Gestion du mouvement de la souris
+  // Gestion du mouvement de la souris - Optimisé avec throttling
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (!containerRef.current || !showIntro) return
+
+      // Throttling pour améliorer les performances
+      if (mousePositionRef.current.throttle) return
+      
+      mousePositionRef.current.throttle = true
+      setTimeout(() => {
+        mousePositionRef.current.throttle = false
+      }, 8) // Plus fluide ~120fps
 
       const container = containerRef.current
       const rect = container.getBoundingClientRect()
@@ -149,6 +157,7 @@ export default function IntroAnimation() {
 
   const handleEnterSite = () => {
     setShowIntro(false)
+    sessionStorage.setItem('introAnimationPlayed', 'true')
   }
 
   // Générer des éléments d'effet en fonction du personnage actuel
@@ -160,7 +169,7 @@ export default function IntroAnimation() {
         return (
           <>
             {/* Effet de gadgets de Robin */}
-            {mousePositionRef.current.x > 0 && (
+            {currentCharacter === 0 && (
               <motion.div
                 className="absolute"
                 style={{
@@ -178,61 +187,61 @@ export default function IntroAnimation() {
                 </svg>
               </motion.div>
             )}
-            {/* Batarangs volants */}
-            {[...Array(5)].map((_, i) => (
+            {/* Batarangs volants - Optimisé */}
+            {[...Array(3)].map((_, i) => (
               <motion.div
                 key={`batarang-${i}`}
                 className="absolute w-8 h-8"
                 style={{
                   color: "rgba(255, 0, 0, 0.8)",
                 }}
-                initial={{
-                  x: Math.random() * 100 - 50 + "%",
-                  y: "100%",
-                  rotate: 0,
-                }}
-                animate={{
-                  x: Math.random() * 100 - 50 + "%",
-                  y: "-10%",
-                  rotate: 360 * 3,
-                }}
-                transition={{
-                  duration: 3 + Math.random() * 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "loop",
-                  delay: i * 0.5,
-                }}
+                                  initial={{
+                    x: `${20 + i * 30}%`,
+                    y: "100%",
+                    rotate: 0,
+                  }}
+                  animate={{
+                    x: `${20 + i * 30}%`,
+                    y: "-10%",
+                    rotate: 360 * 3,
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "loop",
+                    delay: i * 0.8,
+                  }}
               >
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12,2L4,12L12,22L20,12L12,2M12,5.5L17,12L12,18.5L7,12L12,5.5Z" />
                 </svg>
               </motion.div>
             ))}
-            {/* Fumée de Gotham */}
+            {/* Fumée de Gotham - Optimisé */}
             <div className="absolute inset-0 pointer-events-none">
-              {[...Array(10)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={`smoke-${i}`}
                   className="absolute rounded-full"
-                  style={{
-                    background: "radial-gradient(circle, rgba(100,100,100,0.3) 0%, rgba(100,100,100,0) 70%)",
-                    width: `${30 + Math.random() * 50}px`,
-                    height: `${30 + Math.random() * 50}px`,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{
-                    opacity: [0, 0.3, 0],
-                    scale: [0.5, 1.5, 2],
-                    y: [0, -50, -100],
-                  }}
-                  transition={{
-                    duration: 4 + Math.random() * 3,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                    delay: i * 0.8,
-                  }}
+                                      style={{
+                      background: "rgba(100,100,100,0.2)",
+                      width: `${40 + i * 10}px`,
+                      height: `${40 + i * 10}px`,
+                      left: `${10 + i * 20}%`,
+                      top: `${20 + i * 15}%`,
+                    }}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{
+                      opacity: [0, 0.2, 0],
+                      scale: [0.5, 1.2, 1.5],
+                      y: [0, -30, -60],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "loop",
+                      delay: i * 1,
+                    }}
                 />
               ))}
             </div>
@@ -243,7 +252,7 @@ export default function IntroAnimation() {
         return (
           <>
             {/* Effet d'énergie stellaire */}
-            {mousePositionRef.current.x > 0 && (
+            {currentCharacter === 1 && (
               <motion.div
                 className="absolute"
                 style={{
@@ -268,65 +277,65 @@ export default function IntroAnimation() {
                 }}
               />
             )}
-            {/* Rayons d'énergie */}
-            {[...Array(8)].map((_, i) => (
+            {/* Rayons d'énergie - Optimisé */}
+            {[...Array(4)].map((_, i) => (
               <motion.div
                 key={`ray-${i}`}
                 className="absolute"
-                style={{
-                  width: "2px",
-                  height: `${50 + Math.random() * 100}px`,
-                  background: "rgba(255,105,180,0.8)",
-                  boxShadow: "0 0 8px 4px rgba(255,105,180,0.4)",
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  transformOrigin: "center bottom",
-                }}
-                initial={{
-                  scaleY: 0,
-                  opacity: 0,
-                  rotate: Math.random() * 360,
-                }}
-                animate={{
-                  scaleY: 1,
-                  opacity: [0, 0.8, 0],
-                  rotate: Math.random() * 360,
-                }}
-                transition={{
-                  duration: 0.8 + Math.random() * 0.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "loop",
-                  delay: i * 0.3,
-                }}
+                                  style={{
+                    width: "2px",
+                    height: `${60 + i * 20}px`,
+                    background: "rgba(255,105,180,0.8)",
+                    boxShadow: "0 0 8px 4px rgba(255,105,180,0.4)",
+                    left: `${20 + i * 20}%`,
+                    top: `${10 + i * 25}%`,
+                    transformOrigin: "center bottom",
+                  }}
+                  initial={{
+                    scaleY: 0,
+                    opacity: 0,
+                    rotate: i * 45,
+                  }}
+                  animate={{
+                    scaleY: 1,
+                    opacity: [0, 0.8, 0],
+                    rotate: i * 45,
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "loop",
+                    delay: i * 0.4,
+                  }}
               />
             ))}
-            {/* Étoiles flottantes */}
-            {[...Array(15)].map((_, i) => (
+            {/* Étoiles flottantes - Optimisé */}
+            {[...Array(8)].map((_, i) => (
               <motion.div
                 key={`star-${i}`}
                 className="absolute"
-                style={{
-                  width: `${2 + Math.random() * 4}px`,
-                  height: `${2 + Math.random() * 4}px`,
-                  background: "rgba(255,255,255,0.9)",
-                  boxShadow: "0 0 5px 2px rgba(255,105,180,0.7)",
-                  borderRadius: "50%",
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                initial={{
-                  opacity: 0.2,
-                }}
-                animate={{
-                  opacity: [0.2, 0.8, 0.2],
-                  scale: [1, 1.5, 1],
-                }}
-                transition={{
-                  duration: 2 + Math.random() * 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
-                  delay: i * 0.2,
-                }}
+                                  style={{
+                    width: `${3 + i}px`,
+                    height: `${3 + i}px`,
+                    background: "rgba(255,255,255,0.9)",
+                    boxShadow: "0 0 5px 2px rgba(255,105,180,0.7)",
+                    borderRadius: "50%",
+                    left: `${15 + i * 12}%`,
+                    top: `${20 + i * 10}%`,
+                  }}
+                  initial={{
+                    opacity: 0.2,
+                  }}
+                  animate={{
+                    opacity: [0.2, 0.8, 0.2],
+                    scale: [1, 1.3, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "reverse",
+                    delay: i * 0.3,
+                  }}
               />
             ))}
           </>
@@ -336,7 +345,7 @@ export default function IntroAnimation() {
         return (
           <>
             {/* Effet de transformation animale */}
-            {mousePositionRef.current.x > 0 && (
+            {currentCharacter === 2 && (
               <motion.div
                 className="absolute"
                 style={{
@@ -387,8 +396,8 @@ export default function IntroAnimation() {
                 </AnimatePresence>
               </motion.div>
             )}
-            {/* Empreintes d'animaux */}
-            {[...Array(5)].map((_, i) => (
+            {/* Empreintes d'animaux - Optimisé */}
+            {[...Array(3)].map((_, i) => (
               <motion.div
                 key={`paw-${i}`}
                 className="absolute"
@@ -416,8 +425,8 @@ export default function IntroAnimation() {
                 </svg>
               </motion.div>
             ))}
-            {/* Feuilles volantes */}
-            {[...Array(3)].map((_, i) => (
+            {/* Feuilles volantes - Optimisé */}
+            {[...Array(2)].map((_, i) => (
               <motion.div
                 key={`leaf-${i}`}
                 className="absolute"
@@ -458,7 +467,7 @@ export default function IntroAnimation() {
         return (
           <>
             {/* Effet de magie noire */}
-            {mousePositionRef.current.x > 0 && (
+            {currentCharacter === 3 && (
               <motion.div
                 className="absolute"
                 style={{
@@ -483,14 +492,14 @@ export default function IntroAnimation() {
                 }}
               />
             )}
-            {/* Pluie */}
+            {/* Pluie - Optimisé */}
             <div className="absolute inset-0 pointer-events-none">
-              {[...Array(50)].map((_, i) => (
+              {[...Array(20)].map((_, i) => (
                 <motion.div
                   key={`rain-${i}`}
                   className="absolute w-[1px] h-[10px] bg-[#663399]/30"
                   style={{
-                    left: `${Math.random() * 100}%`,
+                    left: `${5 + i * 5}%`,
                     top: `-10px`,
                   }}
                   initial={{ opacity: 0.7 }}
@@ -499,44 +508,44 @@ export default function IntroAnimation() {
                     opacity: 0,
                   }}
                   transition={{
-                    duration: 0.8 + Math.random() * 0.5,
+                    duration: 0.8,
                     repeat: Number.POSITIVE_INFINITY,
                     repeatType: "loop",
-                    delay: i * 0.05,
+                    delay: i * 0.1,
                   }}
                 />
               ))}
             </div>
-            {/* Nuages sombres */}
-            {[...Array(3)].map((_, i) => (
+            {/* Nuages sombres - Optimisé */}
+            {[...Array(2)].map((_, i) => (
               <motion.div
                 key={`cloud-${i}`}
                 className="absolute rounded-full"
-                style={{
-                  background: "rgba(40, 20, 60, 0.5)",
-                  width: 100 + Math.random() * 150,
-                  height: 60 + Math.random() * 80,
-                  filter: "blur(20px)",
-                  top: `${Math.random() * 60}%`,
-                }}
-                initial={{
-                  x: "-20%",
-                  opacity: 0,
-                }}
-                animate={{
-                  x: "120%",
-                  opacity: [0, 0.5, 0],
-                }}
-                transition={{
-                  duration: 15 + Math.random() * 10,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "loop",
-                  delay: i * 3,
-                }}
+                                  style={{
+                    background: "rgba(40, 20, 60, 0.5)",
+                    width: 120 + i * 30,
+                    height: 70 + i * 20,
+                    filter: "blur(20px)",
+                    top: `${20 + i * 30}%`,
+                  }}
+                  initial={{
+                    x: "-20%",
+                    opacity: 0,
+                  }}
+                  animate={{
+                    x: "120%",
+                    opacity: [0, 0.5, 0],
+                  }}
+                  transition={{
+                    duration: 12,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "loop",
+                    delay: i * 4,
+                  }}
               />
             ))}
-            {/* Éclairs */}
-            {[...Array(3)].map((_, i) => (
+            {/* Éclairs - Optimisé */}
+            {[...Array(2)].map((_, i) => (
               <motion.div
                 key={`lightning-${i}`}
                 className="absolute"
@@ -572,7 +581,7 @@ export default function IntroAnimation() {
         return (
           <>
             {/* Effet de circuits électroniques */}
-            {mousePositionRef.current.x > 0 && (
+            {currentCharacter === 4 && (
               <motion.div
                 className="absolute"
                 style={{
@@ -592,53 +601,53 @@ export default function IntroAnimation() {
                 transition={{ duration: 1 }}
               />
             )}
-            {/* Lignes de circuit */}
-            {[...Array(10)].map((_, i) => (
+            {/* Lignes de circuit - Optimisé */}
+            {[...Array(5)].map((_, i) => (
               <motion.div
                 key={`circuit-${i}`}
                 className="absolute"
-                style={{
-                  width: `${50 + Math.random() * 150}px`,
-                  height: "2px",
-                  background: "rgba(65,105,225,0.7)",
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                initial={{ scaleX: 0, opacity: 0 }}
-                animate={{
-                  scaleX: 1,
-                  opacity: [0, 0.8, 0],
-                  x: [0, 20, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "loop",
-                  delay: i * 0.8,
-                }}
+                                  style={{
+                    width: `${80 + i * 20}px`,
+                    height: "2px",
+                    background: "rgba(65,105,225,0.7)",
+                    left: `${10 + i * 20}%`,
+                    top: `${20 + i * 15}%`,
+                  }}
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  animate={{
+                    scaleX: 1,
+                    opacity: [0, 0.8, 0],
+                    x: [0, 15, 0],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "loop",
+                    delay: i * 1,
+                  }}
               />
             ))}
-            {/* Points de données */}
-            {[...Array(15)].map((_, i) => (
+            {/* Points de données - Optimisé */}
+            {[...Array(8)].map((_, i) => (
               <motion.div
                 key={`data-${i}`}
                 className="absolute w-1 h-1 rounded-full"
                 style={{
                   background: "rgba(65,105,225,1)",
                   boxShadow: "0 0 3px 2px rgba(65,105,225,0.5)",
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${15 + i * 12}%`,
+                  top: `${25 + i * 8}%`,
                 }}
                 initial={{ opacity: 0.2 }}
                 animate={{
                   opacity: [0.2, 1, 0.2],
-                  scale: [1, 1.5, 1],
+                  scale: [1, 1.3, 1],
                 }}
                 transition={{
-                  duration: 1 + Math.random(),
+                  duration: 1,
                   repeat: Number.POSITIVE_INFINITY,
                   repeatType: "reverse",
-                  delay: i * 0.2,
+                  delay: i * 0.3,
                 }}
               />
             ))}
@@ -649,7 +658,7 @@ export default function IntroAnimation() {
         return (
           <>
             {/* Effet de visée et de cible */}
-            {mousePositionRef.current.x > 0 && (
+            {currentCharacter === 5 && (
               <>
                 <motion.div
                   className="absolute w-16 h-16 rounded-full border-2 border-[#FF8C00]"
@@ -689,8 +698,8 @@ export default function IntroAnimation() {
                 />
               </>
             )}
-            {/* Étincelles et balles */}
-            {[...Array(8)].map((_, i) => (
+            {/* Étincelles et balles - Optimisé */}
+            {[...Array(4)].map((_, i) => (
               <motion.div
                 key={`spark-${i}`}
                 className="absolute w-2 h-2 rounded-full"
@@ -699,20 +708,20 @@ export default function IntroAnimation() {
                   boxShadow: "0 0 5px 2px rgba(255,140,0,0.5)",
                 }}
                 initial={{
-                  x: Math.random() * 100 + "%",
-                  y: Math.random() * 100 + "%",
+                  x: `${20 + i * 20}%`,
+                  y: `${30 + i * 15}%`,
                   opacity: 0,
                 }}
                 animate={{
-                  x: `${Math.random() * 100}%`,
-                  y: `${Math.random() * 100}%`,
+                  x: `${60 + i * 10}%`,
+                  y: `${20 + i * 20}%`,
                   opacity: [0, 1, 0],
                 }}
                 transition={{
-                  duration: 0.5 + Math.random() * 0.5,
+                  duration: 0.5,
                   repeat: Number.POSITIVE_INFINITY,
                   repeatType: "loop",
-                  delay: i * 0.7,
+                  delay: i * 0.8,
                 }}
               />
             ))}
@@ -741,14 +750,15 @@ export default function IntroAnimation() {
           {/* Projecteur qui se déplace */}
           <motion.div
             className="absolute w-[300px] h-[300px] rounded-full pointer-events-none"
+            initial={{ opacity: 0, scale: 0.5 }}
             animate={{
               x: spotlightPosition.x + "vw",
               y: spotlightPosition.y + "vh",
-              opacity: foundTarget ? 1 : [0.3, 0.7, 0.5],
-              scale: foundTarget ? 1.2 : [0.8, 1.1, 0.9],
+              opacity: foundTarget ? 1 : [0.4, 0.8, 0.6],
+              scale: foundTarget ? 1.2 : [0.9, 1.2, 1.0],
             }}
             transition={{
-              duration: foundTarget ? 0.5 : 1,
+              duration: foundTarget ? 0.3 : 0.6,
               ease: "easeInOut",
             }}
             style={{
@@ -784,7 +794,7 @@ export default function IntroAnimation() {
                 initial={{ opacity: 0, scale: 0.5, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.5, y: -20 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.3 }}
               >
                 <div className="relative w-[250px] h-[250px] flex items-center justify-center">
                   <Image

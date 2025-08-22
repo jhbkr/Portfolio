@@ -77,7 +77,7 @@ export default function FreelancePacks() {
         "Garantie 7 jours correctifs après mise en ligne"
       ],
       delay: "5–7 jours ouvrés",
-      note: "Idéal pour un premier contrat rapide et visible localement."
+                    note: "Idéal pour un projet rapide et visible localement."
     },
     {
       id: "vitrine-pro",
@@ -152,7 +152,7 @@ export default function FreelancePacks() {
         >
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Offres Packagées</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Spécial premier contrats - Prix compétitifs pour un junior à Lyon
+            Prix compétitifs et adaptés à vos besoins
           </p>
         </motion.div>
 

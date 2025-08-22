@@ -131,7 +131,7 @@ export default function FreelanceMaintenance() {
         >
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Maintenance & Support</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Solution "avec filet" - Recommandé dès le 1er contrat
+            Solution complète et sécurisée
           </p>
         </motion.div>
 

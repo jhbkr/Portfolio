@@ -137,9 +137,8 @@ export default function Hero() {
           <motion.div
             className="space-y-6"
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
               Jihad Bakari - <span
@@ -196,9 +195,8 @@ export default function Hero() {
           <motion.div
             className="flex justify-center"
             initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
             <div
               className={cn(

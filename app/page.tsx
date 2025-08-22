@@ -8,20 +8,23 @@ import Contact from "@/components/contact"
 import Footer from "@/components/footer"
 import Reviews from "@/components/reviews"
 import IntroAnimation from "@/components/intro-animation"
+import { Suspense } from "react"
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
       <IntroAnimation />
-      <Header />
-      <Hero />
-      <About />
-      <Timeline />
-      <ProjectsCarousel />
-      <Skills />
-      <Contact />
-      <Reviews />
-      <Footer />
+      <Suspense fallback={<div className="min-h-screen bg-background" />}>
+        <Header />
+        <Hero />
+        <About />
+        <Timeline />
+        <ProjectsCarousel />
+        <Skills />
+        <Contact />
+        <Reviews />
+        <Footer />
+      </Suspense>
     </main>
   )
 }

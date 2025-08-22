@@ -238,7 +238,7 @@ export default function FreelanceOptions() {
           viewport={{ once: true }}
         >
           <p className="text-muted-foreground mb-6">
-            Tu restes dans ton positionnement accessible tout en protégeant ta marge.
+            
           </p>
           <Button
             size="lg"

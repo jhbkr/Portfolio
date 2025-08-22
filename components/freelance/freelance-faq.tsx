@@ -70,63 +70,63 @@ export default function FreelanceFAQ() {
   const faqs = [
     {
       id: 1,
-      category: "pricing",
-      question: "Pourquoi vos prix sont 'bas' ?",
-      answer: "Je me positionne en junior (formation EPITECH) pour signer vite et bâtir des références. Mes process et gages de qualité (perf, SEO, doc, garantie) sécurisent le résultat. Les tarifs évolueront avec l'expérience."
+      category: "delais",
+      question: "Quels sont les délais de réalisation ?",
+      answer: "Les délais varient selon le pack : Pack Vitrine (1-2 semaines), Pack E-commerce (3-4 semaines), Pack MVP (4-6 semaines). Pour les projets sur mesure, le délai est défini selon le cahier des charges. Ces délais sont indicatifs et peuvent varier selon la complexité du projet."
     },
     {
       id: 2,
-      category: "project",
-      question: "Et si je n'ai pas encore tous les contenus ?",
-      answer: "Je fournis un gabarit et j'intègre les contenus au fil de l'eau ; je peux aussi proposer une prestation de copy (option)."
+      category: "revisions",
+      question: "Combien de révisions sont incluses ?",
+      answer: "Chaque phase de développement inclut 2 allers-retours de révisions. Les modifications mineures sont incluses dans le prix initial. Les modifications majeures font l'objet d'un devis complémentaire. Je m'engage à répondre sous 48h ouvrées maximum."
     },
     {
       id: 3,
-      category: "technical",
-      question: "Hébergement & frais récurrents ?",
-      answer: "Variables selon la solution choisie ; pour un site simple, prévoir environ 5–50 €/mois (hébergement/outils)."
+      category: "livrable",
+      question: "Que recevrai-je à la livraison ?",
+      answer: "Vous recevrez : le site mis en ligne et fonctionnel, les fichiers sources, une documentation technique, une formation d'utilisation, et 7 jours d'assistance technique post-livraison. La propriété intellectuelle est transférée une fois la prestation entièrement soldée."
     },
     {
       id: 4,
-      category: "legal",
-      question: "Vous facturez la TVA ?",
-      answer: "Non, je suis en franchise de base de TVA (mention art. 293 B sur devis/factures)."
+      category: "hebergement",
+      question: "Proposez-vous l'hébergement ?",
+      answer: "Je peux recommander des solutions d'hébergement adaptées à votre projet. Les frais récurrents varient selon la solution : environ 5-50€/mois pour un site simple (hébergement + outils). Je peux également gérer la mise en ligne pour vous."
     },
     {
       id: 5,
-      category: "payment",
-      question: "Quels sont les délais de paiement ?",
-      answer: "Échéances : 40 % commande, 40 % recette, 20 % livraison ; paiement sous 30 jours fin de mois (B2B)."
+      category: "support",
+      question: "Quel support après la livraison ?",
+      answer: "Inclus : 7 jours d'assistance technique gratuite après la mise en ligne. Pour un support continu, je propose des contrats de maintenance séparés. La garantie bugfix couvre 7 jours après la livraison."
     },
     {
       id: 6,
-      category: "legal",
-      question: "Que se passe-t-il en cas de retard de paiement ?",
-      answer: "Retard : pénalités au taux légal + indemnité forfaitaire 40 € (B2B), sans préjudice d'un complément si frais supérieurs."
+      category: "droits",
+      question: "Qui possède les droits du site ?",
+      answer: "La propriété intellectuelle des développements réalisés est transférée au client une fois la prestation entièrement soldée. Le client s'engage à respecter les droits de propriété intellectuelle du prestataire sur les éléments techniques, frameworks et bibliothèques utilisés."
     },
     {
       id: 7,
-      category: "guarantee",
-      question: "Quelle est la garantie après livraison ?",
-      answer: "Garantie 7 jours après mise en ligne pour corrections de bugs non induits par des interventions tierces."
+      category: "tva",
+      question: "Facturez-vous la TVA ?",
+      answer: "Non, je suis en franchise de base de TVA (art. 293 B du CGI). Tous les prix sont exprimés hors taxes. La TVA n'est pas applicable sur mes prestations."
     },
     {
       id: 8,
-      category: "project",
-      question: "Puis-je modifier le projet en cours de route ?",
-      answer: "Toute demande hors périmètre initial fera l'objet d'un avenant (nouveau devis)."
+      category: "facturation",
+      question: "Comment fonctionne la facturation ?",
+      answer: "Modalités de paiement : 40% d'acompte à la commande, 40% à la recette, 20% à la mise en ligne. Paiement par virement bancaire ou chèque. Délai de paiement : 30 jours fin de mois (B2B). En cas de retard, des pénalités s'appliquent (taux légal + 40€ indemnité forfaitaire)."
     },
     {
       id: 9,
-      category: "profile",
-      question: "Quelle est votre formation et expérience ?",
-      answer: "Formation EPITECH Développeur Web Full-Stack (2024-2026), compétences en React/Next.js, Node.js, PHP, et développement mobile. Passionné par les nouvelles technologies."
+      category: "pricing",
+      question: "Pourquoi vos prix sont-ils compétitifs ?",
+      answer: "Mes process et gages de qualité (performance, SEO, documentation, garantie) sécurisent le résultat. Les tarifs sont adaptés à la complexité et à la valeur ajoutée de chaque projet."
     },
     {
       id: 10,
-      category: "work",
-      question: "Travaillez-vous en remote ?",
-      answer: "Oui, je travaille principalement en remote depuis Lyon. Je peux me déplacer pour des réunions importantes si nécessaire."
+      category: "project",
+      question: "Que faire si je n'ai pas tous les contenus ?",
+      answer: "Je fournis un gabarit et j'intègre les contenus au fil de l'eau. Je peux aussi proposer une prestation de rédaction de contenu (option). Nous pouvons commencer le développement avec des contenus de placeholder et les remplacer progressivement."
     }
   ]
 

@@ -75,7 +75,7 @@ export default function FreelanceDevis() {
       id: 1,
       title: "Devis Vitrine Pro (5 pages)",
       price: "1 290 €",
-      client: "[Raison sociale] — SIREN [xxx] — Contact : [Nom]",
+      client: "Pixel Web — SIREN 989818018 — Contact : Jihad Bakari",
       project: "Création d'un site vitrine 5 pages (responsive, SEO de base)",
       items: [
         { detail: "Cadrage & arborescence", qty: "1", pu: "170 €", total: "170 €" },

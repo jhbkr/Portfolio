@@ -53,39 +53,41 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground mt-1">&copy; {new Date().getFullYear()} All rights reserved</p>
           </div>
 
-          <div className="flex space-x-4">
-            <a
-              href="https://github.com/jhbkr"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-background hover:bg-muted transition-colors"
-              aria-label="GitHub"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Github className="h-5 w-5" />
-            </a>
-            <Link
-              href="#"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-background hover:bg-muted transition-colors"
-              aria-label="Twitter"
-            >
-              <Twitter className="h-5 w-5" />
-            </Link>
-            <a
-              href="https://www.linkedin.com/in/jihad-bakari/"
-              className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted hover:bg-muted/80 transition"
-              aria-label="LinkedIn"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <Link
-              href="#"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-background hover:bg-muted transition-colors"
-              aria-label="Instagram"
-            >
-              <Instagram className="h-5 w-5" />
-            </Link>
+          <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
+            {/* Liens légaux */}
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <Link href="/mentions-legales" className="text-muted-foreground hover:text-foreground transition-colors">
+                Mentions légales
+              </Link>
+              <Link href="/cgv" className="text-muted-foreground hover:text-foreground transition-colors">
+                CGV
+              </Link>
+              <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+                Contact
+              </Link>
+            </div>
+
+            {/* Réseaux sociaux */}
+            <div className="flex space-x-4">
+              <a
+                href="https://github.com/jhbkr"
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-background hover:bg-muted transition-colors"
+                aria-label="GitHub"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/jihad-bakari/"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted hover:bg-muted/80 transition"
+                aria-label="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
