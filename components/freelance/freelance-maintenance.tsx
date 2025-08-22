@@ -157,15 +157,15 @@ export default function FreelanceMaintenance() {
               )}>
                 {plan.recommended && (
                   <div className={cn(
-                    "absolute top-0 right-0 bg-gradient-to-l from-transparent to-current text-white px-4 py-1 text-sm font-medium",
-                    isClient && theme === "robin" && "bg-[#FF0000]",
-                    isClient && theme === "starfire" && "bg-[#FF69B4]",
-                    isClient && theme === "cyborg" && "bg-[#4169E1]",
-                    isClient && theme === "beastboy" && "bg-[#32CD32]",
-                    isClient && theme === "raven" && "bg-[#663399]",
-                    isClient && theme === "deathstroke" && "bg-[#FF8C00]",
+                    "absolute -top-2 -right-2 bg-gradient-to-r from-primary to-primary/80 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg border-2 border-white/20 transform rotate-12 z-10",
+                    isClient && theme === "robin" && "from-[#FF0000] to-[#CC0000]",
+                    isClient && theme === "starfire" && "from-[#FF69B4] to-[#FF1493]",
+                    isClient && theme === "cyborg" && "from-[#4169E1] to-[#0000CD]",
+                    isClient && theme === "beastboy" && "from-[#32CD32] to-[#228B22]",
+                    isClient && theme === "raven" && "from-[#663399] to-[#4B0082]",
+                    isClient && theme === "deathstroke" && "from-[#FF8C00] to-[#FF4500]",
                   )}>
-                    Recommandé
+                    ⭐ Recommandé
                   </div>
                 )}
                 
