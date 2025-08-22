@@ -34,7 +34,7 @@ export default function IntroAnimation() {
 
   // Mettre à jour la référence quand mousePosition change
   useEffect(() => {
-    mousePositionRef.current = mousePosition
+    mousePositionRef.current = { ...mousePosition, throttle: mousePositionRef.current?.throttle || false }
   }, [mousePosition])
 
   const characters = [
