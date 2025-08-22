@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 export default function IntroAnimation() {
-  const [showIntro, setShowIntro] = useState(true)
+  const [showIntro, setShowIntro] = useState(false)
+  const [hasCheckedSession, setHasCheckedSession] = useState(false)
   const [currentCharacter, setCurrentCharacter] = useState(-1)
   const [spotlightPosition, setSpotlightPosition] = useState({ x: 0, y: 0 })
   const [foundTarget, setFoundTarget] = useState(false)
@@ -18,6 +19,18 @@ export default function IntroAnimation() {
 
   // Utiliser useRef au niveau supérieur du composant
   const mousePositionRef = useRef(mousePosition)
+
+  // Vérifier si l'intro a déjà été jouée dans cette session
+  useEffect(() => {
+    if (hasCheckedSession || typeof window === 'undefined') return
+    
+    const sessionIntroPlayed = sessionStorage.getItem('introAnimationPlayed')
+    if (!sessionIntroPlayed) {
+      setShowIntro(true)
+      sessionStorage.setItem('introAnimationPlayed', 'true')
+    }
+    setHasCheckedSession(true)
+  }, [hasCheckedSession])
 
   // Mettre à jour la référence quand mousePosition change
   useEffect(() => {

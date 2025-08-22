@@ -34,11 +34,9 @@ const getRandomPosition = (containerWidth: number, containerHeight: number, marg
 const imagesToPreload = [
   "/images/intro/gotham-skyline.png",
   "/images/intro/robin-acrobatic-pose.png",
-  "/images/intro/starfire-nebula-bg.png",
-  "/images/raven-soul-self.png",
-  "/images/intro/raven-magic-circle.png",
-  "/images/intro/deathstroke-advanced-hud.png",
-  "/images/deathstroke-logo.png",
+  "/images/intro/starfire.png",
+  "/images/intro/raven.png",
+  "/images/intro/deathstroke.png",
 ]
 
 // Beast Boy animal sequence
@@ -56,6 +54,8 @@ export default function ThemeChangeAnimator() {
   const [animationKey, setAnimationKey] = useState(0)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
   const [currentBeastBoyAnimalIndex, setCurrentBeastBoyAnimalIndex] = useState(0)
+  const [lastPath, setLastPath] = useState<string | null>(null)
+
 
   // --- Hooks pour Beast Boy (toujours au même niveau) ---
   const [bbPhase, setBBPhase] = useState(0)
@@ -88,26 +88,82 @@ export default function ThemeChangeAnimator() {
     const handleResize = () => {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight })
     }
+    
+    // Fonction pour réinitialiser les animations (touche 'R')
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'r' || e.key === 'R') {
+        // Réinitialiser les animations et le chemin
+        setActiveAnimation(null)
+        setAnimationKey(0)
+        setLastPath(null)
+      }
+    }
+    
     window.addEventListener("resize", handleResize)
+    window.addEventListener("keydown", handleKeyPress)
     handleResize()
-    return () => window.removeEventListener("resize", handleResize)
+    
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      window.removeEventListener("keydown", handleKeyPress)
+    }
   }, [])
 
   useEffect(() => {
-    if (theme && theme !== "light" && theme !== "dark" && theme !== "system") {
+    if (!theme || theme === "light" || theme === "dark" || theme === "system") {
+      setActiveAnimation(null)
+      return
+    }
+    
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : null
+    
+    // Si on est sur la page freelance, ne pas déclencher d'animation
+    if (currentPath === '/freelance') {
+      setLastPath(currentPath)
+      return
+    }
+    
+    // Si on vient de freelance vers portfolio, déclencher l'animation
+    const isComingFromFreelance = lastPath === '/freelance' && currentPath === '/'
+    
+    // Sur le portfolio, déclencher l'animation normalement (sauf si on vient de freelance)
+    if (currentPath === '/' && !isComingFromFreelance) {
       setAnimationKey((prevKey) => prevKey + 1)
       setActiveAnimation(theme)
+      
       if (theme === "beastboy") {
         setCurrentBeastBoyAnimalIndex(0) // Reset for Beast Boy
       }
+      
       const timer = setTimeout(() => {
         setActiveAnimation(null)
       }, ANIMATION_DURATION)
-      return () => clearTimeout(timer)
-    } else {
-      setActiveAnimation(null)
+      
+      return () => {
+        clearTimeout(timer)
+      }
     }
-  }, [theme])
+    
+    // Si on vient de freelance vers portfolio, déclencher l'animation
+    if (isComingFromFreelance) {
+      setAnimationKey((prevKey) => prevKey + 1)
+      setActiveAnimation(theme)
+      
+      if (theme === "beastboy") {
+        setCurrentBeastBoyAnimalIndex(0) // Reset for Beast Boy
+      }
+      
+      const timer = setTimeout(() => {
+        setActiveAnimation(null)
+      }, ANIMATION_DURATION)
+      
+      return () => {
+        clearTimeout(timer)
+      }
+    }
+    
+    setLastPath(currentPath)
+  }, [theme, lastPath])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -143,9 +199,16 @@ export default function ThemeChangeAnimator() {
             {/* PHASE 1 : Gotham + pluie + nuages + skyline */}
             <motion.div className="absolute inset-0" style={{ background: "linear-gradient(to top, #181a23 60%, transparent 100%)", zIndex: 1 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, ease: "easeOut" }} />
             <motion.div className="absolute bottom-0 left-0 w-full h-2/5" style={{ zIndex: 2 }} initial={{ opacity: 0, y: 80 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}>
-              <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 0.9, ease: "easeOut" }}>
-                <Image src="/images/intro/gotham-skyline.png" alt="Gotham Skyline" layout="fill" objectFit="cover" className="filter grayscale brightness-30" priority />
-            </motion.div>
+              <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 0.9, ease: "easeOut" }} className="relative w-full h-full">
+                <Image 
+                  src="/images/intro/gotham-skyline.png" 
+                  alt="Gotham Skyline" 
+                  fill 
+                  className="filter grayscale brightness-30 object-cover" 
+                  priority 
+                  sizes="100vw"
+                />
+              </motion.div>
             </motion.div>
             {Array.from({ length: 5 }).map((_, i) => (
               <motion.div key={`robin-cloud-${i}`} className="absolute rounded-full" style={{ width: `${w * (0.5 + Math.random() * 0.3)}px`, height: `${h * (0.13 + Math.random() * 0.09)}px`, left: `${Math.random() * 60}%`, top: `${8 + i * 10}%`, background: `linear-gradient(90deg, #23242b 60%, #181a23 100%)`, opacity: 0.22 + i * 0.09, filter: `blur(${32 + i * 10}px)`, zIndex: 4 }} initial={{ x: -w * 0.2 * (i % 2 === 0 ? 1 : -1) }} animate={{ x: w * 0.2 * (i % 2 === 0 ? 1 : -1) }} transition={{ duration: 12 + i * 2, repeat: Infinity, repeatType: "reverse", ease: "linear" }} />
@@ -204,7 +267,14 @@ export default function ThemeChangeAnimator() {
             {/* PHASE 5 : Reveal Robin couleur + fissure */}
             <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" initial={{ opacity: 0, scale: 0.7, filter: "blur(18px)" }} animate={{ opacity: [0, 1, 1], scale: [0.7, 1.1, 1], filter: ["blur(18px)", "blur(0px)", "blur(0px)"] }} transition={{ duration: 0.9, delay: 2.8, times: [0, 0.5, 1], ease: "easeOut" }} style={{ zIndex: 50 }}>
               <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 0.9, ease: "easeOut" }}>
-                <Image src="/images/intro/robin.png" alt="Robin Teen Titans" width={320} height={320} style={{ objectFit: "contain", borderRadius: "50%", boxShadow: "0 0 60px 10px #ffe066, 0 0 120px 30px #181a23" }} priority />
+                <Image 
+                  src="/images/intro/robin.png" 
+                  alt="Robin Teen Titans" 
+                  width={320} 
+                  height={320} 
+                  style={{ objectFit: "contain", borderRadius: "50%", boxShadow: "0 0 60px 10px #ffe066, 0 0 120px 30px #181a23" }} 
+                  priority 
+                />
               </motion.div>
               {/* Particules lumineuses */}
               {Array.from({ length: 24 }).map((_, i) => (
@@ -1157,7 +1227,18 @@ export default function ThemeChangeAnimator() {
                 }}
                 transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <Image src="/images/intro/raven.png" alt="Raven Teen Titans" width={340} height={340} style={{ objectFit: "contain", borderRadius: "50%", boxShadow: "0 0 60px 10px #a084e8, 0 0 120px 30px #fff" }} priority />
+                <Image 
+                  src="/images/intro/raven.png" 
+                  alt="Raven Teen Titans" 
+                  width={340} 
+                  height={340} 
+                  style={{ 
+                    objectFit: "contain", 
+                    borderRadius: "50%", 
+                    boxShadow: "0 0 60px 10px #a084e8, 0 0 120px 30px #fff" 
+                  }} 
+                  priority 
+                />
               </motion.div>
               {/* Particules magiques devant l'image (moins nombreuses et moins lumineuses) */}
               {Array.from({ length: 8 }).map((_, i) => (
@@ -1196,13 +1277,7 @@ export default function ThemeChangeAnimator() {
             {/* Phase 1: Tactical Briefing (0 - 2s) */}
             <motion.div className="absolute inset-0 opacity-35">
               <motion.div initial={{ backgroundPosition: "0 0" }} animate={{ backgroundPosition: "-100px -100px" }} transition={{ duration: 1.5, ease: "linear", repeat: 1, repeatType: "loop" }}>
-              <Image
-                src="/images/intro/deathstroke-advanced-hud.png"
-                alt="Deathstroke HUD"
-                layout="fill"
-                objectFit="cover"
-                priority
-              />
+              <div className="w-full h-full bg-gradient-to-br from-orange-900 via-orange-800 to-orange-700 opacity-50" />
               </motion.div>
             </motion.div>
             <motion.div
@@ -1318,7 +1393,9 @@ export default function ThemeChangeAnimator() {
               transition={{ duration: 0.7, delay: 4.0, ease: "easeInOut" }}
             >
               <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 1.2, ease: "easeOut" }}>
-              <Image src="/images/deathstroke-logo.png" alt="Deathstroke Logo" width={150} height={150} />
+              <div className="w-[150px] h-[150px] bg-gradient-to-br from-orange-600 to-orange-800 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                DS
+              </div>
               </motion.div>
             </motion.div>
           </motion.div>

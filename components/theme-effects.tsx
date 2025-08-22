@@ -8,15 +8,31 @@ export default function ThemeEffects() {
   const { theme } = useTheme()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isClient, setIsClient] = useState(false)
+  const [hasPlayedIntro, setHasPlayedIntro] = useState(false)
 
+  // Premier useEffect - toujours appelé
   useEffect(() => {
     setIsClient(true)
+  }, [])
+
+  // Deuxième useEffect - toujours appelé
+  useEffect(() => {
+    if (!isClient) return
 
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
     window.addEventListener("mousemove", handleMouseMove)
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+    }
+  }, [isClient])
+
+  // Troisième useEffect - toujours appelé
+  useEffect(() => {
+    if (!isClient) return
 
     // Ajouter la classe d'effet au body
     if (theme) {
@@ -33,13 +49,40 @@ export default function ThemeEffects() {
         document.body.classList.add(`${theme}-effect`)
       }
     }
+  }, [theme, isClient])
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
+  // Quatrième useEffect - toujours appelé
+  useEffect(() => {
+    if (!isClient) return
+
+    // Vérifier si l'intro a déjà été jouée dans cette session
+    if (typeof window !== 'undefined') {
+      const sessionIntroPlayed = sessionStorage.getItem('themeIntroPlayed')
+      if (sessionIntroPlayed) {
+        setHasPlayedIntro(true)
+      }
     }
-  }, [theme])
+  }, [isClient])
+
+  // Cinquième useEffect - toujours appelé
+  useEffect(() => {
+    if (!isClient || hasPlayedIntro || typeof window === 'undefined') return
+    
+    // Attendre un peu avant de marquer comme joué pour éviter les rechargements rapides
+    const timer = setTimeout(() => {
+      sessionStorage.setItem('themeIntroPlayed', 'true')
+      setHasPlayedIntro(true)
+    }, 1000)
+    
+    return () => clearTimeout(timer)
+  }, [isClient, hasPlayedIntro])
 
   if (!isClient) return null
+
+  // Afficher les effets seulement si on n'est pas sur les thèmes de base
+  if (theme === "light" || theme === "dark" || theme === "system") {
+    return null
+  }
 
   const renderThemeEffect = () => {
     switch (theme) {

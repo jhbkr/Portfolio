@@ -11,37 +11,129 @@ import { useTheme } from "@/components/theme-provider"
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+  const [currentPath, setCurrentPath] = useState('/')
   const { theme } = useTheme()
 
+  // Initialisation côté client
   useEffect(() => {
+    setIsClient(true)
+    setCurrentPath(window.location.pathname)
+    
+    // Écouter les changements de route
+    const handleRouteChange = () => {
+      setCurrentPath(window.location.pathname)
+    }
+    
+    window.addEventListener('popstate', handleRouteChange)
+    
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [isClient])
+
+  // Gérer les ancres dans l'URL au chargement de la page
+  useEffect(() => {
+    if (!isClient) return
+
+    const hash = window.location.hash
+    if (hash) {
+      // Attendre que la page soit chargée
+      setTimeout(() => {
+        const section = document.getElementById(hash.substring(1))
+        if (section) {
+          const offsetTop = section.offsetTop - 80
+          window.scrollTo({
+            top: offsetTop,
+            behavior: "smooth",
+          })
+        }
+      }, 100)
+    }
+  }, [isClient])
 
   const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId)
-    if (section) {
-      const offsetTop = section.offsetTop - 80
-      window.scrollTo({
-        top: offsetTop,
-        behavior: "smooth",
-      })
+    if (!isClient) return
+
+    // Si c'est un lien externe (commence par /), utiliser Next.js Link
+    if (sectionId.startsWith('/')) {
+      window.location.href = sectionId
       setMobileMenuOpen(false)
+      return
+    }
+    
+    // Vérifier si on est sur la page d'accueil ou la page freelance
+    const isOnHomePage = currentPath === '/'
+    const isOnFreelancePage = currentPath === '/freelance'
+    
+    // Si on est sur la page freelance et qu'on clique sur une section
+    if (isOnFreelancePage) {
+      const section = document.getElementById(sectionId)
+      if (section) {
+        const offsetTop = section.offsetTop - 80
+        window.scrollTo({
+          top: offsetTop,
+          behavior: "smooth",
+        })
+        setMobileMenuOpen(false)
+      }
+      return
+    }
+    
+    // Si on est sur la page d'accueil et qu'on clique sur une section
+    if (isOnHomePage) {
+      const section = document.getElementById(sectionId)
+      if (section) {
+        const offsetTop = section.offsetTop - 80
+        window.scrollTo({
+          top: offsetTop,
+          behavior: "smooth",
+        })
+        setMobileMenuOpen(false)
+      }
     }
   }
 
-  const navItems = [
+  // Sections pour la page d'accueil
+  const homeNavItems = [
     { name: "Accueil", href: "home" },
     { name: "À propos", href: "about" },
     { name: "Parcours", href: "timeline" },
     { name: "Projets", href: "projects" },
     { name: "Skills", href: "skills" },
+    { name: "Freelance", href: "/freelance" },
     { name: "Contact", href: "contact" },
   ]
+
+  // Sections pour la page freelance
+  const freelanceNavItems = [
+    { name: "Packs", href: "packs" },
+    { name: "Process", href: "process" },
+    { name: "TJM", href: "tjm" },
+    { name: "Devis", href: "devis" },
+    { name: "Options", href: "options" },
+    { name: "FAQ", href: "faq" },
+    { name: "Contact", href: "contact" },
+  ]
+
+  // Déterminer les sections à afficher selon la page
+  const getNavItems = () => {
+    if (!isClient) return homeNavItems
+    return currentPath === '/freelance' ? freelanceNavItems : homeNavItems
+  }
+
+  const navItems = getNavItems()
 
   const getThemeBorderColor = () => {
     switch (theme) {
@@ -60,6 +152,26 @@ export default function Header() {
       default:
         return "border-primary"
     }
+  }
+
+  // Éviter le rendu avant l'hydratation pour éviter les erreurs d'hydratation
+  if (!isClient) {
+    return (
+      <header className="fixed top-0 w-full z-50 transition-all duration-300 navbar-stable bg-background/90 backdrop-blur-md shadow-md border-b-2 border-primary">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="text-2xl font-bold">Jihad Bakari Portfolio</div>
+          <div className="hidden md:flex items-center space-x-6">
+            <div className="text-foreground/80">Accueil</div>
+            <div className="text-foreground/80">À propos</div>
+            <div className="text-foreground/80">Parcours</div>
+            <div className="text-foreground/80">Projets</div>
+            <div className="text-foreground/80">Skills</div>
+            <div className="text-foreground/80">Freelance</div>
+            <div className="text-foreground/80">Contact</div>
+          </div>
+        </div>
+      </header>
+    )
   }
 
   return (
@@ -84,10 +196,20 @@ export default function Header() {
             theme === "deathstroke" && "text-[#FF8C00]",
           )}
         >
-          Jihad Bakari Portfolio
+          {currentPath === '/freelance' ? 'Jihad Bakari Freelance' : 'Jihad Bakari Portfolio'}
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6">
+          {/* Bouton retour vers portfolio si on est sur la page freelance */}
+          {currentPath === '/freelance' && (
+            <Link
+              href="/"
+              className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1 px-3 py-1 rounded-md border border-border hover:bg-background/50"
+            >
+              ← Retour Portfolio
+            </Link>
+          )}
+          
           {navItems.map((item) => (
             <button
               key={item.name}
@@ -112,6 +234,16 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden bg-background/95 backdrop-blur-md">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+            {/* Bouton retour vers portfolio si on est sur la page freelance */}
+            {currentPath === '/freelance' && (
+              <Link
+                href="/"
+                className="text-foreground/80 hover:text-foreground transition-colors text-left flex items-center gap-2 px-3 py-1 rounded-md border border-border hover:bg-background/50"
+              >
+                ← Retour Portfolio
+              </Link>
+            )}
+            
             {navItems.map((item) => (
               <button
                 key={item.name}

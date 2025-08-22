@@ -1,4 +1,4 @@
-// File: /home/epitech-msc-14/ProjetPerso/Portfolio1/app/layout.tsx
+// File: /Users/jhbkr/Desktop/Portfolio/Portfolio/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

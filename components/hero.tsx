@@ -10,9 +10,16 @@ import { useEffect, useState } from "react"
 
 export default function Hero() {
   const { theme } = useTheme()
-  const [backgroundImage, setBackgroundImage] = useState("/placeholder.svg?height=800&width=1200")
+  const [isClient, setIsClient] = useState(false)
+  const [backgroundImage, setBackgroundImage] = useState("/images/wallpapers/TeenTitan-wallpaper.jpeg")
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+    
     // Définir l'image de fond en fonction du thème
     switch (String(theme)) {
       case "robin":
@@ -42,7 +49,7 @@ export default function Hero() {
       default:
         setBackgroundImage("/images/wallpapers/TeenTitan-wallpaper.jpeg")
     }
-  }, [theme])
+  }, [theme, isClient])
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId)
@@ -56,6 +63,15 @@ export default function Hero() {
   }
 
   const getHeroBackground = () => {
+    // Retourner un style par défaut pour le SSR
+    if (!isClient) {
+      return {
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }
+    }
+
     if (theme === "light" || theme === "dark") {
       return {
         backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
@@ -113,7 +129,7 @@ export default function Hero() {
   return (
     <section id="home" className="min-h-screen pt-16 flex items-center relative" style={getHeroBackground()}>
       {/* Overlay blanc en light pour lisibilité */}
-      {theme === "light" && (
+      {isClient && theme === "light" && (
         <div className="absolute inset-0 bg-white/70 z-0 pointer-events-none" />
       )}
       <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
@@ -128,12 +144,12 @@ export default function Hero() {
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
               Jihad Bakari - <span
                 className={cn(
-                  theme === "robin" && "text-[#FF0000]",
-                  theme === "starfire" && "text-[#FF69B4]",
-                  theme === "cyborg" && "text-[#4169E1]",
-                  theme === "beastboy" && "text-[#32CD32]",
-                  theme === "raven" && "text-[#663399]",
-                  (theme as string) === "deathstroke" && "text-[#FF8C00]",
+                  isClient && theme === "robin" && "text-[#FF0000]",
+                  isClient && theme === "starfire" && "text-[#FF69B4]",
+                  isClient && theme === "cyborg" && "text-[#4169E1]",
+                  isClient && theme === "beastboy" && "text-[#32CD32]",
+                  isClient && theme === "raven" && "text-[#663399]",
+                  isClient && (theme as string) === "deathstroke" && "text-[#FF8C00]",
                 )}
               >
                 Développeur Web
@@ -148,12 +164,12 @@ export default function Hero() {
                 size="lg"
                 className={cn(
                   "group",
-                  theme === "robin" && "bg-[#FF0000] hover:bg-[#FF0000]/90",
-                  theme === "starfire" && "bg-[#FF69B4] hover:bg-[#FF69B4]/90",
-                  theme === "cyborg" && "bg-[#4169E1] hover:bg-[#4169E1]/90",
-                  theme === "beastboy" && "bg-[#32CD32] hover:bg-[#32CD32]/90",
-                  theme === "raven" && "bg-[#663399] hover:bg-[#663399]/90",
-                  (theme as string) === "deathstroke" && "bg-[#FF8C00] hover:bg-[#FF8C00]/90",
+                  isClient && theme === "robin" && "bg-[#FF0000] hover:bg-[#FF0000]/90",
+                  isClient && theme === "starfire" && "bg-[#FF69B4] hover:bg-[#FF69B4]/90",
+                  isClient && theme === "cyborg" && "bg-[#4169E1] hover:bg-[#4169E1]/90",
+                  isClient && theme === "beastboy" && "bg-[#32CD32] hover:bg-[#32CD32]/90",
+                  isClient && theme === "raven" && "bg-[#663399] hover:bg-[#663399]/90",
+                  isClient && (theme as string) === "deathstroke" && "bg-[#FF8C00] hover:bg-[#FF8C00]/90",
                 )}
                 onClick={() => scrollToSection("projects")}
               >
@@ -188,15 +204,21 @@ export default function Hero() {
               className={cn(
                 "relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden",
                 "border-4 card-glow",
-                theme === "robin" && "border-[#FF0000]",
-                theme === "starfire" && "border-[#FF69B4]",
-                theme === "cyborg" && "border-[#4169E1]",
-                theme === "beastboy" && "border-[#32CD32]",
-                theme === "raven" && "border-[#663399]",
-                (theme as string) === "deathstroke" && "border-[#FF8C00]",
+                isClient && theme === "robin" && "border-[#FF0000]",
+                isClient && theme === "starfire" && "border-[#FF69B4]",
+                isClient && theme === "cyborg" && "border-[#4169E1]",
+                isClient && theme === "beastboy" && "border-[#32CD32]",
+                isClient && theme === "raven" && "border-[#663399]",
+                isClient && (theme as string) === "deathstroke" && "border-[#FF8C00]",
               )}
             >
-              <Image src="/images/photo/CVPhoto.jpg" alt="Profile photo" fill className="object-cover" />
+              <Image 
+                src="/images/photo/CVPhoto.jpg" 
+                alt="Profile photo" 
+                fill 
+                className="object-cover"
+                sizes="(max-width: 768px) 256px, 320px"
+              />
             </div>
           </motion.div>
         </div>
