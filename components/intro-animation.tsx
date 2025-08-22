@@ -91,7 +91,7 @@ export default function IntroAnimation() {
 
     // Après quelques secondes, le projecteur "trouve" sa cible
     const targetTimer = setTimeout(() => {
-      setSpotlightPosition({ x: 0, y: 0 }) // Vrai centre de l'écran
+      setSpotlightPosition({ x: 50, y: 50 }) // Centre de l'écran (50% de la largeur et hauteur)
       setFoundTarget(true)
       clearInterval(interval)
 
