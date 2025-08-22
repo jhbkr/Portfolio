@@ -62,6 +62,9 @@ export default function Footer() {
               <Link href="/cgv" className="text-muted-foreground hover:text-foreground transition-colors">
                 CGV
               </Link>
+              <Link href="/politique-confidentialite" className="text-muted-foreground hover:text-foreground transition-colors">
+                Politique de confidentialité
+              </Link>
               <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
                 Contact
               </Link>

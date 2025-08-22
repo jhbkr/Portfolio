@@ -340,7 +340,7 @@ export default function FreelanceContactForm() {
                     <Label htmlFor="accepteRGPD" className="text-sm leading-relaxed">
                       J'accepte que mes données soient traitées conformément à la{" "}
                       <a 
-                        href="/mentions-legales" 
+                        href="/politique-confidentialite" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-primary hover:underline font-medium"
