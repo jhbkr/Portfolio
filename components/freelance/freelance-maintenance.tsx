@@ -157,7 +157,7 @@ export default function FreelanceMaintenance() {
               )}>
                 {plan.recommended && (
                   <div className={cn(
-                    "absolute -top-3 -right-3 bg-gradient-to-r from-primary to-primary/80 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg border-2 border-white/20 transform rotate-3 z-10",
+                    "absolute top-4 right-4 bg-gradient-to-r from-primary to-primary/90 text-white px-3 py-1.5 text-xs font-semibold rounded-lg shadow-md z-10",
                     isClient && theme === "robin" && "from-[#FF0000] to-[#CC0000]",
                     isClient && theme === "starfire" && "from-[#FF69B4] to-[#FF1493]",
                     isClient && theme === "cyborg" && "from-[#4169E1] to-[#0000CD]",
