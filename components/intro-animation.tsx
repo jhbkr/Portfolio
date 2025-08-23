@@ -91,7 +91,7 @@ export default function IntroAnimation() {
 
     // Après quelques secondes, le projecteur "trouve" sa cible
     const targetTimer = setTimeout(() => {
-      setSpotlightPosition({ x: 0, y: 0 }) // Centre des images (position relative au conteneur flex)
+      setSpotlightPosition({ x: 0, y: 0 })
       setFoundTarget(true)
       clearInterval(interval)
 
@@ -750,15 +750,14 @@ export default function IntroAnimation() {
           {/* Projecteur qui se déplace */}
           <motion.div
             className="absolute w-[300px] h-[300px] rounded-full pointer-events-none"
-            initial={{ opacity: 0, scale: 0.5 }}
             animate={{
               x: spotlightPosition.x + "vw",
               y: spotlightPosition.y + "vh",
-              opacity: foundTarget ? 1 : [0.4, 0.8, 0.6],
-              scale: foundTarget ? 1.2 : [0.9, 1.2, 1.0],
+              opacity: foundTarget ? 1 : [0.3, 0.7, 0.5],
+              scale: foundTarget ? 1.2 : [0.8, 1.1, 0.9],
             }}
             transition={{
-              duration: foundTarget ? 0.3 : 0.6,
+              duration: foundTarget ? 0.5 : 1,
               ease: "easeInOut",
             }}
             style={{

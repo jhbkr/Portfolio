@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { Check, Shield, Zap, Star, Clock, AlertCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
+import React from "react"
 
 export default function FreelanceMaintenance() {
   const { theme } = useTheme()
@@ -156,15 +157,7 @@ export default function FreelanceMaintenance() {
                 plan.recommended && isClient && theme === "deathstroke" && "ring-[#FF8C00]",
               )}>
                 {plan.recommended && (
-                  <div className={cn(
-                    "absolute top-4 right-4 bg-gradient-to-r from-primary to-primary/90 text-white px-3 py-1.5 text-xs font-semibold rounded-lg shadow-md z-10",
-                    isClient && theme === "robin" && "from-[#FF0000] to-[#CC0000]",
-                    isClient && theme === "starfire" && "from-[#FF69B4] to-[#FF1493]",
-                    isClient && theme === "cyborg" && "from-[#4169E1] to-[#0000CD]",
-                    isClient && theme === "beastboy" && "from-[#32CD32] to-[#228B22]",
-                    isClient && theme === "raven" && "from-[#663399] to-[#4B0082]",
-                    isClient && theme === "deathstroke" && "from-[#FF8C00] to-[#FF4500]",
-                  )}>
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-primary/90 text-white px-3 py-1 text-sm font-medium rounded-full shadow-lg">
                     ⭐ Recommandé
                   </div>
                 )}
@@ -180,15 +173,17 @@ export default function FreelanceMaintenance() {
                       isClient && theme === "raven" && "bg-[#663399]/10",
                       isClient && theme === "deathstroke" && "bg-[#FF8C00]/10",
                     )}>
-                      <plan.icon className={cn(
-                        "h-8 w-8",
-                        isClient && theme === "robin" && "text-[#FF0000]",
-                        isClient && theme === "starfire" && "text-[#FF69B4]",
-                        isClient && theme === "cyborg" && "text-[#4169E1]",
-                        isClient && theme === "beastboy" && "text-[#32CD32]",
-                        isClient && theme === "raven" && "text-[#663399]",
-                        isClient && theme === "deathstroke" && "text-[#FF8C00]",
-                      )} />
+                      {React.createElement(plan.icon, {
+                        className: cn(
+                          "h-8 w-8",
+                          isClient && theme === "robin" && "text-[#FF0000]",
+                          isClient && theme === "starfire" && "text-[#FF69B4]",
+                          isClient && theme === "cyborg" && "text-[#4169E1]",
+                          isClient && theme === "beastboy" && "text-[#32CD32]",
+                          isClient && theme === "raven" && "text-[#663399]",
+                          isClient && theme === "deathstroke" && "text-[#FF8C00]",
+                        )
+                      })}
                     </div>
                   </div>
                   <CardTitle className="text-2xl mb-2">{plan.title}</CardTitle>

@@ -4,11 +4,20 @@ import { useTheme } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { Briefcase, GraduationCap, Languages, User } from "lucide-react"
 import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
 
 export default function About() {
   const { theme } = useTheme()
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const getThemeColor = () => {
+    if (!isClient) {
+      return "bg-primary"
+    }
     switch (theme) {
       case "robin":
         return "bg-[#FF0000]"
@@ -28,6 +37,9 @@ export default function About() {
   }
 
   const getThemeTextColor = () => {
+    if (!isClient) {
+      return "text-primary"
+    }
     switch (theme) {
       case "robin":
         return "text-[#FF0000]"
@@ -47,6 +59,9 @@ export default function About() {
   }
 
   const getThemeBorderColor = () => {
+    if (!isClient) {
+      return "border-primary"
+    }
     switch (theme) {
       case "robin":
         return "border-[#FF0000]"
@@ -124,14 +139,14 @@ export default function About() {
                 className={cn(
                   "mx-4 p-6 rounded-xl border-2 min-w-[300px] md:min-w-[400px] max-w-[400px]",
                   "card-glow",
-                  getThemeBorderColor(),
+                  isClient && getThemeBorderColor(),
                 )}
               >
                 <div className="flex items-center mb-4">
-                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center mr-3", getThemeColor())}>
+                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center mr-3", isClient && getThemeColor())}>
                     {section.icon}
                   </div>
-                  <h3 className={cn("text-xl font-bold", getThemeTextColor())}>{section.title}</h3>
+                  <h3 className={cn("text-xl font-bold", isClient && getThemeTextColor())}>{section.title}</h3>
                 </div>
 
                 <ul className="space-y-2">
