@@ -168,26 +168,104 @@ export default function IntroAnimation() {
       case "robin":
         return (
           <>
-            {/* Effet de gadgets de Robin */}
-            {currentCharacter === 0 && (
+            {/* Masque de lumière - Effet "détecté par le spot" */}
+            {currentCharacter === 0 && foundTarget && (
               <motion.div
-                className="absolute"
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  left: mousePositionRef.current.x - 15,
-                  top: mousePositionRef.current.y - 15,
-                  pointerEvents: "none",
+                  mixBlendMode: "screen",
+                  mask: "radial-gradient(circle at center, white 0%, transparent 70%)",
+                  WebkitMask: "radial-gradient(circle at center, white 0%, transparent 70%)",
                 }}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 0.8 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
               >
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="rgba(255, 0, 0, 0.8)">
-                  <path d="M17,2 L17,5 L19,5 L19,7 L22,7 L22,9 L19,9 L19,11 L17,11 L17,14 L14,14 L14,11 L12,11 L12,9 L14,9 L14,7 L12,7 L12,5 L14,5 L14,2 L17,2 Z M7,7 L7,9 L9,9 L9,7 L7,7 Z M7,11 L7,13 L9,13 L9,11 L7,11 Z M7,15 L7,17 L9,17 L9,15 L7,15 Z M3,7 L3,9 L5,9 L5,7 L3,7 Z M3,11 L3,13 L5,13 L5,11 L3,11 Z M3,15 L3,17 L5,17 L5,15 L3,15 Z" />
+                <div className="absolute inset-0 bg-gradient-to-b from-red-500/20 to-transparent" />
+              </motion.div>
+            )}
+
+            {/* Camera shake - Quand le grappin accroche */}
+            {currentCharacter === 0 && foundTarget && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                animate={{
+                  x: [0, -2, 2, -1, 1, 0],
+                  y: [0, 1, -1, 2, -2, 0],
+                }}
+                transition={{
+                  duration: 0.3,
+                  delay: 1.2,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
+
+            {/* Gouttes sur la lentille - Effet pluie ciné */}
+            {currentCharacter === 0 && (
+              <>
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={`raindrop-${i}`}
+                    className="absolute w-2 h-2 rounded-full bg-white/30"
+                    style={{
+                      left: `${15 + i * 15}%`,
+                      top: `${10 + i * 12}%`,
+                    }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{
+                      opacity: [0, 0.6, 0],
+                      scale: [0, 1, 0.8],
+                      y: [0, 20, 40],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "loop",
+                      delay: i * 0.3,
+                    }}
+                  />
+                ))}
+              </>
+            )}
+
+            {/* Batarang en gros plan avec motion blur - Effet "wahou" */}
+            {currentCharacter === 0 && foundTarget && (
+              <motion.div
+                className="absolute w-32 h-32 pointer-events-none"
+                style={{
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  filter: "blur(2px)",
+                }}
+                initial={{
+                  x: "-200%",
+                  y: "-200%",
+                  rotate: 0,
+                  scale: 0.5,
+                  opacity: 0,
+                }}
+                animate={{
+                  x: "200%",
+                  y: "200%",
+                  rotate: 720,
+                  scale: 2,
+                  opacity: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay: 1.5,
+                  ease: "easeInOut",
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill="rgba(255, 0, 0, 0.9)" className="w-full h-full">
+                  <path d="M12,2L4,12L12,22L20,12L12,2M12,5.5L17,12L12,18.5L7,12L12,5.5Z" />
                 </svg>
               </motion.div>
             )}
-            {/* Batarangs volants - Optimisé */}
+
+            {/* Batarangs volants - Version améliorée */}
             {[...Array(3)].map((_, i) => (
               <motion.div
                 key={`batarang-${i}`}
@@ -195,53 +273,54 @@ export default function IntroAnimation() {
                 style={{
                   color: "rgba(255, 0, 0, 0.8)",
                 }}
-                                  initial={{
-                    x: `${20 + i * 30}%`,
-                    y: "100%",
-                    rotate: 0,
-                  }}
-                  animate={{
-                    x: `${20 + i * 30}%`,
-                    y: "-10%",
-                    rotate: 360 * 3,
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                    delay: i * 0.8,
-                  }}
+                initial={{
+                  x: `${20 + i * 30}%`,
+                  y: "100%",
+                  rotate: 0,
+                }}
+                animate={{
+                  x: `${20 + i * 30}%`,
+                  y: "-10%",
+                  rotate: 360 * 3,
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "loop",
+                  delay: i * 0.8,
+                }}
               >
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12,2L4,12L12,22L20,12L12,2M12,5.5L17,12L12,18.5L7,12L12,5.5Z" />
                 </svg>
               </motion.div>
             ))}
-            {/* Fumée de Gotham - Optimisé */}
+
+            {/* Fumée de Gotham - Version améliorée */}
             <div className="absolute inset-0 pointer-events-none">
               {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={`smoke-${i}`}
                   className="absolute rounded-full"
-                                      style={{
-                      background: "rgba(100,100,100,0.2)",
-                      width: `${40 + i * 10}px`,
-                      height: `${40 + i * 10}px`,
-                      left: `${10 + i * 20}%`,
-                      top: `${20 + i * 15}%`,
-                    }}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{
-                      opacity: [0, 0.2, 0],
-                      scale: [0.5, 1.2, 1.5],
-                      y: [0, -30, -60],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Number.POSITIVE_INFINITY,
-                      repeatType: "loop",
-                      delay: i * 1,
-                    }}
+                  style={{
+                    background: "rgba(100,100,100,0.2)",
+                    width: `${40 + i * 10}px`,
+                    height: `${40 + i * 10}px`,
+                    left: `${10 + i * 20}%`,
+                    top: `${20 + i * 15}%`,
+                  }}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{
+                    opacity: [0, 0.2, 0],
+                    scale: [0.5, 1.2, 1.5],
+                    y: [0, -30, -60],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "loop",
+                    delay: i * 1,
+                  }}
                 />
               ))}
             </div>
@@ -251,91 +330,205 @@ export default function IntroAnimation() {
       case "starfire":
         return (
           <>
-            {/* Effet d'énergie stellaire */}
+            {/* Comète avec rubans plasma */}
             {currentCharacter === 1 && (
               <motion.div
-                className="absolute"
+                className="absolute w-4 h-4 pointer-events-none"
                 style={{
-                  left: mousePositionRef.current.x - 20,
-                  top: mousePositionRef.current.y - 20,
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
+                  left: "20%",
+                  top: "30%",
                   background: "radial-gradient(circle, rgba(255,105,180,1) 0%, rgba(255,105,180,0) 70%)",
-                  boxShadow: "0 0 15px 8px rgba(255,105,180,0.5)",
-                  pointerEvents: "none",
+                  boxShadow: "0 0 20px 10px rgba(255,105,180,0.6)",
                 }}
-                initial={{ scale: 0, opacity: 0 }}
+                initial={{ x: "-100%", y: "50%", scale: 0 }}
                 animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.8, 0.4, 0.8],
+                  x: "50%",
+                  y: "50%",
+                  scale: [0, 1, 0.5],
                 }}
                 transition={{
                   duration: 1.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
+                  ease: "easeInOut",
+                }}
+              >
+                {/* Rubans plasma en orbite */}
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={`plasma-${i}`}
+                    className="absolute w-1 h-20"
+                    style={{
+                      background: "linear-gradient(to bottom, rgba(255,105,180,0.8), transparent)",
+                      left: "50%",
+                      top: "50%",
+                      transformOrigin: "center top",
+                    }}
+                    initial={{ rotate: i * 120, scaleY: 0 }}
+                    animate={{
+                      rotate: [i * 120, i * 120 + 360],
+                      scaleY: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      delay: 0.5 + i * 0.2,
+                      ease: "easeInOut",
+                    }}
+                  />
+                ))}
+              </motion.div>
+            )}
+
+            {/* Iris qui se referme - Signature Starfire */}
+            {currentCharacter === 1 && foundTarget && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "conic-gradient(from 0deg, transparent, rgba(255,105,180,0.3), transparent)",
+                  borderRadius: "50%",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+                initial={{ width: "100vw", height: "100vh", opacity: 0 }}
+                animate={{
+                  width: "0px",
+                  height: "0px",
+                  opacity: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 1,
+                  delay: 1.8,
+                  ease: "easeInOut",
                 }}
               />
             )}
-            {/* Rayons d'énergie - Optimisé */}
+
+            {/* Explosion douce - Signature Starfire */}
+            {currentCharacter === 1 && foundTarget && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "radial-gradient(circle, rgba(255,105,180,0.2) 0%, transparent 70%)",
+                }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{
+                  scale: [0, 2, 3],
+                  opacity: [0, 0.6, 0],
+                }}
+                transition={{
+                  duration: 1.2,
+                  delay: 2.2,
+                  ease: "easeOut",
+                }}
+              />
+            )}
+
+            {/* Bokeh cosmique - Grands disques flous qui respirent */}
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={`bokeh-${i}`}
+                className="absolute rounded-full"
+                style={{
+                  background: "radial-gradient(circle, rgba(255,105,180,0.1) 0%, transparent 70%)",
+                  width: `${80 + i * 40}px`,
+                  height: `${80 + i * 40}px`,
+                  left: `${20 + i * 15}%`,
+                  top: `${30 + i * 10}%`,
+                  filter: "blur(10px)",
+                }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{
+                  opacity: [0, 0.3, 0],
+                  scale: [0.5, 1.2, 0.8],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "reverse",
+                  delay: i * 0.5,
+                }}
+              />
+            ))}
+
+            {/* Gravité lumineuse - Distorsion finale */}
+            {currentCharacter === 1 && foundTarget && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "radial-gradient(ellipse at center, transparent 0%, rgba(255,105,180,0.1) 50%, transparent 100%)",
+                }}
+                initial={{ scale: 1, opacity: 0 }}
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0, 0.4, 0],
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay: 2.5,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
+
+            {/* Rayons d'énergie - Version améliorée */}
             {[...Array(4)].map((_, i) => (
               <motion.div
                 key={`ray-${i}`}
                 className="absolute"
-                                  style={{
-                    width: "2px",
-                    height: `${60 + i * 20}px`,
-                    background: "rgba(255,105,180,0.8)",
-                    boxShadow: "0 0 8px 4px rgba(255,105,180,0.4)",
-                    left: `${20 + i * 20}%`,
-                    top: `${10 + i * 25}%`,
-                    transformOrigin: "center bottom",
-                  }}
-                  initial={{
-                    scaleY: 0,
-                    opacity: 0,
-                    rotate: i * 45,
-                  }}
-                  animate={{
-                    scaleY: 1,
-                    opacity: [0, 0.8, 0],
-                    rotate: i * 45,
-                  }}
-                  transition={{
-                    duration: 0.8,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                    delay: i * 0.4,
-                  }}
+                style={{
+                  width: "2px",
+                  height: `${60 + i * 20}px`,
+                  background: "rgba(255,105,180,0.8)",
+                  boxShadow: "0 0 8px 4px rgba(255,105,180,0.4)",
+                  left: `${20 + i * 20}%`,
+                  top: `${10 + i * 25}%`,
+                  transformOrigin: "center bottom",
+                }}
+                initial={{
+                  scaleY: 0,
+                  opacity: 0,
+                  rotate: i * 45,
+                }}
+                animate={{
+                  scaleY: 1,
+                  opacity: [0, 0.8, 0],
+                  rotate: i * 45,
+                }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "loop",
+                  delay: i * 0.4,
+                }}
               />
             ))}
-            {/* Étoiles flottantes - Optimisé */}
+
+            {/* Étoiles flottantes - Version améliorée */}
             {[...Array(8)].map((_, i) => (
               <motion.div
                 key={`star-${i}`}
                 className="absolute"
-                                  style={{
-                    width: `${3 + i}px`,
-                    height: `${3 + i}px`,
-                    background: "rgba(255,255,255,0.9)",
-                    boxShadow: "0 0 5px 2px rgba(255,105,180,0.7)",
-                    borderRadius: "50%",
-                    left: `${15 + i * 12}%`,
-                    top: `${20 + i * 10}%`,
-                  }}
-                  initial={{
-                    opacity: 0.2,
-                  }}
-                  animate={{
-                    opacity: [0.2, 0.8, 0.2],
-                    scale: [1, 1.3, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                    delay: i * 0.3,
-                  }}
+                style={{
+                  width: `${3 + i}px`,
+                  height: `${3 + i}px`,
+                  background: "rgba(255,255,255,0.9)",
+                  boxShadow: "0 0 5px 2px rgba(255,105,180,0.7)",
+                  borderRadius: "50%",
+                  left: `${15 + i * 12}%`,
+                  top: `${20 + i * 10}%`,
+                }}
+                initial={{
+                  opacity: 0.2,
+                }}
+                animate={{
+                  opacity: [0.2, 0.8, 0.2],
+                  scale: [1, 1.3, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "reverse",
+                  delay: i * 0.3,
+                }}
               />
             ))}
           </>
@@ -344,80 +537,80 @@ export default function IntroAnimation() {
       case "beastboy":
         return (
           <>
-            {/* Effet de transformation animale */}
+            {/* Morphing "silhouette → emoji → photo" */}
             {currentCharacter === 2 && (
-              <motion.div
-                className="absolute"
-                style={{
-                  left: mousePositionRef.current.x - 25,
-                  top: mousePositionRef.current.y - 25,
-                  width: "50px",
-                  height: "50px",
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(50,205,50,0.3) 0%, rgba(50,205,50,0) 70%)",
-                  pointerEvents: "none",
-                }}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
-                }}
-              >
-                {/* Silhouettes d'animaux qui changent */}
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={Math.floor(Date.now() / 3000) % 3} // Change toutes les 3 secondes
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    {Math.floor(Date.now() / 3000) % 3 === 0 && (
-                      <svg viewBox="0 0 24 24" fill="rgba(50,205,50,0.8)" width="50" height="50">
-                        <path d="M8,3L8,7.5L10,9.5L10,11.5L8,13.5L8,15.5L11,18.5L11,20.5L9,21.5L7,20.5L7,18.5L5,16.5L3,17.5L2,16.5L3,14.5L5,13.5L5,11.5L3,9.5L5,7.5L5,3L8,3M19,3L22,7.5L20,9.5L18,13.5L19,15.5L19,20.5L16,21.5L13,20.5L13,18.5L16,17.5L16,15.5L15,13.5L15,9.5L14,7.5L16,3L19,3Z" />
-                      </svg>
-                    )}
-                    {Math.floor(Date.now() / 3000) % 3 === 1 && (
-                      <svg viewBox="0 0 24 24" fill="rgba(50,205,50,0.8)" width="50" height="50">
-                        <path d="M21,9H19V7H21V9M21,5H19V3H21V5M19,11H21V13H19V11M21,19H19V17H21V19M17,3H15V5H17V3M13,3H11V5H13V3M17,19H15V21H17V19M17,11H15V13H17V11M9,3H7V5H9V3M5,3H3V5H5V3M9,19H7V21H9V19M5,19H3V21H5V19M3,11H5V13H3V11M3,7H5V9H3V7M13,19H11V21H13V19M13,11H11V13H13V11Z" />
-                      </svg>
-                    )}
-                    {Math.floor(Date.now() / 3000) % 3 === 2 && (
-                      <svg viewBox="0 0 24 24" fill="rgba(50,205,50,0.8)" width="50" height="50">
-                        <path d="M12,3C13.74,3 15.36,3.5 16.74,4.35C17.38,3.53 18.38,3 19.5,3A3.5,3.5 0 0,1 23,6.5C23,8 22.05,9.28 20.72,9.78C20.9,10.5 21,11.23 21,12A9,9 0 0,1 12,21A9,9 0 0,1 3,12C3,7.03 7.03,3 12,3Z" />
-                      </svg>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              </motion.div>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                {/* Phase 1: Silhouette animale verte */}
+                <motion.div
+                  className="absolute"
+                  initial={{ opacity: 1, scale: 1 }}
+                  animate={{ opacity: [1, 0, 0], scale: [1, 1.2, 0.8] }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                >
+                  <svg viewBox="0 0 24 24" fill="rgba(50,205,50,0.8)" width="100" height="100">
+                    <path d="M8,3L8,7.5L10,9.5L10,11.5L8,13.5L8,15.5L11,18.5L11,20.5L9,21.5L7,20.5L7,18.5L5,16.5L3,17.5L2,16.5L3,14.5L5,13.5L5,11.5L3,9.5L5,7.5L5,3L8,3M19,3L22,7.5L20,9.5L18,13.5L19,15.5L19,20.5L16,21.5L13,20.5L13,18.5L16,17.5L16,15.5L15,13.5L15,9.5L14,7.5L16,3L19,3Z" />
+                  </svg>
+                </motion.div>
+
+                {/* Flash de transition */}
+                <motion.div
+                  className="absolute inset-0 bg-white"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 0.2, delay: 0.8 }}
+                />
+
+                {/* Phase 2: Emoji */}
+                <motion.div
+                  className="absolute text-6xl"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: [0, 1, 0], scale: [0.5, 1, 0.8] }}
+                  transition={{ duration: 0.6, delay: 1.0 }}
+                >
+                  🐺
+                </motion.div>
+
+                {/* Flash de transition */}
+                <motion.div
+                  className="absolute inset-0 bg-white"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 0.2, delay: 1.6 }}
+                />
+
+                {/* Phase 3: Image finale */}
+                <motion.div
+                  className="absolute"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: [0, 1], scale: [0.8, 1] }}
+                  transition={{ duration: 0.4, delay: 1.8 }}
+                >
+                  <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-2xl font-bold">BB</span>
+                  </div>
+                </motion.div>
+              </div>
             )}
-            {/* Empreintes d'animaux - Optimisé */}
-            {[...Array(3)].map((_, i) => (
+            {/* Empreintes qui convergent vers le centre - "retour à l'humain" */}
+            {[...Array(8)].map((_, i) => (
               <motion.div
-                key={`paw-${i}`}
-                className="absolute"
+                key={`paw-converge-${i}`}
+                className="absolute w-4 h-4"
                 style={{
-                  width: "20px",
-                  height: "20px",
-                  opacity: 0.7,
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${20 + i * 10}%`,
+                  top: `${30 + i * 8}%`,
                 }}
-                initial={{ opacity: 0, rotate: Math.random() * 360 }}
+                initial={{ opacity: 0, scale: 0.5 }}
                 animate={{
                   opacity: [0, 0.7, 0],
-                  scale: [0.8, 1, 0.8],
+                  scale: [0.5, 1, 0.8],
+                  x: [0, -50 - i * 10],
+                  y: [0, -30 - i * 5],
                 }}
                 transition={{
-                  duration: 3,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatDelay: 10 + i * 3,
-                  delay: i * 2,
+                  duration: 2,
+                  delay: i * 0.1,
+                  ease: "easeInOut",
                 }}
               >
                 <svg viewBox="0 0 24 24" fill="rgba(50,205,50,0.7)">
@@ -425,6 +618,53 @@ export default function IntroAnimation() {
                 </svg>
               </motion.div>
             ))}
+
+            {/* Souffle de jungle - Fog vert en "wind sweep" horizontal */}
+            {currentCharacter === 2 && foundTarget && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, transparent 0%, rgba(50,205,50,0.1) 50%, transparent 100%)",
+                }}
+                initial={{ x: "-100%", opacity: 0 }}
+                animate={{
+                  x: "100%",
+                  opacity: [0, 0.3, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  delay: 2.0,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
+
+            {/* ADN double hélice */}
+            {currentCharacter === 2 && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={`dna-${i}`}
+                    className="absolute w-2 h-2 bg-green-400 rounded-full"
+                    style={{
+                      left: `${50 + Math.sin(i * 0.3) * 20}%`,
+                      top: `${10 + i * 4}%`,
+                    }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{
+                      opacity: [0, 0.8, 0],
+                      scale: [0, 1, 0.8],
+                    }}
+                    transition={{
+                      duration: 2,
+                      delay: i * 0.1,
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "loop",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
             {/* Feuilles volantes - Optimisé */}
             {[...Array(2)].map((_, i) => (
               <motion.div
@@ -466,33 +706,132 @@ export default function IntroAnimation() {
       case "raven":
         return (
           <>
-            {/* Effet de magie noire */}
-            {currentCharacter === 3 && (
+            {/* Anneau d'encre qui se propage - Effet arcane */}
+            {currentCharacter === 3 && foundTarget && (
               <motion.div
-                className="absolute"
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  left: mousePositionRef.current.x - 20,
-                  top: mousePositionRef.current.y - 20,
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(102,51,153,0.6) 0%, rgba(102,51,153,0) 70%)",
-                  boxShadow: "0 0 15px 8px rgba(102,51,153,0.3)",
-                  pointerEvents: "none",
+                  mixBlendMode: "difference",
                 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.6, 0.3, 0.6],
+                  scale: [0, 2, 4],
+                  opacity: [0, 0.3, 0],
                 }}
                 transition={{
                   duration: 1.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
+                  delay: 0.5,
+                  ease: "easeOut",
+                }}
+              >
+                <div className="absolute inset-0 rounded-full border-4 border-purple-600" />
+              </motion.div>
+            )}
+
+            {/* Corbeaux qui forment un portail elliptique */}
+            {currentCharacter === 3 && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={`crow-${i}`}
+                    className="absolute w-6 h-6"
+                    style={{
+                      left: `${30 + i * 10}%`,
+                      top: `${20 + i * 15}%`,
+                    }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{
+                      opacity: [0, 1, 0],
+                      scale: [0, 1, 0.8],
+                      x: [0, 50 * Math.cos(i * 60 * Math.PI / 180)],
+                      y: [0, 30 * Math.sin(i * 60 * Math.PI / 180)],
+                    }}
+                    transition={{
+                      duration: 2,
+                      delay: i * 0.2,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" fill="rgba(102,51,153,0.8)">
+                      <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,13L11,9L3,17V19L11,11L15,15L21,9Z" />
+                    </svg>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Explosion en particules violettes */}
+            {currentCharacter === 3 && foundTarget && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(15)].map((_, i) => (
+                  <motion.div
+                    key={`particle-${i}`}
+                    className="absolute w-2 h-2 bg-purple-600 rounded-full"
+                    style={{
+                      left: "50%",
+                      top: "50%",
+                    }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{
+                      opacity: [0, 1, 0],
+                      scale: [0, 1, 0],
+                      x: [0, (Math.random() - 0.5) * 200],
+                      y: [0, (Math.random() - 0.5) * 200],
+                    }}
+                    transition={{
+                      duration: 2,
+                      delay: 1.5 + i * 0.1,
+                      ease: "easeOut",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Time-freeze sur "Zinthos" */}
+            {currentCharacter === 3 && foundTarget && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "rgba(102,51,153,0.1)",
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{
+                  duration: 0.2,
+                  delay: 2.0,
                 }}
               />
             )}
-            {/* Pluie - Optimisé */}
+
+            {/* Runes flottantes */}
+            {[...Array(8)].map((_, i) => (
+              <motion.div
+                key={`rune-${i}`}
+                className="absolute w-8 h-8 text-purple-600"
+                style={{
+                  left: `${15 + i * 12}%`,
+                  top: `${25 + i * 8}%`,
+                }}
+                initial={{ opacity: 0, rotate: 0 }}
+                animate={{
+                  opacity: [0, 0.6, 0],
+                  rotate: [0, 360],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "loop",
+                  delay: i * 0.3,
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" />
+                </svg>
+              </motion.div>
+            ))}
+
+            {/* Pluie - Version améliorée */}
             <div className="absolute inset-0 pointer-events-none">
               {[...Array(20)].map((_, i) => (
                 <motion.div
@@ -516,35 +855,37 @@ export default function IntroAnimation() {
                 />
               ))}
             </div>
-            {/* Nuages sombres - Optimisé */}
+
+            {/* Nuages sombres - Version améliorée */}
             {[...Array(2)].map((_, i) => (
               <motion.div
                 key={`cloud-${i}`}
                 className="absolute rounded-full"
-                                  style={{
-                    background: "rgba(40, 20, 60, 0.5)",
-                    width: 120 + i * 30,
-                    height: 70 + i * 20,
-                    filter: "blur(20px)",
-                    top: `${20 + i * 30}%`,
-                  }}
-                  initial={{
-                    x: "-20%",
-                    opacity: 0,
-                  }}
-                  animate={{
-                    x: "120%",
-                    opacity: [0, 0.5, 0],
-                  }}
-                  transition={{
-                    duration: 12,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                    delay: i * 4,
-                  }}
+                style={{
+                  background: "rgba(40, 20, 60, 0.5)",
+                  width: 120 + i * 30,
+                  height: 70 + i * 20,
+                  filter: "blur(20px)",
+                  top: `${20 + i * 30}%`,
+                }}
+                initial={{
+                  x: "-20%",
+                  opacity: 0,
+                }}
+                animate={{
+                  x: "120%",
+                  opacity: [0, 0.5, 0],
+                }}
+                transition={{
+                  duration: 12,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "loop",
+                  delay: i * 4,
+                }}
               />
             ))}
-            {/* Éclairs - Optimisé */}
+
+            {/* Éclairs - Version améliorée */}
             {[...Array(2)].map((_, i) => (
               <motion.div
                 key={`lightning-${i}`}
@@ -580,54 +921,216 @@ export default function IntroAnimation() {
       case "cyborg":
         return (
           <>
-            {/* Effet de circuits électroniques */}
-            {currentCharacter === 4 && (
+            {/* Glitch datamosh au boot */}
+            {currentCharacter === 4 && foundTarget && (
               <motion.div
-                className="absolute"
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  left: mousePositionRef.current.x,
-                  top: mousePositionRef.current.y,
-                  width: "2px",
-                  height: "2px",
-                  background: "rgba(65,105,225,0.9)",
-                  boxShadow: "0 0 5px 3px rgba(65,105,225,0.5)",
-                  pointerEvents: "none",
+                  background: "linear-gradient(90deg, transparent 0%, rgba(65,105,225,0.1) 50%, transparent 100%)",
+                }}
+                initial={{ opacity: 0, y: 0 }}
+                animate={{
+                  opacity: [0, 1, 0],
+                  y: [0, 2, 0],
+                }}
+                transition={{
+                  duration: 0.1,
+                  delay: 0.3,
+                  repeat: 3,
+                  repeatType: "loop",
+                }}
+              />
+            )}
+
+            {/* Scanlines */}
+            {currentCharacter === 4 && foundTarget && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={`scanline-${i}`}
+                    className="absolute w-full h-[1px] bg-blue-500/20"
+                    style={{
+                      top: `${i * 5}%`,
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{
+                      duration: 0.05,
+                      delay: 0.3 + i * 0.01,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Chroma split */}
+            {currentCharacter === 4 && foundTarget && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, rgba(255,0,0,0.1) 0%, transparent 50%, rgba(0,0,255,0.1) 100%)",
+                }}
+                initial={{ x: 0 }}
+                animate={{ x: [0, 2, -2, 0] }}
+                transition={{
+                  duration: 0.1,
+                  delay: 0.4,
+                  repeat: 2,
+                  repeatType: "loop",
+                }}
+              />
+            )}
+
+            {/* Ouverture de l'œil rouge */}
+            {currentCharacter === 4 && foundTarget && (
+              <motion.div
+                className="absolute w-16 h-16 bg-red-600 rounded-full pointer-events-none"
+                style={{
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  boxShadow: "0 0 20px 10px rgba(255,0,0,0.5)",
                 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{
-                  scale: [1, 15, 1],
-                  opacity: [0, 0.8, 0],
+                  scale: [0, 1, 1.2, 1],
+                  opacity: [0, 1, 0.8, 1],
                 }}
-                transition={{ duration: 1 }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.6,
+                  ease: "easeOut",
+                }}
               />
             )}
-            {/* Lignes de circuit - Optimisé */}
+
+            {/* Onde sonique avec circuits imprimés */}
+            {currentCharacter === 4 && foundTarget && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={`sonic-${i}`}
+                    className="absolute rounded-full border-2 border-blue-500"
+                    style={{
+                      left: "50%",
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: `${100 + i * 50}px`,
+                      height: `${100 + i * 50}px`,
+                    }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{
+                      scale: [0, 1, 2],
+                      opacity: [0, 0.6, 0],
+                    }}
+                    transition={{
+                      duration: 1,
+                      delay: 1.0 + i * 0.2,
+                      ease: "easeOut",
+                    }}
+                  >
+                    {/* Circuits imprimés */}
+                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                      <path
+                        d="M10,50 L30,30 L70,30 L90,50 L70,70 L30,70 Z"
+                        fill="none"
+                        stroke="rgba(65,105,225,0.8)"
+                        strokeWidth="1"
+                        strokeDasharray="5,5"
+                      />
+                    </svg>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Overlay HUD - Barres CPU */}
+            {currentCharacter === 4 && foundTarget && (
+              <div className="absolute top-4 left-4 pointer-events-none">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={`cpu-${i}`}
+                    className="w-20 h-2 bg-gray-800 border border-blue-500 mb-1"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: 1.5 + i * 0.1,
+                    }}
+                  >
+                    <motion.div
+                      className="h-full bg-blue-500"
+                      initial={{ width: "0%" }}
+                      animate={{ width: `${60 + i * 10}%` }}
+                      transition={{
+                        duration: 0.5,
+                        delay: 1.8 + i * 0.1,
+                      }}
+                    />
+                  </motion.div>
+                ))}
+                
+                {/* "LINK ESTABLISHED" */}
+                <motion.div
+                  className="text-blue-500 text-xs font-mono mt-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: 2.0,
+                  }}
+                >
+                  LINK ESTABLISHED
+                </motion.div>
+              </div>
+            )}
+
+            {/* Extinction des barres HUD */}
+            {currentCharacter === 4 && foundTarget && (
+              <div className="absolute top-4 left-4 pointer-events-none">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={`cpu-off-${i}`}
+                    className="w-20 h-2 bg-gray-800 border border-blue-500 mb-1"
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 0 }}
+                    transition={{
+                      duration: 0.2,
+                      delay: 2.5 + i * 0.1,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Lignes de circuit - Version améliorée */}
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={`circuit-${i}`}
                 className="absolute"
-                                  style={{
-                    width: `${80 + i * 20}px`,
-                    height: "2px",
-                    background: "rgba(65,105,225,0.7)",
-                    left: `${10 + i * 20}%`,
-                    top: `${20 + i * 15}%`,
-                  }}
-                  initial={{ scaleX: 0, opacity: 0 }}
-                  animate={{
-                    scaleX: 1,
-                    opacity: [0, 0.8, 0],
-                    x: [0, 15, 0],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                    delay: i * 1,
-                  }}
+                style={{
+                  width: `${80 + i * 20}px`,
+                  height: "2px",
+                  background: "rgba(65,105,225,0.7)",
+                  left: `${10 + i * 20}%`,
+                  top: `${20 + i * 15}%`,
+                }}
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{
+                  scaleX: 1,
+                  opacity: [0, 0.8, 0],
+                  x: [0, 15, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "loop",
+                  delay: i * 1,
+                }}
               />
             ))}
-            {/* Points de données - Optimisé */}
+
+            {/* Points de données - Version améliorée */}
             {[...Array(8)].map((_, i) => (
               <motion.div
                 key={`data-${i}`}
@@ -657,7 +1160,90 @@ export default function IntroAnimation() {
       case "deathstroke":
         return (
           <>
-            {/* Effet de visée et de cible */}
+            {/* Scope overlay avec distance/vent */}
+            {currentCharacter === 5 && foundTarget && (
+              <div className="absolute top-4 right-4 pointer-events-none">
+                <motion.div
+                  className="text-orange-500 text-xs font-mono"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
+                >
+                  <div>DIST: 247m</div>
+                  <div>WIND: 3.2m/s</div>
+                  <div>HUM: 67%</div>
+                </motion.div>
+              </div>
+            )}
+
+            {/* "TARGET ACQUIRED" */}
+            {currentCharacter === 5 && foundTarget && (
+              <motion.div
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-orange-500 text-lg font-mono pointer-events-none"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1.0 }}
+              >
+                TARGET ACQUIRED
+              </motion.div>
+            )}
+
+            {/* Bullet time - Duplication fantôme */}
+            {currentCharacter === 5 && foundTarget && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={`ghost-${i}`}
+                    className="absolute w-32 h-32 border-2 border-orange-500 rounded-full"
+                    style={{
+                      left: "50%",
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    initial={{ opacity: 0, scale: 1 }}
+                    animate={{
+                      opacity: [0, 0.3, 0],
+                      scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                      duration: 0.3,
+                      delay: 1.5 + i * 0.1,
+                      ease: "easeOut",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Ricochets étincelles qui tracent "DS" */}
+            {currentCharacter === 5 && foundTarget && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(8)].map((_, i) => (
+                  <motion.div
+                    key={`ricochet-${i}`}
+                    className="absolute w-1 h-1 bg-orange-500 rounded-full"
+                    style={{
+                      left: `${30 + i * 5}%`,
+                      top: `${40 + i * 3}%`,
+                    }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{
+                      opacity: [0, 1, 0],
+                      scale: [0, 1, 0],
+                      x: [0, (i % 2 === 0 ? 20 : -20)],
+                      y: [0, (i % 3 === 0 ? 15 : -15)],
+                    }}
+                    transition={{
+                      duration: 0.2,
+                      delay: 2.0 + i * 0.05,
+                      ease: "easeOut",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Effet de visée et de cible - Version améliorée */}
             {currentCharacter === 5 && (
               <>
                 <motion.div
@@ -698,7 +1284,8 @@ export default function IntroAnimation() {
                 />
               </>
             )}
-            {/* Étincelles et balles - Optimisé */}
+
+            {/* Étincelles et balles - Version améliorée */}
             {[...Array(4)].map((_, i) => (
               <motion.div
                 key={`spark-${i}`}
