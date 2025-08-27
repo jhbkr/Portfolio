@@ -1,12 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
-
+export async function POST(request: NextRequest) {
   try {
+    const body = await request.json()
+    
     const {
       name,
       email,
@@ -21,11 +19,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       message,
       cgvAccepted,
       rgpdAccepted
-    } = req.body
+    } = body
 
     // Validation basique
     if (!name || !email || !source) {
-      return res.status(400).json({ error: 'Missing required fields' })
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
     }
 
     // Insérer dans Supabase
@@ -53,13 +54,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (error) {
       console.error('Supabase error:', error)
-      return res.status(500).json({ error: 'Database error' })
+      return NextResponse.json(
+        { error: 'Database error' },
+        { status: 500 }
+      )
     }
 
-    // Envoyer email de notification (optionnel)
-    // await sendNotificationEmail({ name, email, source, message })
-
-    res.status(200).json({ 
+    return NextResponse.json({ 
       success: true, 
       message: 'Contact submitted successfully',
       data 
@@ -67,6 +68,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   } catch (error) {
     console.error('API error:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
-} 
+}
