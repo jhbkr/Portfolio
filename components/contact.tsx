@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTheme } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,11 +13,16 @@ import { motion } from "framer-motion"
 
 export default function Contact() {
   const { theme } = useTheme()
+  const [isClient, setIsClient] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   })
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -30,20 +35,34 @@ export default function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          source: 'portfolio',
+          formType: 'contact'
+        }),
       });
+      
+      const result = await res.json();
+      
       if (res.ok) {
-        alert("Message envoyé !");
+        alert("Message envoyé avec succès !");
         setFormData({ name: "", email: "", message: "" });
       } else {
-        alert("Erreur lors de l'envoi du message.");
+        alert(`Erreur lors de l'envoi du message: ${result.error || 'Erreur inconnue'}`);
       }
     } catch (err) {
+      console.error('Erreur:', err);
       alert("Erreur lors de l'envoi du message.");
     }
   }
 
   const getThemeColor = () => {
+    if (!isClient) {
+      return "bg-primary hover:bg-primary/90"
+    }
+
     switch (theme) {
       case "robin":
         return "bg-[#FF0000] hover:bg-[#FF0000]/90"
@@ -63,6 +82,10 @@ export default function Contact() {
   }
 
   const getThemeBorderColor = () => {
+    if (!isClient) {
+      return "border-primary"
+    }
+
     switch (theme) {
       case "robin":
         return "border-[#FF0000]"
@@ -82,6 +105,10 @@ export default function Contact() {
   }
 
   const getThemeTextColor = () => {
+    if (!isClient) {
+      return "text-primary"
+    }
+
     switch (theme) {
       case "robin":
         return "text-[#FF0000]"

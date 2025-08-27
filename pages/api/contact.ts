@@ -1,39 +1,72 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next'
+import { supabase } from '@/lib/supabase'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
-
-  const { name, email, message } = req.body;
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ message: "Missing fields" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Portfolio Contact <onboarding@resend.dev>",
-        to: ["karimbkr269200@gmail.com"],
-        subject: "Nouveau message depuis le portfolio",
-        html: `<p><strong>Nom:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong><br/>${message}</p>`,
-      }),
-    });
+    const {
+      name,
+      email,
+      phone,
+      company,
+      source,
+      formType,
+      projectObjective,
+      chosenPack,
+      budgetRange,
+      desiredDeadline,
+      message,
+      cgvAccepted,
+      rgpdAccepted
+    } = req.body
 
-    if (!response.ok) {
-      const error = await response.json();
-      return res.status(500).json({ message: error.message || "Erreur lors de l'envoi du message." });
+    // Validation basique
+    if (!name || !email || !source) {
+      return res.status(400).json({ error: 'Missing required fields' })
     }
 
-    return res.status(200).json({ message: "Message envoyé avec succès !" });
+    // Insérer dans Supabase
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert([
+        {
+          name,
+          email,
+          phone,
+          company,
+          source,
+          form_type: formType,
+          project_objective: projectObjective,
+          chosen_pack: chosenPack,
+          budget_range: budgetRange,
+          desired_deadline: desiredDeadline,
+          message,
+          cgv_accepted: cgvAccepted,
+          rgpd_accepted: rgpdAccepted,
+          status: 'new'
+        }
+      ])
+      .select()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return res.status(500).json({ error: 'Database error' })
+    }
+
+    // Envoyer email de notification (optionnel)
+    // await sendNotificationEmail({ name, email, source, message })
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Contact submitted successfully',
+      data 
+    })
+
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Erreur lors de l'envoi du message." });
+    console.error('API error:', error)
+    res.status(500).json({ error: 'Internal server error' })
   }
 } 

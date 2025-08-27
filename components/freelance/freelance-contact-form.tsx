@@ -77,7 +77,33 @@ export default function FreelanceContactForm() {
     setIsSubmitting(true)
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.nom,
+          email: formData.email,
+          phone: formData.telephone,
+          company: formData.societe,
+          source: 'freelance',
+          formType: 'contact',
+          projectObjective: formData.objectif,
+          chosenPack: formData.pack,
+          budgetRange: formData.budget,
+          desiredDeadline: formData.delais,
+          message: formData.commentaires,
+          cgvAccepted: formData.accepteCGV,
+          rgpdAccepted: formData.accepteRGPD
+        })
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erreur lors de l\'envoi')
+      }
       
       setIsSubmitted(true)
       setFormData({
