@@ -84,7 +84,7 @@ export default function FreelanceContactForm() {
         },
         body: JSON.stringify({
           name: formData.nom,
-          femail: formData.email,
+          email: formData.email,
           phone: formData.telephone,
           company: formData.societe,
           source: 'freelance',
