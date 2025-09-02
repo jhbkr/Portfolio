@@ -57,6 +57,15 @@ export default function ProjectsCarousel() {
       githubUrl: "#",
       liveUrl: "#",
     },
+    {
+      id: 4,
+      title: "E-commerce",
+      description: "Projet e-commerce complet réalisé en équipe de 6 personnes. En tant que Scrum Master, j'ai coordonné le développement de toutes les fonctionnalités : catalogue produits, panier d'achat, système de paiement, gestion des commandes, authentification utilisateur, panel administrateur et système de notation.",
+      image: "/placeholder.svg?height=300&width=500",
+      tags: ["React", "Node.js", "Express", "MongoDB", "Stripe", "JWT", "Redux"],
+      githubUrl: "#",
+      liveUrl: "#",
+    },
   ]
 
   const nextProject = () => {
@@ -210,6 +219,16 @@ export default function ProjectsCarousel() {
                           playsInline
                           poster="/placeholder.svg?height=300&width=500"
                         />
+                      ) : project.title === "E-commerce" ? (
+                        <video
+                          src="/images/project/demo.mp4"
+                          className="object-cover w-full h-full absolute inset-0"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          poster="/placeholder.svg?height=300&width=500"
+                        />
                       ) : (
                         <Image
                           src={project.image || "/placeholder.svg"}
@@ -254,6 +273,16 @@ export default function ProjectsCarousel() {
                     {projects[currentIndex].title === "Site Portfolio" ? (
                       <video
                         src="/images/project/Portfolio.webm"
+                        className="object-cover w-full h-full absolute inset-0"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        poster="/placeholder.svg?height=300&width=500"
+                      />
+                    ) : projects[currentIndex].title === "E-commerce" ? (
+                      <video
+                        src="/images/project/demo.mp4"
                         className="object-cover w-full h-full absolute inset-0"
                         autoPlay
                         loop
