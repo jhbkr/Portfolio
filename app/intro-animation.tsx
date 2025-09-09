@@ -788,7 +788,12 @@ export default function IntroAnimation() {
                     width={250}
                     height={250}
                     className="object-contain"
-                    style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))" }}
+                    style={{ 
+                      filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))",
+                      width: "auto",
+                      height: "auto"
+                    }}
+                    priority
                   />
                 </div>
 

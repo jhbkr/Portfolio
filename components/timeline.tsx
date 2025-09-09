@@ -4,6 +4,7 @@ import { useTheme } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { GraduationCap, MapPin } from "lucide-react"
+import { useState, useEffect } from "react"
 
 type TimelineItem = {
   period: string
@@ -14,6 +15,11 @@ type TimelineItem = {
 
 export default function Timeline() {
   const { theme } = useTheme()
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const experiences: TimelineItem[] = [
     {
@@ -58,6 +64,9 @@ export default function Timeline() {
   ]
 
   const getThemeColor = () => {
+    if (!isClient) {
+      return "bg-primary"
+    }
     switch (theme) {
       case "robin":
         return "bg-[#FF0000]"
@@ -77,6 +86,9 @@ export default function Timeline() {
   }
 
   const getThemeTextColor = () => {
+    if (!isClient) {
+      return "text-primary"
+    }
     switch (theme) {
       case "robin":
         return "text-[#FF0000]"
@@ -96,6 +108,9 @@ export default function Timeline() {
   }
 
   const getThemeBorderColor = () => {
+    if (!isClient) {
+      return "border-primary"
+    }
     switch (theme) {
       case "robin":
         return "border-[#FF0000]"
@@ -112,6 +127,27 @@ export default function Timeline() {
       default:
         return "border-primary"
     }
+  }
+
+  if (!isClient) {
+    return (
+      <section id="timeline" className="py-24 md:py-32 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Mon Parcours</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Découvrez mon parcours académique et professionnel.</p>
+          </div>
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center py-12">
+              <div className="animate-pulse">
+                <div className="h-4 bg-muted rounded w-1/2 mx-auto mb-4"></div>
+                <div className="h-4 bg-muted rounded w-1/3 mx-auto"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
