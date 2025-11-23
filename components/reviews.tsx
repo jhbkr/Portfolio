@@ -20,6 +20,11 @@ export default function Reviews() {
   const { theme } = useTheme()
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Simuler le chargement des avis en temps réel
   useEffect(() => {
@@ -83,6 +88,8 @@ export default function Reviews() {
   }, [])
 
   const getThemeColor = () => {
+    if (!mounted) return "bg-primary"
+
     switch (theme) {
       case "robin":
         return "bg-[#FF0000]"
@@ -102,6 +109,8 @@ export default function Reviews() {
   }
 
   const getThemeTextColor = () => {
+    if (!mounted) return "text-primary"
+
     switch (theme) {
       case "robin":
         return "text-[#FF0000]"
@@ -121,6 +130,8 @@ export default function Reviews() {
   }
 
   const getThemeBorderColor = () => {
+    if (!mounted) return "border-primary"
+
     switch (theme) {
       case "robin":
         return "border-[#FF0000]"

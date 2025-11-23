@@ -4,11 +4,19 @@ import { useTheme } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { Github, Twitter, Linkedin, Instagram } from "lucide-react"
+import { useState, useEffect } from "react"
 
 export default function Footer() {
   const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const getThemeColor = () => {
+    if (!mounted) return "text-primary"
+
     switch (theme) {
       case "robin":
         return "text-[#FF0000]"
@@ -26,6 +34,8 @@ export default function Footer() {
   }
 
   const getThemeBgColor = () => {
+    if (!mounted) return "bg-primary/10"
+
     switch (theme) {
       case "robin":
         return "bg-[#FF0000]/10"
