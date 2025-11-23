@@ -23,7 +23,7 @@ export default function IntroAnimation() {
   // Vérifier si l'intro a déjà été jouée dans cette session
   useEffect(() => {
     if (hasCheckedSession || typeof window === 'undefined') return
-    
+
     // Vérifier immédiatement pour éviter l'affichage du contenu principal
     const sessionIntroPlayed = sessionStorage.getItem('introAnimationPlayed')
     if (sessionIntroPlayed) {
@@ -115,7 +115,7 @@ export default function IntroAnimation() {
 
       // Throttling pour améliorer les performances
       if (mousePositionRef.current.throttle) return
-      
+
       mousePositionRef.current.throttle = true
       setTimeout(() => {
         mousePositionRef.current.throttle = false
@@ -1069,7 +1069,7 @@ export default function IntroAnimation() {
                     />
                   </motion.div>
                 ))}
-                
+
                 {/* "LINK ESTABLISHED" */}
                 <motion.div
                   className="text-blue-500 text-xs font-mono mt-2"
@@ -1386,8 +1386,7 @@ export default function IntroAnimation() {
                   <Image
                     src={characters[currentCharacter].image || "/placeholder.svg"}
                     alt={characters[currentCharacter].name}
-                    width={250}
-                    height={250}
+                    fill
                     className="object-contain"
                     style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))" }}
                   />

@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/components/theme-provider"
@@ -22,12 +22,19 @@ type Project = {
 }
 
 export default function ProjectsCarousel() {
-  const { theme } = useTheme()
+  const { theme: rawTheme } = useTheme()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const theme = mounted ? rawTheme : "system"
 
   const projects: Project[] = [
     {
@@ -237,7 +244,7 @@ export default function ProjectsCarousel() {
                           className={project.title === "My Snapchat" ? "object-contain" : "object-cover"}
                         />
                       )}
-          </div>
+                    </div>
                   </Card>
                 </motion.div>
               );
@@ -291,12 +298,12 @@ export default function ProjectsCarousel() {
                         poster="/placeholder.svg?height=300&width=500"
                       />
                     ) : (
-                    <Image
-                      src={projects[currentIndex].image || "/placeholder.svg"}
-                      alt={projects[currentIndex].title}
-                      fill
+                      <Image
+                        src={projects[currentIndex].image || "/placeholder.svg"}
+                        alt={projects[currentIndex].title}
+                        fill
                         className={projects[currentIndex].title === "My Snapchat" ? "object-contain" : "object-cover"}
-                    />
+                      />
                     )}
                     <div
                       className={cn("absolute bottom-0 left-0 h-2 transition-all duration-500", getThemeColor())}
@@ -403,37 +410,37 @@ export default function ProjectsCarousel() {
               </Button>
             </div>
           </div>
-          </div>
+        </div>
 
         {/* Indicateurs positionnés en dessous du carrousel */}
-        <motion.div 
+        <motion.div
           className="flex justify-center gap-3 mt-8"
           initial={{ opacity: 0, y: 10 }}
-          animate={{ 
+          animate={{
             opacity: isTransitioning ? 1 : 0,
             y: isTransitioning ? 0 : 10
           }}
           transition={{ duration: 0.3 }}
         >
-            {projects.map((_, index) => (
-              <button
-                key={index}
+          {projects.map((_, index) => (
+            <button
+              key={index}
               onClick={() => goToProject(index)}
               disabled={isTransitioning}
-                className={cn(
+              className={cn(
                 "w-3 h-3 rounded-full transition-all duration-300 border-2 hover:scale-110",
-                  index === currentIndex ? getThemeColor() : "bg-transparent",
-                  theme === "robin" && "border-[#FF0000]",
-                  theme === "starfire" && "border-[#FF69B4]",
-                  theme === "cyborg" && "border-[#4169E1]",
-                  theme === "beastboy" && "border-[#32CD32]",
-                  theme === "raven" && "border-[#663399]",
-                  theme === "deathstroke" && "border-[#FF8C00]",
+                index === currentIndex ? getThemeColor() : "bg-transparent",
+                theme === "robin" && "border-[#FF0000]",
+                theme === "starfire" && "border-[#FF69B4]",
+                theme === "cyborg" && "border-[#4169E1]",
+                theme === "beastboy" && "border-[#32CD32]",
+                theme === "raven" && "border-[#663399]",
+                theme === "deathstroke" && "border-[#FF8C00]",
                 isTransitioning && "cursor-not-allowed"
-                )}
-                aria-label={`Aller à la diapositive ${index + 1}`}
-              />
-            ))}
+              )}
+              aria-label={`Aller à la diapositive ${index + 1}`}
+            />
+          ))}
         </motion.div>
       </div>
     </section>

@@ -17,6 +17,11 @@ type Skill = {
 export default function Skills() {
   const { theme } = useTheme()
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const skills: Skill[] = [
     {
@@ -179,6 +184,7 @@ export default function Skills() {
   }, [width, controls])
 
   const getThemeColor = () => {
+    if (!mounted) return "bg-primary"
     switch (theme) {
       case "robin":
         return "bg-[#FF0000]"
@@ -197,6 +203,7 @@ export default function Skills() {
   }
 
   const getThemeTextColor = () => {
+    if (!mounted) return "text-primary"
     switch (theme) {
       case "robin":
         return "text-[#FF0000]"
@@ -215,6 +222,7 @@ export default function Skills() {
   }
 
   const getThemeBorderColor = () => {
+    if (!mounted) return "border-primary"
     switch (theme) {
       case "robin":
         return "border-[#FF0000]"
@@ -265,7 +273,7 @@ export default function Skills() {
         </motion.div>
 
         <div className="overflow-hidden py-8 relative">
-              <motion.div
+          <motion.div
             className="flex whitespace-nowrap"
             ref={containerRef}
             animate={controls}

@@ -19,7 +19,7 @@ export default function Hero() {
 
   useEffect(() => {
     if (!isClient) return
-    
+
     // Définir l'image de fond en fonction du thème
     switch (String(theme)) {
       case "robin":
@@ -210,12 +210,13 @@ export default function Hero() {
                 isClient && (theme as string) === "deathstroke" && "border-[#FF8C00]",
               )}
             >
-              <Image 
-                src="/images/photo/CVPhoto.jpg" 
-                alt="Profile photo" 
-                fill 
+              <Image
+                src="/images/photo/CVPhoto.jpg"
+                alt="Profile photo"
+                fill
                 className="object-cover"
                 sizes="(max-width: 768px) 256px, 320px"
+                priority
               />
             </div>
           </motion.div>

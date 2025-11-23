@@ -88,7 +88,7 @@ export default function ThemeChangeAnimator() {
     const handleResize = () => {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight })
     }
-    
+
     // Fonction pour réinitialiser les animations (touche 'R')
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'r' || e.key === 'R') {
@@ -98,11 +98,11 @@ export default function ThemeChangeAnimator() {
         setLastPath(null)
       }
     }
-    
+
     window.addEventListener("resize", handleResize)
     window.addEventListener("keydown", handleKeyPress)
     handleResize()
-    
+
     return () => {
       window.removeEventListener("resize", handleResize)
       window.removeEventListener("keydown", handleKeyPress)
@@ -114,54 +114,54 @@ export default function ThemeChangeAnimator() {
       setActiveAnimation(null)
       return
     }
-    
+
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : null
-    
+
     // Si on est sur la page freelance, ne pas déclencher d'animation
     if (currentPath === '/freelance') {
       setLastPath(currentPath)
       return
     }
-    
+
     // Si on vient de freelance vers portfolio, déclencher l'animation
     const isComingFromFreelance = lastPath === '/freelance' && currentPath === '/'
-    
+
     // Sur le portfolio, déclencher l'animation normalement (sauf si on vient de freelance)
     if (currentPath === '/' && !isComingFromFreelance) {
       setAnimationKey((prevKey) => prevKey + 1)
       setActiveAnimation(theme)
-      
+
       if (theme === "beastboy") {
         setCurrentBeastBoyAnimalIndex(0) // Reset for Beast Boy
       }
-      
+
       const timer = setTimeout(() => {
         setActiveAnimation(null)
       }, ANIMATION_DURATION)
-      
+
       return () => {
         clearTimeout(timer)
       }
     }
-    
+
     // Si on vient de freelance vers portfolio, déclencher l'animation
     if (isComingFromFreelance) {
       setAnimationKey((prevKey) => prevKey + 1)
       setActiveAnimation(theme)
-      
+
       if (theme === "beastboy") {
         setCurrentBeastBoyAnimalIndex(0) // Reset for Beast Boy
       }
-      
+
       const timer = setTimeout(() => {
         setActiveAnimation(null)
       }, ANIMATION_DURATION)
-      
+
       return () => {
         clearTimeout(timer)
       }
     }
-    
+
     setLastPath(currentPath)
   }, [theme, lastPath])
 
@@ -177,16 +177,11 @@ export default function ThemeChangeAnimator() {
 
     switch (activeAnimation) {
       case "robin":
-        // PHASE 1 : Gotham + pluie + nuages + skyline
-        // PHASE 2 : Batsignal dynamique, scan, halo, R stylisé
-        // PHASE 3 : Gadgets Robin (batarangs, shurikens, fumigènes, grappin)
-        // PHASE 4 : Effet HUD/scan tech
-        // PHASE 5 : Apparition de Robin, glow, particules
-        const batsignalCircle = { x: w * 0.52, y: h * 0.28, r: w * 0.07 };
-        const batarangAngles = [0, Math.PI / 3, (2 * Math.PI) / 3, Math.PI, (4 * Math.PI) / 3, (5 * Math.PI) / 3];
-        const shurikenAngles = [Math.PI / 6, Math.PI / 2, (5 * Math.PI) / 6, (7 * Math.PI) / 6, (3 * Math.PI) / 2, (11 * Math.PI) / 6];
-        const grapStart = { x: w * 0.1, y: h * 0.9 };
-        const grapEnd = { x: w * 0.52, y: h * 0.28 };
+        // PHASE 1: THE EYES (REFINED SVG) (0s - 1.0s)
+        // PHASE 2: THE FLASH STEP (GOD SPEED) (1.0s - 2.2s)
+        // PHASE 3: THE TAKEDOWN (SHATTER) (2.2s - 2.8s)
+        // PHASE 4: THE VIGILANTE REVEAL (2.8s - 4.0s)
+
         return (
           <motion.div
             key={`robin-${animationKey}`}
@@ -196,95 +191,52 @@ export default function ThemeChangeAnimator() {
             animate="visible"
             exit="exit"
           >
-            {/* PHASE 1 : Gotham + pluie + nuages + skyline */}
-            <motion.div className="absolute inset-0" style={{ background: "linear-gradient(to top, #181a23 60%, transparent 100%)", zIndex: 1 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, ease: "easeOut" }} />
-            <motion.div className="absolute bottom-0 left-0 w-full h-2/5" style={{ zIndex: 2 }} initial={{ opacity: 0, y: 80 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}>
-              <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 0.9, ease: "easeOut" }} className="relative w-full h-full">
-                <Image 
-                  src="/images/intro/gotham-skyline.png" 
-                  alt="Gotham Skyline" 
-                  fill 
-                  className="filter grayscale brightness-30 object-cover" 
-                  priority 
-                  sizes="100vw"
+            {/* --- PHASE 1: THE EYES (REFINED SVG) --- */}
+
+            {/* Diagonal Slice Background */}
+            <motion.div
+              className="absolute inset-0 bg-[#050505]"
+              style={{
+                clipPath: "polygon(0 0, 100% 0, 100% 30%, 0 70%)",
+                zIndex: 10
+              }}
+              initial={{ x: "-100%" }}
+              animate={{ x: "0%" }}
+              transition={{ duration: 0.3, ease: "circOut" }}
+            >
+              {/* Heavy Rain in the slice (Parallax Layer 1) */}
+              {Array.from({ length: 60 }).map((_, i) => (
+                <motion.div
+                  key={`noir-rain-${i}`}
+                  className="absolute bg-white/30"
+                  style={{
+                    width: "1px",
+                    height: `${30 + Math.random() * 50}px`,
+                    left: `${Math.random() * 100}vw`,
+                    top: `${Math.random() * 100}vh`,
+                    transform: "rotate(20deg)"
+                  }}
+                  animate={{ y: [0, h] }}
+                  transition={{
+                    duration: 0.2 + Math.random() * 0.1,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
                 />
-              </motion.div>
+              ))}
             </motion.div>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <motion.div key={`robin-cloud-${i}`} className="absolute rounded-full" style={{ width: `${w * (0.5 + Math.random() * 0.3)}px`, height: `${h * (0.13 + Math.random() * 0.09)}px`, left: `${Math.random() * 60}%`, top: `${8 + i * 10}%`, background: `linear-gradient(90deg, #23242b 60%, #181a23 100%)`, opacity: 0.22 + i * 0.09, filter: `blur(${32 + i * 10}px)`, zIndex: 4 }} initial={{ x: -w * 0.2 * (i % 2 === 0 ? 1 : -1) }} animate={{ x: w * 0.2 * (i % 2 === 0 ? 1 : -1) }} transition={{ duration: 12 + i * 2, repeat: Infinity, repeatType: "reverse", ease: "linear" }} />
-            ))}
-            {Array.from({ length: 220 }).map((_, i) => (
-              <motion.div key={`robin-rain-${i}`} className="absolute" style={{ width: `${0.8 + Math.random() * 1.5}px`, height: `${18 + Math.random() * 32}px`, left: `${Math.random() * 100}vw`, top: `${Math.random() * 100}vh`, background: "linear-gradient(to bottom, #b3c6e7 60%, transparent 100%)", opacity: 0.18 + Math.random() * 0.5, filter: `blur(${Math.random() * 1.5}px)`, zIndex: 5 }} initial={{ y: "-40vh", opacity: 0 }} animate={{ y: "140vh", opacity: [0, 1, 0] }} transition={{ duration: 0.18 + Math.random() * 0.15, delay: Math.random() * 1.2, repeat: Infinity, ease: "linear" }} />
-            ))}
-            {/* PHASE 2 : Batsignal dynamique, scan, halo, R stylisé */}
-            <motion.div className="absolute" style={{ left: batsignalCircle.x - batsignalCircle.r, top: batsignalCircle.y - batsignalCircle.r, width: batsignalCircle.r * 2, height: batsignalCircle.r * 2, zIndex: 20, pointerEvents: "none" }} initial={{ opacity: 0, scale: 0.7, filter: "blur(12px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}>
-              <svg width="100%" height="100%" viewBox="0 0 100 100">
+
+            {/* SVG Mask Eyes */}
+            <motion.div
+              className="absolute top-[25%] left-[35%]"
+              style={{ zIndex: 11, transform: "translate(-50%, -50%) rotate(-10deg)" }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: [0, 1, 0], scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3, times: [0, 0.2, 1] }}
+            >
+              <svg width="200" height="100" viewBox="0 0 200 100">
                 <defs>
-                  <radialGradient id="batsignal-cloud" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#fffbe7" stopOpacity="0.95" />
-                    <stop offset="80%" stopColor="#ffe066" stopOpacity="0.7" />
-                    <stop offset="100%" stopColor="transparent" />
-                  </radialGradient>
-                </defs>
-                <ellipse cx="50" cy="50" rx="48" ry="48" fill="url(#batsignal-cloud)" opacity="0.95" />
-                {/* Halo animé */}
-                <motion.ellipse cx="50" cy="50" rx="54" ry="54" fill="url(#batsignal-cloud)" opacity={0.18} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: [0.8, 1.1, 0.95, 1], opacity: [0, 0.18, 0.1, 0.18] }} transition={{ duration: 1.8, delay: 0.9, repeat: Infinity, repeatType: "mirror" }} />
-                {/* R stylisé avec effet de scan */}
-                <motion.path d="M32 22 V 78 H 43 V 58 H 56 C 70 58 73 52 73 40 C 73 28 70 22 56 22 H 32 M 43 48 H 58 L 73 78" stroke="#181a23" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.8, delay: 1.3, ease: "easeInOut" }} style={{ filter: "drop-shadow(0 0 8px #ffe066)" }} />
-                {/* Scan lumineux tech */}
-                <motion.rect x="18" y="10" width="64" height="60" fill="url(#batsignal-cloud)" initial={{ opacity: 0, y: 60 }} animate={{ opacity: [0, 0.7, 0], y: [60, 10, 60] }} transition={{ duration: 0.8, delay: 1.3, ease: "easeInOut" }} style={{ mixBlendMode: "lighten" }} />
-              </svg>
-            </motion.div>
-            {/* PHASE 3 : Gadgets Robin */}
-            {batarangAngles.map((angle, i) => (
-              <motion.div key={`robin-batarang-${i}`} className="absolute" style={{ left: batsignalCircle.x + Math.cos(angle) * batsignalCircle.r * 1.2, top: batsignalCircle.y + Math.sin(angle) * batsignalCircle.r * 1.2, zIndex: 30, pointerEvents: "none" }} initial={{ scale: 0.2, opacity: 0, rotate: 0 }} animate={{ scale: [0.2, 1, 0.7], opacity: [0, 1, 0], rotate: [0, 360, 720] }} transition={{ duration: 0.9, delay: 1.7 + i * 0.06, times: [0, 0.7, 1], ease: "easeInOut" }}>
-                <Zap size={36} strokeWidth={2} className="text-yellow-400 drop-shadow-lg" />
-            </motion.div>
-            ))}
-            {shurikenAngles.map((angle, i) => (
-              <motion.div key={`robin-shuriken-${i}`} className="absolute" style={{ left: batsignalCircle.x + Math.cos(angle) * batsignalCircle.r * 1.7, top: batsignalCircle.y + Math.sin(angle) * batsignalCircle.r * 1.7, zIndex: 31, pointerEvents: "none" }} initial={{ scale: 0.2, opacity: 0, rotate: 0 }} animate={{ scale: [0.2, 1, 0.7], opacity: [0, 1, 0], rotate: [0, 360, 720] }} transition={{ duration: 0.9, delay: 1.9 + i * 0.06, times: [0, 0.7, 1], ease: "easeInOut" }}>
-                <Target size={28} strokeWidth={1.5} className="text-green-400 drop-shadow-lg" />
-                </motion.div>
-            ))}
-            {['#39ff14', '#ff1744', '#ffe066'].map((color, i) => (
-              <motion.div key={`robin-smoke-${i}`} className="absolute rounded-full" style={{ left: batsignalCircle.x + Math.cos(i * 2) * batsignalCircle.r * 0.7, top: batsignalCircle.y + Math.sin(i * 2) * batsignalCircle.r * 0.7, width: w * 0.13, height: w * 0.13, background: `radial-gradient(circle, ${color} 0%, transparent 80%)`, filter: "blur(18px)", opacity: 0.18, zIndex: 32 }} initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: [0.5, 1.2, 0.8], opacity: [0, 0.18, 0] }} transition={{ duration: 0.9, delay: 1.9 + i * 0.08, times: [0, 0.7, 1], ease: "easeInOut" }} />
-            ))}
-            {/* Grappin */}
-            <motion.div className="absolute" style={{ left: grapStart.x, top: grapStart.y, zIndex: 40, pointerEvents: "none" }} initial={{ x: 0, y: 0, scale: 0.5, opacity: 0, rotate: -45 }} animate={{ x: [0, grapEnd.x - grapStart.x], y: [0, grapEnd.y - grapStart.y], scale: [0.5, 1.2, 0.8], opacity: [0, 1, 0], rotate: [-45, 0, 20] }} transition={{ duration: 0.6, delay: 2.1, times: [0, 0.7, 1], ease: "easeInOut" }}>
-              <div style={{ width: "12px", height: "60px", background: "linear-gradient(180deg, #b3b3b3 60%, #23242b 100%)", borderRadius: "6px", boxShadow: "0 0 12px 2px #fffbe7" }} />
-              <div style={{ position: "absolute", left: "5px", top: "60px", width: "2px", height: "80px", background: "linear-gradient(180deg, #fffbe7 0%, #23242b 100%)", borderRadius: "2px", opacity: 0.7 }} />
-            </motion.div>
-            {/* PHASE 4 : Effet HUD/scan tech */}
-            <motion.div className="absolute inset-0 pointer-events-none" style={{ zIndex: 45 }} initial={{ opacity: 0 }} animate={{ opacity: [0, 0.7, 0.3, 0], scale: [1, 1.05, 1] }} transition={{ duration: 0.9, delay: 2.3, times: [0, 0.5, 1], ease: "easeInOut" }}>
-              {/* Lignes tech/HUD */}
-              {Array.from({ length: 8 }).map((_, i) => (
-                <motion.div key={`robin-hudline-${i}`} className="absolute" style={{ left: `${10 + i * 10}%`, top: "0%", width: "2px", height: "100%", background: "linear-gradient(180deg, #ffe066 0%, transparent 100%)", opacity: 0.12, filter: "blur(1.5px)" }} initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ duration: 0.5, delay: 2.3 + i * 0.03, ease: "easeOut" }} />
-              ))}
-              {Array.from({ length: 4 }).map((_, i) => (
-                <motion.div key={`robin-hudtarget-${i}`} className="absolute" style={{ left: `${20 + i * 20}%`, top: "40%", width: "60px", height: "60px", border: "2px solid #ffe066", borderRadius: "50%", opacity: 0.08, filter: "blur(1.5px)" }} initial={{ scale: 0.5 }} animate={{ scale: [0.5, 1.1, 0.9, 1] }} transition={{ duration: 0.8, delay: 2.5 + i * 0.06, repeat: Infinity, repeatType: "mirror" }} />
-              ))}
-            </motion.div>
-            {/* PHASE 5 : Reveal Robin couleur + fissure */}
-            <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" initial={{ opacity: 0, scale: 0.7, filter: "blur(18px)" }} animate={{ opacity: [0, 1, 1], scale: [0.7, 1.1, 1], filter: ["blur(18px)", "blur(0px)", "blur(0px)"] }} transition={{ duration: 0.9, delay: 2.8, times: [0, 0.5, 1], ease: "easeOut" }} style={{ zIndex: 50 }}>
-              <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 0.9, ease: "easeOut" }}>
-                <Image 
-                  src="/images/intro/robin.png" 
-                  alt="Robin Teen Titans" 
-                  width={320} 
-                  height={320} 
-                  style={{ objectFit: "contain", borderRadius: "50%", boxShadow: "0 0 60px 10px #ffe066, 0 0 120px 30px #181a23" }} 
-                  priority 
-                />
-              </motion.div>
-              {/* Particules lumineuses */}
-              {Array.from({ length: 24 }).map((_, i) => (
-                <motion.div key={`robin-particle-${i}`} className="absolute" style={{ left: "50%", top: "50%", width: "12px", height: "12px", borderRadius: "50%", background: i % 2 === 0 ? "#ffe066" : "#fffbe7", filter: "blur(2px)", zIndex: 51 }} initial={{ x: 0, y: 0, scale: 0.5, opacity: 1 }} animate={{ x: Math.cos((i / 24) * 2 * Math.PI) * 90, y: Math.sin((i / 24) * 2 * Math.PI) * 90, scale: [0.5, 1.2, 0.2], opacity: [1, 1, 0] }} transition={{ duration: 0.9, delay: 2.8, ease: "easeOut" }} />
-              ))}
-              {/* Effet de fissure finale (SVG) */}
-              <motion.svg width={w} height={h} className="absolute inset-0 pointer-events-none" style={{ zIndex: 999 }} initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.5, delay: 3.5, ease: "easeInOut" }}>
-                <polyline points={`${w * 0.5},${h * 0.5} ${w * 0.52},${h * 0.28} ${w * 0.6},${h * 0.1} ${w * 0.7},${h * 0.3} ${w * 0.8},${h * 0.5}`} stroke="#ffe066" strokeWidth="6" fill="none" filter="url(#fissure-glow)" />
-                <defs>
-                  <filter id="fissure-glow">
+                  <filter id="glow">
                     <feGaussianBlur stdDeviation="4" result="coloredBlur" />
                     <feMerge>
                       <feMergeNode in="coloredBlur" />
@@ -292,8 +244,235 @@ export default function ThemeChangeAnimator() {
                     </feMerge>
                   </filter>
                 </defs>
-              </motion.svg>
+                {/* Left Eye */}
+                <motion.path
+                  d="M 10 40 L 80 50 L 20 70 Z"
+                  fill="white"
+                  filter="url(#glow)"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.1, delay: 0.3 }}
+                />
+                {/* Right Eye */}
+                <motion.path
+                  d="M 190 40 L 120 50 L 180 70 Z"
+                  fill="white"
+                  filter="url(#glow)"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.1, delay: 0.3 }}
+                />
+              </svg>
             </motion.div>
+
+            {/* --- PHASE 2: THE FLASH STEP (GOD SPEED) --- */}
+
+            {/* Lightning Bolt SVG */}
+            <motion.svg
+              className="absolute inset-0 w-full h-full"
+              style={{ zIndex: 19 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0, 1, 0] }}
+              transition={{ duration: 0.4, delay: 1.2, times: [0, 0.1, 0.3, 0.4, 1] }}
+            >
+              <motion.path
+                d={`M ${w * 0.4} 0 L ${w * 0.5} ${h * 0.3} L ${w * 0.45} ${h * 0.5} L ${w * 0.6} ${h * 0.8} L ${w * 0.5} ${h}`}
+                stroke="white"
+                strokeWidth="4"
+                fill="none"
+                filter="url(#glow)"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.2, delay: 1.2 }}
+              />
+            </motion.svg>
+
+            {/* Flash Step Trails (Afterimages) */}
+            {[
+              { delay: 1.2, x: "20%", y: "30%", scale: 0.8, rotate: 10 },
+              { delay: 1.5, x: "80%", y: "20%", scale: 0.6, rotate: -5 },
+              { delay: 1.8, x: "50%", y: "60%", scale: 1.0, rotate: 0 }
+            ].map((flash, i) => (
+              <motion.div
+                key={`hunt-flash-${i}`}
+                className="absolute inset-0"
+                style={{ zIndex: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ duration: 0.25, delay: flash.delay }}
+              >
+                {/* Flash Background */}
+                <div className="absolute inset-0 bg-[#1a1c29]" />
+
+                {/* Ghost Trails */}
+                {[1, 2, 3].map((ghost) => (
+                  <div
+                    key={`ghost-${i}-${ghost}`}
+                    className="absolute w-[400px] h-[400px]"
+                    style={{
+                      left: flash.x,
+                      top: flash.y,
+                      transform: `translate(-50%, -50%) scale(${flash.scale}) rotate(${flash.rotate}deg) translate(${ghost * 20}px, ${ghost * 10}px)`,
+                      opacity: 0.3 / ghost,
+                      filter: "blur(4px)"
+                    }}
+                  >
+                    <Image
+                      src="/images/intro/robin-acrobatic-pose.png"
+                      alt="Shadow"
+                      fill
+                      className="object-contain brightness-0 invert"
+                    />
+                  </div>
+                ))}
+
+                {/* Main Silhouette */}
+                <div
+                  className="absolute w-[400px] h-[400px]"
+                  style={{
+                    left: flash.x,
+                    top: flash.y,
+                    transform: `translate(-50%, -50%) scale(${flash.scale}) rotate(${flash.rotate}deg)`
+                  }}
+                >
+                  <Image
+                    src="/images/intro/robin-acrobatic-pose.png"
+                    alt="Shadow"
+                    fill
+                    className="object-contain brightness-0"
+                  />
+                </div>
+              </motion.div>
+            ))}
+
+            {/* --- PHASE 3: THE TAKEDOWN (SHATTER) --- */}
+
+            {/* Realistic Glass Shatter SVG */}
+            <motion.div
+              className="absolute inset-0"
+              style={{ zIndex: 30 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 0.4, delay: 2.2 }}
+            >
+              {/* Chromatic Aberration Layers */}
+              {["red", "blue", "green"].map((color, i) => (
+                <motion.svg
+                  key={`shatter-${color}`}
+                  className="absolute inset-0 w-full h-full"
+                  style={{
+                    mixBlendMode: "screen",
+                    x: i * 5 - 10,
+                    y: i * 5 - 10
+                  }}
+                >
+                  <path d={`M 0 0 L ${w} ${h}`} stroke={color} strokeWidth="2" />
+                  <path d={`M ${w} 0 L 0 ${h}`} stroke={color} strokeWidth="2" />
+                  <path d={`M ${w / 2} 0 L ${w / 2} ${h}`} stroke={color} strokeWidth="2" />
+                  <path d={`M 0 ${h / 2} L ${w} ${h / 2}`} stroke={color} strokeWidth="2" />
+                  {/* Spiderweb center */}
+                  <circle cx={w / 2} cy={h / 2} r="50" fill="none" stroke={color} strokeWidth="2" />
+                  <circle cx={w / 2} cy={h / 2} r="100" fill="none" stroke={color} strokeWidth="2" />
+                  <circle cx={w / 2} cy={h / 2} r="150" fill="none" stroke={color} strokeWidth="2" />
+                </motion.svg>
+              ))}
+              <div className="absolute inset-0 bg-white/80 mix-blend-overlay" />
+            </motion.div>
+
+            {/* --- PHASE 4: THE VIGILANTE REVEAL --- */}
+
+            {/* Spotlight Beam */}
+            <motion.div
+              className="absolute top-0 left-1/2 w-[300px] h-[150vh] bg-gradient-to-b from-white/20 via-white/5 to-transparent blur-2xl"
+              style={{
+                zIndex: 35,
+                transform: "translateX(-50%) rotate(-15deg)",
+                transformOrigin: "top center"
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0.8] }}
+              transition={{ duration: 0.5, delay: 2.8 }}
+            />
+
+            {/* Parallax Rain (3 Layers) */}
+            {[
+              { count: 40, speed: 0.5, size: 20, z: 36, opacity: 0.2 }, // Back
+              { count: 60, speed: 0.3, size: 40, z: 37, opacity: 0.4 }, // Mid
+              { count: 30, speed: 0.1, size: 60, z: 42, opacity: 0.6 }  // Fore (in front of Robin)
+            ].map((layer, idx) => (
+              <motion.div
+                key={`rain-layer-${idx}`}
+                className="absolute inset-0"
+                style={{ zIndex: layer.z }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: layer.opacity }}
+                transition={{ delay: 2.8 }}
+              >
+                {Array.from({ length: layer.count }).map((_, i) => (
+                  <motion.div
+                    key={`rain-${idx}-${i}`}
+                    className="absolute bg-white"
+                    style={{
+                      width: "2px",
+                      height: `${layer.size + Math.random() * 20}px`,
+                      left: `${Math.random() * 100}vw`,
+                      top: `${Math.random() * 100}vh`,
+                      transform: "rotate(15deg)"
+                    }}
+                    animate={{ y: [0, h] }}
+                    transition={{
+                      duration: layer.speed + Math.random() * 0.1,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                  />
+                ))}
+              </motion.div>
+            ))}
+
+            {/* Robin Reveal */}
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{ zIndex: 40 }}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1, delay: 2.8, ease: "easeOut" }}
+            >
+              <div className="relative w-[400px] h-[400px]">
+                <Image
+                  src="/images/intro/robin.png"
+                  alt="Robin Teen Titans"
+                  fill
+                  className="object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+                  priority
+                />
+                {/* Dark Overlay on Robin for mood */}
+                <div className="absolute inset-0 bg-black/20 mix-blend-multiply rounded-full" />
+              </div>
+            </motion.div>
+
+            {/* Floating Debris/Particles */}
+            {Array.from({ length: 20 }).map((_, i) => (
+              <motion.div
+                key={`debris-${i}`}
+                className="absolute bg-gray-400 rounded-full"
+                style={{
+                  width: Math.random() * 4 + "px",
+                  height: Math.random() * 4 + "px",
+                  zIndex: 41,
+                  left: "50%",
+                  top: "50%"
+                }}
+                initial={{ x: 0, y: 0, opacity: 0 }}
+                animate={{
+                  x: (Math.random() - 0.5) * 300,
+                  y: (Math.random() - 0.5) * 300,
+                  opacity: [0, 1, 0]
+                }}
+                transition={{ duration: 2, delay: 2.8, ease: "easeOut" }}
+              />
+            ))}
+
           </motion.div>
         )
       case "starfire":
@@ -394,11 +573,11 @@ export default function ThemeChangeAnimator() {
               <motion.div
                 key={`sf-star-${i}`}
                 className="absolute rounded-full"
-                  style={{
+                style={{
                   width: `${1 + Math.random() * 2.5}px`,
                   height: `${1 + Math.random() * 2.5}px`,
-                    left: `${Math.random() * 100}vw`,
-                    top: `${Math.random() * 100}vh`,
+                  left: `${Math.random() * 100}vw`,
+                  top: `${Math.random() * 100}vh`,
                   background: "white",
                   opacity: 0.7 + Math.random() * 0.3,
                   filter: "blur(0.5px)",
@@ -406,13 +585,13 @@ export default function ThemeChangeAnimator() {
                 }}
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: [0, 1, 0.7, 1, 0], scale: [0.5, 1, 0.8, 1.2, 0.5] }}
-                  transition={{
-                    duration: 1.8 + Math.random() * 1.5,
+                transition={{
+                  duration: 1.8 + Math.random() * 1.5,
                   delay: Math.random() * 1.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "mirror",
-                  }}
-                />
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "mirror",
+                }}
+              />
             ))}
 
             {/* --- COMÈTE --- */}
@@ -427,8 +606,8 @@ export default function ThemeChangeAnimator() {
                 zIndex: 10,
               }}
             >
-                <motion.div
-                  style={{
+              <motion.div
+                style={{
                   position: "absolute",
                   width: "32px",
                   height: "32px",
@@ -450,7 +629,7 @@ export default function ThemeChangeAnimator() {
                   opacity: [0, 1, 1, 0],
                   rotate: [-18, 0, 12],
                 }}
-                  transition={{
+                transition={{
                   duration: 1.2,
                   delay: 0.8,
                   times: [0, 0.7, 1],
@@ -493,7 +672,7 @@ export default function ThemeChangeAnimator() {
             </motion.div>
 
             {/* --- EXPLOSION AMÉLIORÉE --- */}
-                <motion.div
+            <motion.div
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{ zIndex: 20 }}
               initial={{ opacity: 0, scale: 0.2 }}
@@ -555,12 +734,11 @@ export default function ThemeChangeAnimator() {
               transition={{ duration: 0.9, delay: 2.6, times: [0, 0.5, 1], ease: "easeOut" }}
               style={{ zIndex: 30 }}
             >
-              <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 1.2, ease: "easeOut" }}>
+              <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 1.2, ease: "easeOut" }} className="relative w-[320px] h-[320px]">
                 <Image
                   src="/images/intro/starfire.png"
                   alt="Starfire Teen Titans"
-                  width={320}
-                  height={320}
+                  fill
                   style={{
                     objectFit: "contain",
                     borderRadius: "50%",
@@ -685,10 +863,10 @@ export default function ThemeChangeAnimator() {
               ))}
               <defs>
                 <filter id="bb-glow">
-                  <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                  <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
                   <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
               </defs>
@@ -708,17 +886,17 @@ export default function ThemeChangeAnimator() {
                 }}
                 initial={{ opacity: 0, scale: 0.5, y: 0 }}
                 animate={{
-                  opacity: [0, 1, 0.7, 0], 
-                  scale: [0.5, 1.2, 0.8, 0.5], 
+                  opacity: [0, 1, 0.7, 0],
+                  scale: [0.5, 1.2, 0.8, 0.5],
                   y: [0, -40, -20, 0],
                   x: [0, Math.sin(i) * 20, 0]
                 }}
                 transition={{
-                  duration: 3 + i * 0.5, 
-                  delay: i * 0.3, 
-                  repeat: Infinity, 
-                  repeatType: "mirror", 
-                  ease: "easeInOut" 
+                  duration: 3 + i * 0.5,
+                  delay: i * 0.3,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  ease: "easeInOut"
                 }}
               >
                 {["🍃", "🌿", "🌱", "🌺", "🌻", "🌼", "🌷", "🌸"][i % 8]}
@@ -727,7 +905,7 @@ export default function ThemeChangeAnimator() {
 
             {/* Effets de transformation - Silhouettes d'animaux flottantes */}
             {phase >= 1 && Array.from({ length: 3 }).map((_, i) => (
-          <motion.div
+              <motion.div
                 key={`bb-transform-silhouette-${i}`}
                 className="absolute"
                 style={{
@@ -739,17 +917,17 @@ export default function ThemeChangeAnimator() {
                   opacity: 0.4,
                 }}
                 initial={{ opacity: 0, scale: 0.3, rotate: 0 }}
-                animate={{ 
-                  opacity: [0, 0.4, 0.2, 0], 
-                  scale: [0.3, 1.1, 0.8, 0.3], 
+                animate={{
+                  opacity: [0, 0.4, 0.2, 0],
+                  scale: [0.3, 1.1, 0.8, 0.3],
                   rotate: [0, 15, -15, 0]
                 }}
-                transition={{ 
-                  duration: 2.5, 
-                  delay: i * 0.8, 
-                  repeat: Infinity, 
-                  repeatType: "mirror", 
-                  ease: "easeInOut" 
+                transition={{
+                  duration: 2.5,
+                  delay: i * 0.8,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  ease: "easeInOut"
                 }}
               >
                 {["🐒", "🦅", "🐅"][i]}
@@ -758,22 +936,22 @@ export default function ThemeChangeAnimator() {
 
             {/* Ondes de transformation - Effet de métamorphose */}
             {phase >= 1 && Array.from({ length: 4 }).map((_, i) => (
-                <motion.div
+              <motion.div
                 key={`bb-transform-wave-${i}`}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-green-400"
                 style={{ zIndex: 25 }}
                 initial={{ width: 0, height: 0, opacity: 0 }}
-                animate={{ 
-                  width: `${200 + i * 80}px`, 
-                  height: `${200 + i * 80}px`, 
-                  opacity: [0, 0.3, 0] 
+                animate={{
+                  width: `${200 + i * 80}px`,
+                  height: `${200 + i * 80}px`,
+                  opacity: [0, 0.3, 0]
                 }}
-                transition={{ 
-                  duration: 2, 
-                  delay: i * 0.3, 
-                  repeat: Infinity, 
-                  repeatType: "loop", 
-                  ease: "easeOut" 
+                transition={{
+                  duration: 2,
+                  delay: i * 0.3,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  ease: "easeOut"
                 }}
               />
             ))}
@@ -814,10 +992,10 @@ export default function ThemeChangeAnimator() {
                   />
                   {/* Particules d'éclat */}
                   {Array.from({ length: 18 }).map((_, i) => (
-                <motion.div
+                    <motion.div
                       key={`bb-explosion-particle-${i}`}
                       className="absolute"
-                  style={{
+                      style={{
                         left: "50%",
                         top: "50%",
                         width: "18px",
@@ -837,11 +1015,11 @@ export default function ThemeChangeAnimator() {
                       transition={{ duration: 0.8, ease: "easeOut" }}
                     />
                   ))}
-            </motion.div>
+                </motion.div>
               </>
             )}
             {/* Stabilisation : feuilles et empreintes - SUPPRIMÉ pour plus de clarté */}
-            
+
             {/* Apparition de Beast Boy - Phase finale */}
             {phase === 3 && (
               <motion.div
@@ -860,29 +1038,29 @@ export default function ThemeChangeAnimator() {
                   }}
                   transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  <Image 
-                    src="/images/intro/beastboy.png" 
-                    alt="Beast Boy Teen Titans" 
-                    width={340} 
-                    height={340} 
-                    style={{ 
-                      objectFit: "contain", 
-                      borderRadius: "50%", 
-                      boxShadow: "0 0 60px 10px #22c55e, 0 0 120px 30px #bef264" 
-                    }} 
-                    priority 
+                  <Image
+                    src="/images/intro/beastboy.png"
+                    alt="Beast Boy Teen Titans"
+                    width={340}
+                    height={340}
+                    style={{
+                      objectFit: "contain",
+                      borderRadius: "50%",
+                      boxShadow: "0 0 60px 10px #22c55e, 0 0 120px 30px #bef264"
+                    }}
+                    priority
                   />
-              </motion.div>
+                </motion.div>
                 {/* Particules de nature autour de l'image */}
                 {Array.from({ length: 6 }).map((_, i) => (
-                <motion.div
+                  <motion.div
                     key={`bb-final-particle-${i}`}
                     className="absolute rounded-full"
-              style={{
+                    style={{
                       width: `${3 + Math.random() * 4}px`,
                       height: `${3 + Math.random() * 4}px`,
-                      left: `calc(50% + ${Math.cos((i/6)*2*Math.PI)*100 + (Math.random()-0.5)*20}px)`,
-                      top: `calc(50% + ${Math.sin((i/6)*2*Math.PI)*100 + (Math.random()-0.5)*20}px)`,
+                      left: `calc(50% + ${Math.cos((i / 6) * 2 * Math.PI) * 100 + (Math.random() - 0.5) * 20}px)`,
+                      top: `calc(50% + ${Math.sin((i / 6) * 2 * Math.PI) * 100 + (Math.random() - 0.5) * 20}px)`,
                       background: "#22c55e",
                       boxShadow: "0 0 6px 2px #bef264, 0 0 12px 4px #22c55e",
                       opacity: 0.6,
@@ -894,7 +1072,7 @@ export default function ThemeChangeAnimator() {
                     transition={{ duration: 2.5 + Math.random(), delay: 1.0 + Math.random(), repeat: Number.POSITIVE_INFINITY, repeatType: "mirror" }}
                   />
                 ))}
-          </motion.div>
+              </motion.div>
             )}
           </motion.div>
         );
@@ -926,9 +1104,9 @@ export default function ThemeChangeAnimator() {
             >
               {/* Cercles principaux */}
               <motion.circle
-                cx={w/2}
-                cy={h/2}
-                r={w*0.18}
+                cx={w / 2}
+                cy={h / 2}
+                r={w * 0.18}
                 fill="none"
                 stroke="#a084e8"
                 strokeWidth="5"
@@ -940,9 +1118,9 @@ export default function ThemeChangeAnimator() {
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
               />
               <motion.circle
-                cx={w/2}
-                cy={h/2}
-                r={w*0.13}
+                cx={w / 2}
+                cy={h / 2}
+                r={w * 0.13}
                 fill="none"
                 stroke="#fff"
                 strokeWidth="2.2"
@@ -954,38 +1132,38 @@ export default function ThemeChangeAnimator() {
                 }}
                 transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
               />
-              <circle cx={w/2} cy={h/2} r={w*0.09} fill="none" stroke="#a084e8" strokeWidth="1.2" opacity="0.3" />
+              <circle cx={w / 2} cy={h / 2} r={w * 0.09} fill="none" stroke="#a084e8" strokeWidth="1.2" opacity="0.3" />
               {/* Petits points internes */}
               {Array.from({ length: 8 }).map((_, i) => (
                 <circle
                   key={`raven-dot-int-${i}`}
-                  cx={w/2 + Math.cos((i/8)*2*Math.PI)*w*0.07}
-                  cy={h/2 + Math.sin((i/8)*2*Math.PI)*w*0.07}
-                  r={w*0.004}
+                  cx={w / 2 + Math.cos((i / 8) * 2 * Math.PI) * w * 0.07}
+                  cy={h / 2 + Math.sin((i / 8) * 2 * Math.PI) * w * 0.07}
+                  r={w * 0.004}
                   fill="#a084e8"
                   opacity="0.5"
                 />
               ))}
               {/* Croix et losanges internes */}
               {Array.from({ length: 4 }).map((_, i) => {
-                const angle = (i/4)*2*Math.PI;
+                const angle = (i / 4) * 2 * Math.PI;
                 return (
                   <g key={`raven-cross-${i}`}> {/* Croix */}
-                    <rect x={w/2-1.5} y={h/2-w*0.11} width={3} height={w*0.022} fill="#fff" opacity="0.4" transform={`rotate(${angle*180/Math.PI},${w/2},${h/2})`} />
-                    <rect x={w/2-1.5} y={h/2+w*0.09} width={3} height={w*0.022} fill="#fff" opacity="0.4" transform={`rotate(${angle*180/Math.PI},${w/2},${h/2})`} />
+                    <rect x={w / 2 - 1.5} y={h / 2 - w * 0.11} width={3} height={w * 0.022} fill="#fff" opacity="0.4" transform={`rotate(${angle * 180 / Math.PI},${w / 2},${h / 2})`} />
+                    <rect x={w / 2 - 1.5} y={h / 2 + w * 0.09} width={3} height={w * 0.022} fill="#fff" opacity="0.4" transform={`rotate(${angle * 180 / Math.PI},${w / 2},${h / 2})`} />
                   </g>
                 )
               })}
               {/* Triangles mystiques (rotation animée) */}
               {Array.from({ length: 6 }).map((_, i) => {
-                const angle = (i/6)*2*Math.PI;
-                const r1 = w*0.13, r2 = w*0.18;
-                const x1 = w/2 + Math.cos(angle-Math.PI/36)*r1;
-                const y1 = h/2 + Math.sin(angle-Math.PI/36)*r1;
-                const x2 = w/2 + Math.cos(angle+Math.PI/36)*r1;
-                const y2 = h/2 + Math.sin(angle+Math.PI/36)*r1;
-                const x3 = w/2 + Math.cos(angle)*r2;
-                const y3 = h/2 + Math.sin(angle)*r2;
+                const angle = (i / 6) * 2 * Math.PI;
+                const r1 = w * 0.13, r2 = w * 0.18;
+                const x1 = w / 2 + Math.cos(angle - Math.PI / 36) * r1;
+                const y1 = h / 2 + Math.sin(angle - Math.PI / 36) * r1;
+                const x2 = w / 2 + Math.cos(angle + Math.PI / 36) * r1;
+                const y2 = h / 2 + Math.sin(angle + Math.PI / 36) * r1;
+                const x3 = w / 2 + Math.cos(angle) * r2;
+                const y3 = h / 2 + Math.sin(angle) * r2;
                 return (
                   <motion.polygon
                     key={`raven-tri-${i}`}
@@ -1002,8 +1180,8 @@ export default function ThemeChangeAnimator() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <motion.path
                   key={`raven-arc-${i}`}
-                  d={`M ${w/2 + Math.cos((i/4)*2*Math.PI)*w*0.09} ${h/2 + Math.sin((i/4)*2*Math.PI)*w*0.09}
-                      A ${w*0.09} ${w*0.09} 0 0 1 ${w/2 + Math.cos(((i+0.5)/4)*2*Math.PI)*w*0.09} ${h/2 + Math.sin(((i+0.5)/4)*2*Math.PI)*w*0.09}`}
+                  d={`M ${w / 2 + Math.cos((i / 4) * 2 * Math.PI) * w * 0.09} ${h / 2 + Math.sin((i / 4) * 2 * Math.PI) * w * 0.09}
+                      A ${w * 0.09} ${w * 0.09} 0 0 1 ${w / 2 + Math.cos(((i + 0.5) / 4) * 2 * Math.PI) * w * 0.09} ${h / 2 + Math.sin(((i + 0.5) / 4) * 2 * Math.PI) * w * 0.09}`}
                   stroke="#fff"
                   strokeWidth="1.1"
                   fill="none"
@@ -1019,10 +1197,10 @@ export default function ThemeChangeAnimator() {
               {Array.from({ length: 18 }).map((_, i) => (
                 <motion.text
                   key={`raven-glyph-${i}`}
-                  x={w/2 + Math.cos((i/18)*2*Math.PI)*w*0.18}
-                  y={h/2 + Math.sin((i/18)*2*Math.PI)*w*0.18}
+                  x={w / 2 + Math.cos((i / 18) * 2 * Math.PI) * w * 0.18}
+                  y={h / 2 + Math.sin((i / 18) * 2 * Math.PI) * w * 0.18}
                   textAnchor="middle"
-                  fontSize={w*0.018}
+                  fontSize={w * 0.018}
                   fill="#fff"
                   initial={{ opacity: 0 }}
                   animate={{
@@ -1034,26 +1212,26 @@ export default function ThemeChangeAnimator() {
                       "drop-shadow(0 0 8px #a084e8)"
                     ],
                   }}
-                  transition={{ duration: 1.5 + i*0.05, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+                  transition={{ duration: 1.5 + i * 0.05, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
                   style={{ fontFamily: "monospace", letterSpacing: "0.1em" }}
                 >
-                  {String.fromCharCode(0x16A0 + i*2)}
+                  {String.fromCharCode(0x16A0 + i * 2)}
                 </motion.text>
               ))}
               {/* Définitions de glow */}
               <defs>
                 <filter id="glow1">
-                  <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                  <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
                   <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
                 <filter id="glow2">
-                  <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
+                  <feGaussianBlur stdDeviation="1.2" result="coloredBlur" />
                   <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
               </defs>
@@ -1067,8 +1245,8 @@ export default function ThemeChangeAnimator() {
                 style={{
                   width: `${2 + Math.random() * 3}px`,
                   height: `${2 + Math.random() * 3}px`,
-                  left: `${w/2 + Math.cos((i/12)*2*Math.PI)*w*0.18 + (Math.random()-0.5)*w*0.03}px`,
-                  top: `${h/2 + Math.sin((i/12)*2*Math.PI)*w*0.18 + (Math.random()-0.5)*w*0.03}px`,
+                  left: `${w / 2 + Math.cos((i / 12) * 2 * Math.PI) * w * 0.18 + (Math.random() - 0.5) * w * 0.03}px`,
+                  top: `${h / 2 + Math.sin((i / 12) * 2 * Math.PI) * w * 0.18 + (Math.random() - 0.5) * w * 0.03}px`,
                   background: "#6c3ebc",
                   boxShadow: "0 0 4px 1px #a084e8, 0 0 8px 2px #3a1c71",
                   opacity: 0.45,
@@ -1086,18 +1264,18 @@ export default function ThemeChangeAnimator() {
                 key={`raven-lightning-${i}`}
                 className="absolute"
                 style={{
-                  left: `${w/2 + Math.cos((i/8)*2*Math.PI)*w*0.19}px`,
-                  top: `${h/2 + Math.sin((i/8)*2*Math.PI)*w*0.19}px`,
+                  left: `${w / 2 + Math.cos((i / 8) * 2 * Math.PI) * w * 0.19}px`,
+                  top: `${h / 2 + Math.sin((i / 8) * 2 * Math.PI) * w * 0.19}px`,
                   zIndex: 13,
                 }}
                 initial={{ opacity: 0, scale: 0.7, rotate: 0 }}
-                animate={{ opacity: [0, 1, 0], scale: [0.7, 1.2, 0.7], rotate: [0, 30 + Math.random()*60, 0] }}
-                transition={{ duration: 0.8, delay: 0.5 + i*0.08, repeat: Number.POSITIVE_INFINITY, repeatType: "mirror" }}
+                animate={{ opacity: [0, 1, 0], scale: [0.7, 1.2, 0.7], rotate: [0, 30 + Math.random() * 60, 0] }}
+                transition={{ duration: 0.8, delay: 0.5 + i * 0.08, repeat: Number.POSITIVE_INFINITY, repeatType: "mirror" }}
               >
                 <svg width="22" height="22" viewBox="0 0 22 22">
                   <polyline points="2,12 10,10 8,18 18,4 12,12 20,10" stroke="#fff" strokeWidth="2" fill="none" filter="url(#glow2)" />
                 </svg>
-                </motion.div>
+              </motion.div>
             ))}
 
             {/* PHASE 2: Incantation phrase */}
@@ -1116,7 +1294,7 @@ export default function ThemeChangeAnimator() {
                   style={{ color: "#a084e8", fontSize: "2.2rem", fontWeight: 700, textShadow: "0 0 28px #a084e8, 0 0 40px #fff" }}
                 >
                   Azarath
-            </motion.div>
+                </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.7 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -1137,7 +1315,7 @@ export default function ThemeChangeAnimator() {
             </motion.div>
 
             {/* PHASE 3: Explosion magique très discrète */}
-                <motion.div
+            <motion.div
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{ zIndex: 30 }}
               initial={{ opacity: 0, scale: 0.2 }}
@@ -1145,7 +1323,7 @@ export default function ThemeChangeAnimator() {
               transition={{ duration: 1.0, delay: 1.8, times: [0, 0.2, 0.7, 1], ease: "easeInOut" }}
             >
               <div
-                  style={{
+                style={{
                   width: "300px",
                   height: "300px",
                   borderRadius: "50%",
@@ -1179,7 +1357,7 @@ export default function ThemeChangeAnimator() {
                   opacity: 0,
                   rotate: 0,
                 }}
-                  animate={{
+                animate={{
                   x: Math.cos((i / 16) * 2 * Math.PI) * (w * 0.33 + Math.random() * w * 0.18),
                   y: Math.sin((i / 16) * 2 * Math.PI) * (h * 0.25 + Math.random() * h * 0.13),
                   scale: [0.7, 1.4, 0.9 + Math.random() * 0.7],
@@ -1220,24 +1398,24 @@ export default function ThemeChangeAnimator() {
             >
               <motion.div
                 initial={{ opacity: 1, scale: 1, rotate: 0 }}
-              animate={{
+                animate={{
                   opacity: 1,
                   scale: [1, 1.025, 1],
                   rotate: [0, 2, -2, 0],
                 }}
                 transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <Image 
-                  src="/images/intro/raven.png" 
-                  alt="Raven Teen Titans" 
-                  width={340} 
-                  height={340} 
-                  style={{ 
-                    objectFit: "contain", 
-                    borderRadius: "50%", 
-                    boxShadow: "0 0 60px 10px #a084e8, 0 0 120px 30px #fff" 
-                  }} 
-                  priority 
+                <Image
+                  src="/images/intro/raven.png"
+                  alt="Raven Teen Titans"
+                  width={340}
+                  height={340}
+                  style={{
+                    objectFit: "contain",
+                    borderRadius: "50%",
+                    boxShadow: "0 0 60px 10px #a084e8, 0 0 120px 30px #fff"
+                  }}
+                  priority
                 />
               </motion.div>
               {/* Particules magiques devant l'image (moins nombreuses et moins lumineuses) */}
@@ -1248,8 +1426,8 @@ export default function ThemeChangeAnimator() {
                   style={{
                     width: `${2 + Math.random() * 3}px`,
                     height: `${2 + Math.random() * 3}px`,
-                    left: `calc(50% + ${Math.cos((i/8)*2*Math.PI)*90 + (Math.random()-0.5)*18}px)`,
-                    top: `calc(50% + ${Math.sin((i/8)*2*Math.PI)*90 + (Math.random()-0.5)*18}px)`,
+                    left: `calc(50% + ${Math.cos((i / 8) * 2 * Math.PI) * 90 + (Math.random() - 0.5) * 18}px)`,
+                    top: `calc(50% + ${Math.sin((i / 8) * 2 * Math.PI) * 90 + (Math.random() - 0.5) * 18}px)`,
                     background: "#6c3ebc",
                     boxShadow: "0 0 4px 1px #a084e8, 0 0 8px 2px #3a1c71",
                     opacity: 0.45,
@@ -1277,7 +1455,7 @@ export default function ThemeChangeAnimator() {
             {/* Phase 1: Tactical Briefing (0 - 2s) */}
             <motion.div className="absolute inset-0 opacity-35">
               <motion.div initial={{ backgroundPosition: "0 0" }} animate={{ backgroundPosition: "-100px -100px" }} transition={{ duration: 1.5, ease: "linear", repeat: 1, repeatType: "loop" }}>
-              <div className="w-full h-full bg-gradient-to-br from-orange-900 via-orange-800 to-orange-700 opacity-50" />
+                <div className="w-full h-full bg-gradient-to-br from-orange-900 via-orange-800 to-orange-700 opacity-50" />
               </motion.div>
             </motion.div>
             <motion.div
@@ -1393,9 +1571,9 @@ export default function ThemeChangeAnimator() {
               transition={{ duration: 0.7, delay: 4.0, ease: "easeInOut" }}
             >
               <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 1.2, ease: "easeOut" }}>
-              <div className="w-[150px] h-[150px] bg-gradient-to-br from-orange-600 to-orange-800 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                DS
-              </div>
+                <div className="w-[150px] h-[150px] bg-gradient-to-br from-orange-600 to-orange-800 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                  DS
+                </div>
               </motion.div>
             </motion.div>
           </motion.div>
