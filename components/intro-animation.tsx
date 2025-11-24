@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 export default function IntroAnimation() {
-  const [showIntro, setShowIntro] = useState(true)
-  const [hasCheckedSession, setHasCheckedSession] = useState(false)
   const [currentCharacter, setCurrentCharacter] = useState(-1)
   const [spotlightPosition, setSpotlightPosition] = useState({ x: 0, y: 0 })
   const [foundTarget, setFoundTarget] = useState(false)
@@ -18,19 +16,20 @@ export default function IntroAnimation() {
   const [waitingForClick, setWaitingForClick] = useState(false)
 
   // Utiliser useRef au niveau supérieur du composant
+  const [showIntro, setShowIntro] = useState(false)
+  const [hasCheckedSession, setHasCheckedSession] = useState(false)
   const mousePositionRef = useRef({ ...mousePosition, throttle: false })
 
-  // Vérifier si l'intro a déjà été jouée dans cette session
+  // Check session storage on mount
   useEffect(() => {
-    if (hasCheckedSession || typeof window === 'undefined') return
+    if (typeof window === 'undefined') return
 
-    // Vérifier immédiatement pour éviter l'affichage du contenu principal
     const sessionIntroPlayed = sessionStorage.getItem('introAnimationPlayed')
-    if (sessionIntroPlayed) {
-      setShowIntro(false)
+    if (!sessionIntroPlayed) {
+      setShowIntro(true)
     }
     setHasCheckedSession(true)
-  }, [hasCheckedSession])
+  }, [])
 
   // Mettre à jour la référence quand mousePosition change
   useEffect(() => {
@@ -1244,7 +1243,7 @@ export default function IntroAnimation() {
             )}
 
             {/* Effet de visée et de cible - Version améliorée */}
-            {currentCharacter === 5 && (
+            {currentCharacter === 5 && foundTarget && (
               <>
                 <motion.div
                   className="absolute w-16 h-16 rounded-full border-2 border-[#FF8C00]"
@@ -1320,122 +1319,122 @@ export default function IntroAnimation() {
     }
   }
 
+  if (!showIntro) return null
+
   return (
     <AnimatePresence>
-      {showIntro && (
+      <motion.div
+        ref={containerRef}
+        className="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center overflow-hidden"
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.8 }}
+        onClick={() => {
+          if (waitingForClick && currentCharacter >= 0) {
+            handleNextCharacter()
+          }
+        }}
+      >
+        {/* Projecteur qui se déplace */}
         <motion.div
-          ref={containerRef}
-          className="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center overflow-hidden"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          onClick={() => {
-            if (waitingForClick && currentCharacter >= 0) {
-              handleNextCharacter()
-            }
+          className="absolute w-[300px] h-[300px] rounded-full pointer-events-none"
+          animate={{
+            x: spotlightPosition.x + "vw",
+            y: spotlightPosition.y + "vh",
+            opacity: foundTarget ? 1 : [0.3, 0.7, 0.5],
+            scale: foundTarget ? 1.2 : [0.8, 1.1, 0.9],
           }}
-        >
-          {/* Projecteur qui se déplace */}
+          transition={{
+            duration: foundTarget ? 0.5 : 1,
+            ease: "easeInOut",
+          }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0) 70%)",
+            boxShadow: "0 0 50px 30px rgba(255,255,255,0.1)",
+          }}
+        />
+
+        {/* Faisceau du projecteur */}
+        {foundTarget && (
           <motion.div
-            className="absolute w-[300px] h-[300px] rounded-full pointer-events-none"
-            animate={{
-              x: spotlightPosition.x + "vw",
-              y: spotlightPosition.y + "vh",
-              opacity: foundTarget ? 1 : [0.3, 0.7, 0.5],
-              scale: foundTarget ? 1.2 : [0.8, 1.1, 0.9],
-            }}
-            transition={{
-              duration: foundTarget ? 0.5 : 1,
-              ease: "easeInOut",
-            }}
+            className="absolute top-0 w-[100px] h-[100vh] pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
             style={{
               background:
-                "radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0) 70%)",
-              boxShadow: "0 0 50px 30px rgba(255,255,255,0.1)",
+                "linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1))",
+              transform: "perspective(500px) rotateX(20deg)",
             }}
           />
+        )}
 
-          {/* Faisceau du projecteur */}
-          {foundTarget && (
+        {/* Effets spécifiques au personnage */}
+        {renderEffects()}
+
+        {/* Personnages */}
+        <AnimatePresence mode="wait">
+          {currentCharacter >= 0 && (
             <motion.div
-              className="absolute top-0 w-[100px] h-[100vh] pointer-events-none"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.15 }}
-              style={{
-                background:
-                  "linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1))",
-                transform: "perspective(500px) rotateX(20deg)",
-              }}
-            />
-          )}
+              key={currentCharacter}
+              className="relative z-10"
+              initial={{ opacity: 0, scale: 0.5, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="relative w-[250px] h-[250px] flex items-center justify-center">
+                <Image
+                  src={characters[currentCharacter].image || "/placeholder.svg"}
+                  alt={characters[currentCharacter].name}
+                  fill
+                  className="object-contain"
+                  style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))" }}
+                />
+              </div>
 
-          {/* Effets spécifiques au personnage */}
-          {renderEffects()}
-
-          {/* Personnages */}
-          <AnimatePresence mode="wait">
-            {currentCharacter >= 0 && (
               <motion.div
-                key={currentCharacter}
-                className="relative z-10"
-                initial={{ opacity: 0, scale: 0.5, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.5, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="relative w-[250px] h-[250px] flex items-center justify-center">
-                  <Image
-                    src={characters[currentCharacter].image || "/placeholder.svg"}
-                    alt={characters[currentCharacter].name}
-                    fill
-                    className="object-contain"
-                    style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))" }}
-                  />
-                </div>
-
-                <motion.div
-                  className="text-white text-2xl font-bold text-center mt-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.3 }}
-                >
-                  {characters[currentCharacter].name}
-                </motion.div>
-
-                {waitingForClick && !showButton && (
-                  <motion.div
-                    className="text-white/60 text-sm text-center mt-2"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0.4, 0.8, 0.4] }}
-                    transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-                  >
-                    Cliquez pour continuer
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Bouton pour entrer sur le site */}
-          <AnimatePresence>
-            {showButton && (
-              <motion.div
-                className="absolute bottom-[20%]"
-                initial={{ opacity: 0, y: 20 }}
+                className="text-white text-2xl font-bold text-center mt-4"
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
               >
-                <Button
-                  onClick={handleEnterSite}
-                  className="px-8 py-6 text-lg bg-white text-black hover:bg-white/90 transition-all duration-300 rounded-full"
-                  style={{ boxShadow: "0 0 20px rgba(255,255,255,0.5)" }}
-                >
-                  Découvrir le Portfolio
-                </Button>
+                {characters[currentCharacter].name}
               </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      )}
+
+              {waitingForClick && !showButton && (
+                <motion.div
+                  className="text-white/60 text-sm text-center mt-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.4, 0.8, 0.4] }}
+                  transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                >
+                  Cliquez pour continuer
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Bouton pour entrer sur le site */}
+        <AnimatePresence>
+          {showButton && (
+            <motion.div
+              className="absolute bottom-[20%]"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Button
+                onClick={handleEnterSite}
+                className="px-8 py-6 text-lg bg-white text-black hover:bg-white/90 transition-all duration-300 rounded-full"
+                style={{ boxShadow: "0 0 20px rgba(255,255,255,0.5)" }}
+              >
+                Découvrir le Portfolio
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </AnimatePresence>
   )
 }
