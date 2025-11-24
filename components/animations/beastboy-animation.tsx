@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { AnimationProps } from "./types"
@@ -11,7 +12,7 @@ export const BeastboyAnimation = ({ w, h, animationKey }: AnimationProps) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.1 } },
-    exit: { opacity: 0, transition: { duration: 0.3, delay: 2.2 } }
+    exit: { opacity: 0, transition: { duration: 0.3 } }
   }
 
   // Paramètres ADN
@@ -23,9 +24,26 @@ export const BeastboyAnimation = ({ w, h, animationKey }: AnimationProps) => {
   const basePairs = ["A", "T", "C", "G"];
   const animalEmojis = ["🐒", "🦅", "🐠", "🐅", "🦖"];
 
-  // Note: bbPhase and bbAdnStep need to be passed as props or managed via state
-  const phase = 0; // TODO: Pass as prop
-  const adnStep = 0; // TODO: Pass as prop
+  // State for animation phases
+  const [phase, setPhase] = React.useState(0);
+  const [adnStep, setAdnStep] = React.useState(0);
+
+  React.useEffect(() => {
+    setPhase(0);
+    setAdnStep(0);
+    const t1 = setTimeout(() => setPhase(1), 1000);
+    const t2 = setTimeout(() => setPhase(2), 1800);
+    const t3 = setTimeout(() => setPhase(3), 2500);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [animationKey]);
+
+  React.useEffect(() => {
+    if (phase === 0) {
+      const helixLength = 4 * 32;
+      const interval = setInterval(() => setAdnStep((s) => (s + 1) % helixLength), 60);
+      return () => clearInterval(interval);
+    }
+  }, [phase]);
 
   // Génération des points de l'hélice
   // Effet hélice qui s'enroule sur elle-même : rayon diminue, angle spiralé

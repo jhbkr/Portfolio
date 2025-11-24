@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { Aperture } from "lucide-react"
 import { AnimationProps } from "./types"
 
 /**
@@ -11,7 +12,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.1 } },
-    exit: { opacity: 0, transition: { duration: 0.3, delay: 2.2 } }
+    exit: { opacity: 0, transition: { duration: 0.3 } }
   }
 
   return (
