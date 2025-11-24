@@ -8,12 +8,12 @@ import { AnimatePresence } from "framer-motion"
 // Extracted animation components
 import { RobinAnimation } from "./animations/robin-animation"
 import { StarfireAnimation } from "./animations/starfire-animation"
-import { BeastboyAnimation } from "./animations/beastboy-animation"
+import { BeastBoyAnimation } from "./animations/beastboy-animation"
 import { RavenAnimation } from "./animations/raven-animation"
 import { CyborgAnimation } from "./animations/cyborg-animation"
 import { DeathstrokeAnimation } from "./animations/deathstroke-animation"
 
-const ANIMATION_DURATION = 6000 // 6 seconds
+const ANIMATION_DURATION = 7000 // 6 seconds
 
 const imagesToPreload = [
   "/images/intro/gotham-skyline.png",
@@ -124,7 +124,7 @@ export default function ThemeChangeAnimator() {
       case "starfire":
         return <StarfireAnimation w={w} h={h} animationKey={animationKey} />;
       case "beastboy":
-        return <BeastboyAnimation w={w} h={h} animationKey={animationKey} />;
+        return <BeastBoyAnimation w={w} h={h} animationKey={animationKey} />;
       case "raven":
         return <RavenAnimation w={w} h={h} animationKey={animationKey} />;
       case "cyborg":
