@@ -13,7 +13,7 @@ import { RavenAnimation } from "./animations/raven-animation"
 import { CyborgAnimation } from "./animations/cyborg-animation"
 import { DeathstrokeAnimation } from "./animations/deathstroke-animation"
 
-const ANIMATION_DURATION = 7000 // 6 seconds
+const ANIMATION_DURATION = 7000 // 7 seconds
 
 const imagesToPreload = [
   "/images/intro/gotham-skyline.png",
