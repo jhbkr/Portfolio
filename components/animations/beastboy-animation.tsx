@@ -12,6 +12,7 @@ import { AnimationProps } from "./types"
  */
 export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
   const [phase, setPhase] = useState(0)
+  const isMobile = w < 768
 
   // TIMING SEQUENCER
   useEffect(() => {
@@ -100,7 +101,7 @@ export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
           >
             <svg width="200" height="400" viewBox="0 0 200 400">
               {/* Barres Horizontales (base pairs) */}
-              {Array.from({ length: 20 }).map((_, i) => (
+              {Array.from({ length: isMobile ? 10 : 20 }).map((_, i) => (
                 <motion.line
                   key={`bp-${i}`}
                   x1="50" y1={i * 20 + 10} x2="150" y2={i * 20 + 10}
@@ -177,7 +178,7 @@ export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
           {/* Matière Liquide Organique (avec effet Goo) */}
           <div className="absolute inset-0 z-20" style={{ filter: "url(#goo)" }}>
             {/* Blobs Liquides qui se Forment */}
-            {Array.from({ length: 30 }).map((_, i) => (
+            {Array.from({ length: isMobile ? 15 : 30 }).map((_, i) => (
               <motion.div
                 key={`blob-${i}`}
                 className="absolute rounded-full bg-[#39FF14]"
@@ -257,7 +258,7 @@ export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
           </motion.div>
 
           {/* Particules Vivantes */}
-          {Array.from({ length: 50 }).map((_, i) => (
+          {Array.from({ length: isMobile ? 25 : 50 }).map((_, i) => (
             <motion.div
               key={`particle-${i}`}
               className="absolute w-1 h-1 bg-[#CCFF00] rounded-full"
@@ -320,7 +321,7 @@ export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
           />
 
           {/* Splash Particles */}
-          {Array.from({ length: 40 }).map((_, i) => (
+          {Array.from({ length: isMobile ? 20 : 40 }).map((_, i) => (
             <motion.div
               key={`splash-${i}`}
               className="absolute top-1/2 left-1/2 bg-[#39FF14] rounded-full"
@@ -369,7 +370,7 @@ export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
           </motion.div>
 
           {/* Liquide Vert qui S'égoutte du Haut */}
-          {Array.from({ length: 20 }).map((_, i) => (
+          {Array.from({ length: isMobile ? 10 : 20 }).map((_, i) => (
             <motion.div
               key={`drip-${i}`}
               className="absolute top-0 w-2 bg-[#39FF14]"
@@ -393,7 +394,7 @@ export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
             <div className="relative w-[500px] h-[500px]">
               {/* Aura de Particules */}
               <div className="absolute inset-0">
-                {Array.from({ length: 30 }).map((_, i) => (
+                {Array.from({ length: isMobile ? 15 : 30 }).map((_, i) => (
                   <motion.div
                     key={`aura-${i}`}
                     className="absolute w-2 h-2 bg-[#CCFF00] rounded-full"
@@ -447,7 +448,7 @@ export const BeastBoyAnimation = ({ w, h, animationKey }: AnimationProps) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 1.4, duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-[#CCFF00] to-[#39FF14] tracking-tight"
+            <h1 className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-[#CCFF00] to-[#39FF14] tracking-tight"
               style={{
                 fontFamily: "Impact, sans-serif",
                 textShadow: "0 0 40px #39FF14, 0 2px 4px rgba(0,0,0,0.8)"

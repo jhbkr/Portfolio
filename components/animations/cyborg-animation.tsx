@@ -10,6 +10,8 @@ import { AnimationProps } from "./types"
  * Tech Interface, HUD, Sonic Cannon, Victor Stone Reveal
  */
 export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
+  const isMobile = w < 768
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.1 } },
@@ -59,25 +61,25 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
       {/* HUD/Targeting System (NEW) */}
       {/* Corner Brackets */}
       <motion.div
-        className="absolute top-8 left-8 w-20 h-20 border-t-4 border-l-4 border-cyan-400"
+        className="absolute top-4 left-4 md:top-8 md:left-8 w-12 h-12 md:w-20 md:h-20 border-t-2 md:border-t-4 border-l-2 md:border-l-4 border-cyan-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.3 }}
       />
       <motion.div
-        className="absolute top-8 right-8 w-20 h-20 border-t-4 border-r-4 border-cyan-400"
+        className="absolute top-4 right-4 md:top-8 md:right-8 w-12 h-12 md:w-20 md:h-20 border-t-2 md:border-t-4 border-r-2 md:border-r-4 border-cyan-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.3 }}
       />
       <motion.div
-        className="absolute bottom-8 left-8 w-20 h-20 border-b-4 border-l-4 border-cyan-400"
+        className="absolute bottom-4 left-4 md:bottom-8 md:left-8 w-12 h-12 md:w-20 md:h-20 border-b-2 md:border-b-4 border-l-2 md:border-l-4 border-cyan-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.3 }}
       />
       <motion.div
-        className="absolute bottom-8 right-8 w-20 h-20 border-b-4 border-r-4 border-cyan-400"
+        className="absolute bottom-4 right-4 md:bottom-8 md:right-8 w-12 h-12 md:w-20 md:h-20 border-b-2 md:border-b-4 border-r-2 md:border-r-4 border-cyan-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.3 }}
@@ -109,7 +111,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
 
       {/* Rotating Radar HUD Element (Creative) */}
       <motion.div
-        className="absolute top-16 left-[45%] w-24 h-24"
+        className="absolute top-12 left-[45%] md:top-16 w-16 h-16 md:w-24 md:h-24"
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 0.6, scale: 1, rotate: 360 }}
         transition={{
@@ -133,7 +135,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
       </motion.div>
 
       {/* Phase 2: Activation & Detailed Eye (1.2s - 2.5s) */}
-      {Array.from({ length: 60 }).map((_, i) => (
+      {Array.from({ length: isMobile ? 30 : 60 }).map((_, i) => (
         <motion.div
           key={`cy-data-beam-${i}`}
           className="absolute rounded bg-sky-300"
@@ -227,7 +229,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
       />
 
       {/* Hexagonal Particle System (Creative) */}
-      {Array.from({ length: 30 }).map((_, i) => {
+      {Array.from({ length: isMobile ? 15 : 30 }).map((_, i) => {
         const angle = (i / 30) * Math.PI * 2;
         const radius = 200 + Math.random() * 300;
         return (
@@ -271,7 +273,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 4.0, duration: 1.5 }}
       >
-        <div className="relative w-[500px] h-[500px]">
+        <div className="relative w-[300px] h-[300px] md:w-[500px] md:h-[500px]">
           {/* Energy Pulse Rings emanating from character */}
           {Array.from({ length: 3 }).map((_, i) => (
             <motion.div
@@ -351,7 +353,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
           {"VICTOR STONE".split("").map((char, i) => (
             <motion.span
               key={i}
-              className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-sky-200 inline-block"
+              className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-sky-200 inline-block"
               style={{
                 fontFamily: "Impact, sans-serif",
                 textShadow: "0 0 20px rgba(6,182,212,0.8)"
@@ -376,7 +378,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
 
         {/* Glitch overlay on text */}
         <motion.div
-          className="absolute inset-0 text-6xl font-black text-red-500 mix-blend-screen"
+          className="absolute inset-0 text-4xl md:text-6xl font-black text-red-500 mix-blend-screen"
           style={{
             fontFamily: "Impact, sans-serif",
             letterSpacing: "0.2em"
@@ -413,7 +415,7 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
       </motion.div>
 
       {/* Matrix-Style Code Rain (Creative addition) */}
-      {Array.from({ length: 15 }).map((_, i) => (
+      {Array.from({ length: isMobile ? 8 : 15 }).map((_, i) => (
         <motion.div
           key={`code-rain-${i}`}
           className="absolute top-0 text-cyan-300 font-mono text-xs opacity-40"
@@ -440,9 +442,9 @@ export const CyborgAnimation = ({ w, h, animationKey }: AnimationProps) => {
           className="absolute border-2 border-cyan-400/40 rounded p-2"
           style={{
             top: `${20 + i * 20}%`,
-            right: '5%',
-            width: '120px',
-            height: '60px'
+            right: isMobile ? '2%' : '5%',
+            width: isMobile ? '80px' : '120px',
+            height: isMobile ? '40px' : '60px'
           }}
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}

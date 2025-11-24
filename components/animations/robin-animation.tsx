@@ -12,6 +12,8 @@ import { AnimationProps } from "./types"
  * PHASE 4: THE VIGILANTE REVEAL (2.8s - 4.0s)
  */
 export const RobinAnimation = ({ w, h, animationKey }: AnimationProps) => {
+    const isMobile = w < 768
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { duration: 0.1 } },
@@ -41,7 +43,7 @@ export const RobinAnimation = ({ w, h, animationKey }: AnimationProps) => {
                 transition={{ duration: 0.3, ease: "circOut" }}
             >
                 {/* Heavy Rain in the slice (Parallax Layer 1) */}
-                {Array.from({ length: 60 }).map((_, i) => (
+                {Array.from({ length: isMobile ? 30 : 60 }).map((_, i) => (
                     <motion.div
                         key={`noir-rain-${i}`}
                         className="absolute bg-white/30"

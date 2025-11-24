@@ -9,6 +9,8 @@ import { AnimationProps } from "./types"
  * A high-impact, sniper-focused animation with realistic glass shattering.
  */
 export const DeathstrokeAnimation = ({ w, h, animationKey }: AnimationProps) => {
+  const isMobile = w < 768
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.1 } },
@@ -199,7 +201,7 @@ export const DeathstrokeAnimation = ({ w, h, animationKey }: AnimationProps) => 
 
       {/* Glass Shards Explosion */}
       <div className="absolute inset-0 z-40 pointer-events-none overflow-hidden">
-        {Array.from({ length: 20 }).map((_, i) => {
+        {Array.from({ length: isMobile ? 10 : 20 }).map((_, i) => {
           const angle = (i * 18) * (Math.PI / 180);
           const dist = 300 + Math.random() * 300;
           return (

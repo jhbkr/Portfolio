@@ -11,6 +11,7 @@ import { AnimationProps } from "./types"
  * Timeline: ~6.0s
  */
 export const StarfireAnimation = ({ w, h, animationKey }: AnimationProps) => {
+  const isMobile = w < 768
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.1 } },
@@ -154,7 +155,7 @@ export const StarfireAnimation = ({ w, h, animationKey }: AnimationProps) => {
       >
         {/* Starfield */}
         <motion.div className="absolute inset-0" animate={{ scale: 1.05 }} transition={{ duration: 5, ease: "linear" }}>
-          {Array.from({ length: 150 }).map((_, i) => (
+          {Array.from({ length: isMobile ? 75 : 150 }).map((_, i) => (
             <div
               key={`star-${i}`}
               className="absolute bg-white rounded-full opacity-80"
@@ -232,7 +233,7 @@ export const StarfireAnimation = ({ w, h, animationKey }: AnimationProps) => {
             ))}
 
             {/* Turbulent Particles */}
-            {Array.from({ length: 40 }).map((_, i) => (
+            {Array.from({ length: isMobile ? 20 : 40 }).map((_, i) => (
               <motion.div
                 key={`tail-p-${i}`}
                 className="absolute bg-orange-400 rounded-full blur-md"
@@ -337,7 +338,7 @@ export const StarfireAnimation = ({ w, h, animationKey }: AnimationProps) => {
           />
 
           {/* Floating Embers */}
-          {Array.from({ length: 25 }).map((_, i) => (
+          {Array.from({ length: isMobile ? 12 : 25 }).map((_, i) => (
             <motion.div
               key={`ember-${i}`}
               className="absolute bg-yellow-400 rounded-full blur-[1px]"

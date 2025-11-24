@@ -47,9 +47,12 @@ export const RavenAnimation = ({ w, h, animationKey }: AnimationProps) => {
 
   // --- GÉNÉRATION DES PARTICULES & ÉLÉMENTS ---
 
+  // Responsive particle counts
+  const isMobile = typeof window !== 'undefined' && w < 768
+
   // Particules de "Void Dust" (poussière du vide)
   const voidDust = useMemo(() =>
-    Array.from({ length: 40 }).map((_, i) => ({
+    Array.from({ length: isMobile ? 20 : 40 }).map((_, i) => ({
       id: i,
       x: rng() * 100,
       y: rng() * 100,
@@ -143,7 +146,7 @@ export const RavenAnimation = ({ w, h, animationKey }: AnimationProps) => {
         <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none mix-blend-screen">
           {/* AZARATH */}
           <motion.h1
-            className="text-6xl md:text-8xl font-black tracking-[0.2em] text-[#2E1065] opacity-0"
+            className="text-4xl md:text-8xl font-black tracking-[0.2em] text-[#2E1065] opacity-0"
             style={{ fontFamily: "Impact, sans-serif", filter: "blur(2px)" }}
             animate={{ opacity: [0, 0.5, 0], scale: [1.1, 1], filter: ["blur(8px)", "blur(2px)", "blur(8px)"] }}
             transition={{ duration: 2, times: [0, 0.2, 1] }}
@@ -153,7 +156,7 @@ export const RavenAnimation = ({ w, h, animationKey }: AnimationProps) => {
 
           {/* METRION */}
           <motion.h1
-            className="text-6xl md:text-8xl font-black tracking-[0.2em] text-[#4C1D95] opacity-0 absolute"
+            className="text-4xl md:text-8xl font-black tracking-[0.2em] text-[#4C1D95] opacity-0 absolute"
             style={{ fontFamily: "Impact, sans-serif", filter: "blur(2px)" }}
             animate={{ opacity: [0, 0.6, 0], scale: [1.1, 1], filter: ["blur(8px)", "blur(2px)", "blur(8px)"] }}
             transition={{ delay: 0.8, duration: 2, times: [0, 0.2, 1] }}
@@ -163,7 +166,7 @@ export const RavenAnimation = ({ w, h, animationKey }: AnimationProps) => {
 
           {/* ZINTHOS (Impact) */}
           <motion.h1
-            className="text-8xl md:text-[10rem] font-black tracking-tighter text-white absolute z-30"
+            className="text-6xl md:text-[10rem] font-black tracking-tighter text-white absolute z-30"
             style={{
               fontFamily: "Impact, sans-serif",
               textShadow: "0 0 20px #4C1D95",
@@ -296,7 +299,7 @@ export const RavenAnimation = ({ w, h, animationKey }: AnimationProps) => {
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
             transition={{ duration: 2, ease: "easeOut" }}
           >
-            <div className="relative w-[600px] h-[600px]">
+            <div className="relative w-[300px] h-[300px] md:w-[600px] md:h-[600px]">
               {/* Dark Aura behind Raven */}
               <div className="absolute inset-0 bg-radial-gradient from-[#2E1065] to-transparent blur-3xl opacity-80 animate-pulse" />
 
@@ -328,7 +331,7 @@ export const RavenAnimation = ({ w, h, animationKey }: AnimationProps) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 1, duration: 1.5 }}
           >
-            <h1 className="text-7xl font-black tracking-[0.1em] text-transparent bg-clip-text bg-gradient-to-b from-white to-[#4C1D95]"
+            <h1 className="text-5xl md:text-7xl font-black tracking-[0.1em] text-transparent bg-clip-text bg-gradient-to-b from-white to-[#4C1D95]"
               style={{
                 fontFamily: "Cinzel, serif",
                 textShadow: "0 10px 40px rgba(0,0,0,0.9)"
@@ -336,7 +339,7 @@ export const RavenAnimation = ({ w, h, animationKey }: AnimationProps) => {
             >
               RACHEL ROTH
             </h1>
-            <p className="text-[#8B5CF6] tracking-[0.5em] text-sm mt-2 uppercase opacity-60">Daughter of Darkness</p>
+            <p className="text-[#8B5CF6] tracking-[0.3em] md:tracking-[0.5em] text-xs md:text-sm mt-2 uppercase opacity-60">Daughter of Darkness</p>
           </motion.div>
         </>
       )}
