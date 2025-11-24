@@ -2,6 +2,7 @@
 
 import { useTheme } from "@/components/theme-provider"
 import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Zap,
@@ -1607,6 +1608,24 @@ export default function ThemeChangeAnimator() {
           </motion.div>
         )
       case "deathstroke":
+        // TIMING CONSTANTS - CORRECTED TIMELINE
+        const TIMING = {
+          SILENCE: { start: 0, end: 1.5 },
+          SCOPE_START: 1.5,
+          SCANNING_END: 3.0,
+          TARGET_LOCKED: 3.0,
+          SHOT: 3.5,
+          IMPACT: 3.6,
+          CRACKS_VISIBLE: 3.65,
+          SHATTER: 4.2,
+          REVEAL: 5.0,
+          TEXT: 5.5,
+          TOTAL_DURATION: 8.0 // Used for normalizing keyframes
+        };
+
+        // Helper to convert seconds to normalized time (0-1)
+        const t = (s: number) => s / TIMING.TOTAL_DURATION;
+
         return (
           <motion.div
             key={`deathstroke-${animationKey}`}
@@ -1616,129 +1635,520 @@ export default function ThemeChangeAnimator() {
             animate="visible"
             exit="exit"
           >
-            {/* Phase 1: Tactical Briefing (0 - 2s) */}
-            <motion.div className="absolute inset-0 opacity-35">
-              <motion.div initial={{ backgroundPosition: "0 0" }} animate={{ backgroundPosition: "-100px -100px" }} transition={{ duration: 1.5, ease: "linear", repeat: 1, repeatType: "loop" }}>
-                <div className="w-full h-full bg-gradient-to-br from-orange-900 via-orange-800 to-orange-700 opacity-50" />
-              </motion.div>
-            </motion.div>
+            {/* ROOT SHAKE CONTAINER - Affects EVERYTHING */}
             <motion.div
-              className="absolute top-[12%] left-1/2 -translate-x-1/2 text-orange-400 text-5xl md:text-7xl font-mono tracking-widest" // Prominent
-              style={{ textShadow: "0 0 20px #FF8C00, 0 0 12px #FF4500, 0 0 3px white" }}
-              initial={{ opacity: 0, y: -60 }}
-              animate={{ opacity: [0, 1, 1, 0], y: 0 }}
-              transition={{ duration: 1.8, delay: 0.1, times: [0, 0.1, 0.88, 1], ease: "easeInOut" }}
-            >
-              TARGET ACQUIRED
-            </motion.div>
-
-            {/* Phase 2: Mask & Reticle (1.5s - 3s) */}
-            <motion.div
-              className="absolute top-0 left-0 w-1/2 h-full bg-orange-600 origin-right"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.35, delay: 1.5, ease: "circOut" }}
-            />
-            <motion.div
-              className="absolute top-0 right-0 w-1/2 h-full bg-slate-900 origin-left"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.35, delay: 1.5, ease: "circOut" }}
-            />
-            <motion.div // Larger, menacing eye
-              className="absolute top-1/2 right-[calc(25%-55px)] -translate-y-1/2 w-[110px] h-[110px] rounded-full bg-black shadow-2xl shadow-black ring-2 ring-orange-500/40"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.25, delay: 1.8, type: "spring", stiffness: 180 }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600"
-              initial={{ opacity: 0, scale: 3.5, filter: "blur(7px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              transition={{ duration: 0.5, delay: 2.0, ease: "backOut" }}
-            >
-              <Target width={w * 0.45} height={w * 0.45} strokeWidth={0.9} className="animate-pulse-fast" />
-            </motion.div>
-
-            {/* Phase 3: Brutal Assault (2.8s - 4.2s) */}
-            {Array.from({ length: 7 }).map(
-              (
-                _,
-                i, // Wider, faster slashes
-              ) => (
-                <motion.div
-                  key={`ds-wide-slash-${i}`}
-                  className="absolute bg-gradient-to-r from-transparent via-gray-100 to-transparent"
-                  style={{
-                    width: "250%",
-                    height: "8px",
-                    left: "-75%",
-                    top: `${8 + Math.random() * 84}%`,
-                    rotate: `${-40 + Math.random() * 80}deg`,
-                    boxShadow: "0 0 22px 6px #fff, 0 0 14px 4px #ffb84d",
-                    mixBlendMode: "add", // Brighter effect
-                  }}
-                  initial={{ x: i % 2 === 0 ? "-100%" : "100%", opacity: 0 }}
-                  animate={{ x: "0%", opacity: [0, 1, 0] }}
-                  transition={{ duration: 0.15, delay: 2.8 + i * 0.06, ease: "easeOut" }}
-                />
-              ),
-            )}
-            {Array.from({ length: 12 }).map(
-              (
-                _,
-                i, // More éclat for bullets
-              ) => (
-                <motion.div
-                  key={`ds-bright-bullet-${i}`}
-                  className="absolute rounded-full bg-orange-200"
-                  style={{
-                    width: "24px",
-                    height: "24px",
-                    left: `${4 + Math.random() * 92}%`,
-                    top: `${4 + Math.random() * 92}%`,
-                    boxShadow: "0 0 18px 10px #FF8C00, 0 0 35px 18px #FFA500, inset 0 0 8px #FFFFE0",
-                  }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 2.2, 1.6], opacity: [0, 1, 0] }}
-                  transition={{ duration: 0.22, delay: 3.2 + i * 0.03, times: [0, 0.15, 1] }}
-                />
-              ),
-            )}
-            <motion.div // Larger, detailed explosion
-              className="absolute top-[calc(50%-150px)] left-[calc(50%-150px)] w-[300px] h-[300px] rounded-full"
-              style={{
-                background:
-                  "radial-gradient(circle, #FFFFFF 10%, #FFD700 28%, #FFA500 48%, #FF4500 68%, rgba(200,0,0,0.7) 82%, transparent 95%)",
-                filter: "blur(10px) contrast(1.6)",
-              }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.9, 1.4], opacity: [0, 1, 0] }}
-              transition={{ duration: 0.6, delay: 3.8, ease: "circOut" }}
-            >
-              <Bomb
-                width={160}
-                height={160}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-800/75 opacity-65"
-              />
-            </motion.div>
-
-            {/* Phase 4: Logo Disappearance (4.0s - 4.5s) */}
-            <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              initial={{ opacity: 0, scale: 3.8, filter: "blur(14px)" }}
+              className="absolute inset-0"
               animate={{
-                opacity: [0, 1, 0.6, 0],
-                scale: [3.8, 1, 1.4, 2.8],
-                filter: ["blur(14px)", "blur(0px)", "blur(0px)", "blur(10px)"],
+                x: [0, -30, 30, -20, 20, -10, 10, 0],
+                y: [0, 20, -20, 15, -15, 8, -8, 0]
               }}
-              transition={{ duration: 0.7, delay: 4.0, ease: "easeInOut" }}
+              transition={{
+                duration: 0.4,
+                delay: TIMING.SHOT,
+                ease: "easeOut"
+              }}
             >
-              <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0.3 }} transition={{ duration: 1.2, ease: "easeOut" }}>
-                <div className="w-[150px] h-[150px] bg-gradient-to-br from-orange-600 to-orange-800 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  DS
+              {/* --- PHASE 5: REVEAL DEATHSTROKE (Background Layer z-0) --- */}
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center z-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: TIMING.REVEAL, duration: 0.8 }}
+              >
+                {/* Smoke */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-t from-orange-900/40 to-transparent"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: TIMING.REVEAL, duration: 1.5 }}
+                />
+                {/* Image */}
+                <div className="relative w-[600px] h-[600px]">
+                  <Image
+                    src="/images/intro/deathstroke.png"
+                    alt="Deathstroke"
+                    fill
+                    className="object-contain drop-shadow-[0_0_80px_#ff4500]"
+                  />
+                  {/* Glowing Eye */}
+                  <motion.div
+                    className="absolute top-[30%] right-[35%] w-6 h-6 bg-orange-500 rounded-full"
+                    style={{ boxShadow: "0 0 40px #ff4500, 0 0 80px #ff4500" }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.8, 1.2], opacity: [0, 1, 0.9] }}
+                    transition={{ delay: TIMING.REVEAL + 0.3, duration: 0.5 }}
+                  />
                 </div>
               </motion.div>
+
+              {/* --- PHASE 1: SILENCE (z-10) --- */}
+              <motion.div
+                className="absolute inset-0 z-10"
+                animate={{ opacity: [1, 1, 0] }}
+                transition={{ duration: TIMING.TOTAL_DURATION, times: [0, t(TIMING.SCOPE_START), t(TIMING.SCOPE_START + 0.1)] }}
+              >
+                {/* Heartbeat */}
+                <motion.div
+                  className="absolute inset-0 bg-red-900/5"
+                  animate={{ opacity: [0, 0.2, 0] }}
+                  transition={{ duration: 0.8, repeat: 2 }}
+                />
+                {/* Initial Laser Dot */}
+                <motion.div
+                  className="absolute w-2 h-2 bg-red-600 rounded-full shadow-[0_0_10px_#ff0000]"
+                  initial={{ x: "10%", y: "80%", opacity: 0 }}
+                  animate={{ x: ["10%", "40%", "50%"], y: ["80%", "30%", "50%"], opacity: [0, 1, 0] }}
+                  transition={{ duration: 1.5, ease: "linear" }}
+                />
+              </motion.div>
+
+              {/* --- PHASE 2: SCOPE & SCANNING (z-10) --- */}
+              <motion.div
+                className="absolute inset-0 z-10 flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 1, 0] }} // Appear, Stay, Disappear at Shatter
+                transition={{
+                  duration: TIMING.TOTAL_DURATION,
+                  times: [0, t(TIMING.SCOPE_START), t(TIMING.SHATTER - 0.1), t(TIMING.SHATTER)]
+                }}
+              >
+                {/* Vignette */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_40%,black_90%)] opacity-90" />
+
+                {/* Scope SVG - Follows Scanning */}
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  animate={{
+                    x: [0, -50, 50, 0],
+                    y: [0, -30, 30, 0]
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    times: [0, 0.3, 0.7, 1],
+                    ease: "easeInOut",
+                    delay: TIMING.SCOPE_START
+                  }}
+                >
+                  <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs>
+                      <mask id="scope-mask-v2">
+                        <rect x="0" y="0" width="100" height="100" fill="white" />
+                        <circle cx="50" cy="50" r="35" fill="black" />
+                      </mask>
+                    </defs>
+                    <rect x="0" y="0" width="100" height="100" fill="black" mask="url(#scope-mask-v2)" opacity="0.98" />
+                    <line x1="10" y1="50" x2="90" y2="50" stroke="#00ff00" strokeWidth="0.05" opacity="0.8" />
+                    <line x1="50" y1="10" x2="50" y2="90" stroke="#00ff00" strokeWidth="0.05" opacity="0.8" />
+                    {/* Mil-dots */}
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <circle key={`h-${i}`} cx={46 + i} cy="50" r="0.15" fill="#00ff00" />
+                    ))}
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <circle key={`v-${i}`} cx="50" cy={46 + i} r="0.15" fill="#00ff00" />
+                    ))}
+                  </svg>
+                </motion.div>
+
+                {/* Scanning Laser Dot */}
+                <motion.div
+                  className="absolute w-2 h-2 bg-red-600 rounded-full shadow-[0_0_10px_#ff0000]"
+                  animate={{
+                    x: [0, -50, 50, 0],
+                    y: [0, -30, 30, 0]
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    times: [0, 0.3, 0.7, 1],
+                    ease: "easeInOut",
+                    delay: TIMING.SCOPE_START
+                  }}
+                />
+
+                {/* HUD */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <motion.div className="absolute top-[30%] right-[20%] text-[#00ff00] font-mono text-xs tracking-widest">
+                    DIST: <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ repeat: Infinity, duration: 0.5 }}>842m</motion.span>
+                  </motion.div>
+                  <motion.div className="absolute top-[30%] left-[20%] text-[#00ff00] font-mono text-xs tracking-widest">
+                    WIND: 4.2 NW
+                  </motion.div>
+
+                  {/* TARGET LOCKED Indicator */}
+                  <motion.div
+                    className="absolute top-[45%] left-1/2 -translate-x-1/2 text-red-500 font-mono text-sm tracking-widest font-bold border border-red-500 px-2 py-1"
+                    initial={{ opacity: 0, scale: 2 }}
+                    animate={{ opacity: [0, 1, 0], scale: 1 }}
+                    transition={{ delay: TIMING.TARGET_LOCKED, duration: 0.5, repeat: 3 }}
+                  >
+                    TARGET LOCKED
+                  </motion.div>
+
+                  <motion.div
+                    className="absolute bottom-[25%] left-1/2 -translate-x-1/2 text-red-500 font-mono text-sm tracking-[0.2em] font-bold"
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.8, repeat: Infinity }}
+                  >
+                    BREATH HELD
+                  </motion.div>
+                </div>
+              </motion.div>
+
+              {/* --- PHASE 3B: IMPACT & FISSURATION (z-20) --- */}
+              {/* Much more visible cracked screen */}
+              <motion.div
+                className="absolute inset-0 z-20"
+                style={{
+                  background: "rgba(255,255,255,0.25)",
+                  backdropFilter: "blur(2px)",
+                  boxShadow: "inset 0 0 100px rgba(255,255,255,0.3)"
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: 0.05,
+                  delay: TIMING.IMPACT
+                }}
+              >
+                {/* Realistic Bullet Impact - Multi-layered */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  {/* Outer impact zone - crushed glass */}
+                  <motion.div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full"
+                    style={{
+                      background: "radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(255,255,255,0.4) 40%, transparent 70%)",
+                      boxShadow: "0 0 40px rgba(255,255,255,0.6)"
+                    }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.3, 1], opacity: [0, 0.8, 0.6] }}
+                    transition={{ duration: 0.15, delay: TIMING.IMPACT }}
+                  />
+
+                  {/* Main bullet hole - entry point */}
+                  <motion.div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full"
+                    style={{
+                      background: "radial-gradient(circle, #000000 30%, #1a1a1a 50%, rgba(50,50,50,0.8) 100%)",
+                      border: "2px solid rgba(255,255,255,0.9)",
+                      boxShadow: "inset 0 0 15px rgba(0,0,0,1), inset 0 0 8px rgba(100,100,100,0.5), 0 0 25px rgba(255,255,255,0.8)"
+                    }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.5, 1], opacity: 1 }}
+                    transition={{ duration: 0.1, delay: TIMING.IMPACT }}
+                  />
+
+                  {/* Inner dark core */}
+                  <motion.div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-black"
+                    style={{
+                      boxShadow: "inset 0 0 6px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.5)"
+                    }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: [0, 1.2, 1] }}
+                    transition={{ duration: 0.12, delay: TIMING.IMPACT + 0.03 }}
+                  />
+
+                  {/* Micro radial cracks around hole */}
+                  {Array.from({ length: 12 }).map((_, i) => {
+                    const angle = (i * 30) * (Math.PI / 180);
+                    const length = 15 + Math.random() * 10;
+                    return (
+                      <motion.div
+                        key={`micro-crack-${i}`}
+                        className="absolute top-1/2 left-1/2"
+                        style={{
+                          width: "1px",
+                          height: `${length}px`,
+                          background: "linear-gradient(to bottom, rgba(255,255,255,0.9), transparent)",
+                          transformOrigin: "top center",
+                          transform: `rotate(${angle * (180 / Math.PI)}deg)`,
+                          filter: "blur(0.3px)"
+                        }}
+                        initial={{ scaleY: 0, opacity: 0 }}
+                        animate={{ scaleY: 1, opacity: 0.8 }}
+                        transition={{ duration: 0.08, delay: TIMING.IMPACT + 0.05 + i * 0.005 }}
+                      />
+                    );
+                  })}
+
+                  {/* Glass dust particles around impact */}
+                  {Array.from({ length: 8 }).map((_, i) => {
+                    const angle = (i * 45) * (Math.PI / 180);
+                    const distance = 20 + Math.random() * 15;
+                    return (
+                      <motion.div
+                        key={`dust-${i}`}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-white rounded-full"
+                        style={{
+                          boxShadow: "0 0 4px rgba(255,255,255,0.9)"
+                        }}
+                        initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+                        animate={{
+                          x: Math.cos(angle) * distance,
+                          y: Math.sin(angle) * distance,
+                          opacity: [0, 1, 0.6, 0],
+                          scale: [0, 1.5, 1, 0.5]
+                        }}
+                        transition={{ duration: 0.4, delay: TIMING.IMPACT + 0.05 }}
+                      />
+                    );
+                  })}
+                </div>
+                {/* Spiderweb Cracks - MUCH MORE VISIBLE */}
+                <svg className="absolute inset-0 overflow-visible" viewBox="0 0 100 100">
+                  <defs>
+                    <filter id="crack-glow-strong"><feGaussianBlur stdDeviation="0.3" /></filter>
+                  </defs>
+                  {/* Radial Cracks */}
+                  {[
+                    "M 50 50 L 50 5",
+                    "M 50 50 L 85 15",
+                    "M 50 50 L 95 50",
+                    "M 50 50 L 85 85",
+                    "M 50 50 L 50 95",
+                    "M 50 50 L 15 85",
+                    "M 50 50 L 5 50",
+                    "M 50 50 L 15 15"
+                  ].map((d, i) => (
+                    <motion.path
+                      key={`crack-${i}`}
+                      d={d}
+                      stroke="white"
+                      strokeWidth="1.5"
+                      opacity="1"
+                      filter="url(#crack-glow-strong)"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.15, delay: TIMING.CRACKS_VISIBLE + i * 0.02, ease: "easeOut" }}
+                    />
+                  ))}
+                  {/* Concentric Cracks */}
+                  <motion.circle
+                    cx="50" cy="50" r="15"
+                    stroke="white" strokeWidth="1" fill="none"
+                    strokeDasharray="3, 3"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 0.2, delay: TIMING.CRACKS_VISIBLE + 0.1 }}
+                  />
+                  <motion.circle
+                    cx="50" cy="50" r="25"
+                    stroke="white" strokeWidth="0.8" fill="none"
+                    strokeDasharray="5, 5"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.9 }}
+                    transition={{ duration: 0.25, delay: TIMING.CRACKS_VISIBLE + 0.15 }}
+                  />
+                </svg>
+              </motion.div>
+
+              {/* --- PHASE 3A: EFFECTS (z-30) --- */}
+              <motion.div className="absolute inset-0 z-30 pointer-events-none">
+                {/* Muzzle Flash */}
+                <motion.div
+                  className="absolute inset-0 bg-white mix-blend-screen"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 0.1, delay: TIMING.SHOT }}
+                />
+                {/* Bullet Trail */}
+                <motion.div
+                  className="absolute top-1/2 left-1/2 h-1 bg-gradient-to-r from-transparent via-orange-500 to-white"
+                  style={{ width: "50%", originX: 0, rotate: -45 }}
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  animate={{ scaleX: 1, opacity: [1, 0] }}
+                  transition={{ duration: 0.1, delay: TIMING.SHOT }}
+                />
+                {/* Shockwave */}
+                <motion.div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-[50px] border-white/20"
+                  initial={{ width: 0, height: 0, opacity: 0 }}
+                  animate={{ width: "150vmax", height: "150vmax", opacity: [1, 0] }}
+                  transition={{ duration: 0.3, delay: TIMING.SHOT }}
+                />
+              </motion.div>
+
+              {/* --- PHASE 4: SHATTER (z-40) - DOKKAN BATTLE STYLE --- */}
+              <div className="absolute inset-0 z-40 pointer-events-none">
+                {/* Large Realistic Glass Shards - Irregular polygonal shapes */}
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const angle = (i * 30) * (Math.PI / 180);
+                  const distance = 400 + Math.random() * 200;
+                  const size = 100 + Math.random() * 150;
+
+                  // Create irregular polygon shapes for each shard
+                  const irregularShapes = [
+                    "polygon(50% 0%, 80% 30%, 100% 60%, 70% 100%, 20% 90%, 0% 50%, 30% 20%)",
+                    "polygon(40% 0%, 100% 20%, 90% 80%, 60% 100%, 10% 70%, 0% 30%)",
+                    "polygon(50% 10%, 100% 40%, 85% 100%, 30% 95%, 0% 60%, 20% 0%)",
+                    "polygon(60% 0%, 100% 50%, 80% 100%, 20% 90%, 0% 40%, 25% 10%)"
+                  ];
+
+                  return (
+                    <motion.div
+                      key={`shard-${i}`}
+                      className="absolute"
+                      style={{
+                        left: "50%",
+                        top: "50%",
+                        width: `${size}px`,
+                        height: `${size}px`,
+                        marginLeft: `-${size / 2}px`,
+                        marginTop: `-${size / 2}px`,
+                        clipPath: irregularShapes[i % 4]
+                      }}
+                      initial={{
+                        x: 0,
+                        y: 0,
+                        opacity: 0,
+                        scale: 1,
+                        rotate: angle * (180 / Math.PI)
+                      }}
+                      animate={{
+                        x: Math.cos(angle) * distance,
+                        y: Math.sin(angle) * distance,
+                        rotate: angle * (180 / Math.PI) + (Math.random() - 0.5) * 180,
+                        opacity: [0, 1, 0.8, 0],
+                        scale: [1, 1.1, 1, 0.8]
+                      }}
+                      transition={{
+                        duration: 1.2,
+                        delay: TIMING.SHATTER + i * 0.015,
+                        ease: "easeOut",
+                        times: [0, 0.2, 0.6, 1]
+                      }}
+                    >
+                      {/* Base glass layer with depth gradient */}
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(230,240,255,0.85) 30%, rgba(200,220,255,0.7) 100%)",
+                          backdropFilter: "blur(4px)"
+                        }}
+                      />
+
+                      {/* Reflection layer - light catching edge */}
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: "linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.9) 20%, transparent 40%, rgba(255,255,255,0.6) 60%, transparent 80%)",
+                          mixBlendMode: "overlay"
+                        }}
+                      />
+
+                      {/* Sharp edge highlight */}
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          border: "3px solid rgba(255,255,255,0.98)",
+                          boxShadow: "inset 0 0 20px rgba(255,255,255,0.4), 0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(200,220,255,0.4)",
+                        }}
+                      />
+
+                      {/* Internal fracture lines/texture */}
+                      <svg className="absolute inset-0" viewBox="0 0 100 100" style={{ opacity: 0.3 }}>
+                        <line x1="0" y1="0" x2="100" y2="100" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
+                        <line x1="100" y1="0" x2="0" y2="100" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" />
+                        <line x1="50" y1="0" x2="50" y2="100" stroke="rgba(255,255,255,0.3)" strokeWidth="0.3" />
+                      </svg>
+                    </motion.div>
+                  );
+                })}
+
+                {/* Additional smaller fragments for density */}
+                {Array.from({ length: 20 }).map((_, i) => {
+                  const angle = (i * 18 + 15) * (Math.PI / 180); // Offset angles
+                  const distance = 250 + Math.random() * 250;
+                  const size = 40 + Math.random() * 80;
+
+                  return (
+                    <motion.div
+                      key={`small-shard-${i}`}
+                      className="absolute"
+                      style={{
+                        left: "50%",
+                        top: "50%",
+                        width: `${size}px`,
+                        height: `${size}px`,
+                        marginLeft: `-${size / 2}px`,
+                        marginTop: `-${size / 2}px`,
+                        background: "rgba(255,255,255,0.85)",
+                        border: "2px solid rgba(255,255,255,1)",
+                        boxShadow: "0 0 20px rgba(255,255,255,0.9)",
+                        clipPath: i % 3 === 0
+                          ? "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)" // Diamond
+                          : "polygon(50% 0%, 100% 100%, 0% 100%)", // Triangle
+                      }}
+                      initial={{
+                        x: 0,
+                        y: 0,
+                        opacity: 0,
+                        scale: 0.8
+                      }}
+                      animate={{
+                        x: Math.cos(angle) * distance,
+                        y: Math.sin(angle) * distance,
+                        rotate: Math.random() * 360,
+                        opacity: [0, 1, 0],
+                        scale: [0.8, 1.2, 0.6]
+                      }}
+                      transition={{
+                        duration: 1.0,
+                        delay: TIMING.SHATTER + Math.random() * 0.15,
+                        ease: "easeOut"
+                      }}
+                    />
+                  );
+                })}
+
+                {/* Bright flash particles at center */}
+                {Array.from({ length: 15 }).map((_, i) => {
+                  const angle = (i * 24) * (Math.PI / 180);
+                  const distance = 150 + Math.random() * 100;
+
+                  return (
+                    <motion.div
+                      key={`flash-${i}`}
+                      className="absolute"
+                      style={{
+                        left: "50%",
+                        top: "50%",
+                        width: "12px",
+                        height: "12px",
+                        marginLeft: "-6px",
+                        marginTop: "-6px",
+                        background: "radial-gradient(circle, rgba(255,255,255,1), rgba(255,255,255,0))",
+                        boxShadow: "0 0 15px rgba(255,255,255,1)",
+                        borderRadius: "50%"
+                      }}
+                      initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+                      animate={{
+                        x: Math.cos(angle) * distance,
+                        y: Math.sin(angle) * distance,
+                        opacity: [0, 1, 0],
+                        scale: [0, 2, 1]
+                      }}
+                      transition={{
+                        duration: 0.6,
+                        delay: TIMING.SHATTER,
+                        ease: "easeOut"
+                      }}
+                    />
+                  );
+                })}
+              </div>
+
+              {/* --- PHASE 5: TEXT (z-50) --- */}
+              <motion.div
+                className="absolute bottom-[10%] left-1/2 -translate-x-1/2 text-orange-500 font-bold text-6xl tracking-[0.8em] z-50"
+                style={{ textShadow: "0 0 20px #ff4500" }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: TIMING.TEXT, duration: 0.5 }}
+              >
+                TERMINATED
+              </motion.div>
+
             </motion.div>
           </motion.div>
         )
@@ -1875,5 +2285,23 @@ export default function ThemeChangeAnimator() {
     }
   }
 
-  return <AnimatePresence mode="wait">{activeAnimation && renderAnimation()}</AnimatePresence>
+  // Use Portal to ensure the animation is always fixed relative to the viewport,
+  // ignoring any parent stacking contexts (transforms, filters, etc.)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
+  if (!mounted) return null
+
+  return createPortal(
+    <AnimatePresence mode="wait">
+      {activeAnimation && (
+        renderAnimation()
+      )}
+    </AnimatePresence>,
+    document.body
+  )
 }
