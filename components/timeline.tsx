@@ -10,7 +10,10 @@ type TimelineItem = {
   period: string
   title: string
   location: string
+  description?: string
   tags: string[]
+  isCurrent?: boolean
+  subtitle?: string
 }
 
 export default function Timeline() {
@@ -22,6 +25,14 @@ export default function Timeline() {
   }, [])
 
   const experiences: TimelineItem[] = [
+    {
+      period: "Août 2025 - Novembre 2026",
+      title: "Alternance - Développeur Web Full-Stack",
+      location: "Ski Planet",
+      subtitle: "Formation en alternance",
+      isCurrent: true,
+      tags: ["Laravel", "React", "TypeScript", "WordPress", "API", "Docker"],
+    },
     {
       period: "2024 - 2026",
       title: "Formation Développeur Web Full-Stack",
@@ -194,15 +205,33 @@ export default function Timeline() {
                     <span className="text-white font-bold">{item.period.split(" ")[0].slice(2)}</span>
                   </div>
 
-                  <div className="bg-card rounded-lg p-6 shadow-md">
-                    <div className="mb-2">
+                  <div className={cn("bg-card rounded-lg p-6 shadow-md", item.isCurrent && "ring-2 ring-offset-2", item.isCurrent && getThemeBorderColor().replace("border-", "ring-"))}>
+                    <div className="flex items-center justify-between mb-2">
                       <h4 className={cn("text-xl font-bold", getThemeTextColor())}>{item.period}</h4>
+                      {item.isCurrent && (
+                        <span className={cn(
+                          "px-3 py-1 rounded-full text-xs font-bold text-white animate-pulse",
+                          getThemeColor()
+                        )}>
+                          ✨ EN COURS
+                        </span>
+                      )}
                     </div>
-                    <p className="text-lg font-semibold mb-2">{item.title}</p>
+                    <p className="text-lg font-semibold mb-1">{item.title}</p>
+                    {item.subtitle && (
+                      <p className="text-sm text-muted-foreground mb-3 italic">
+                        {item.subtitle}
+                      </p>
+                    )}
                     <div className="flex items-center text-muted-foreground mb-4">
                       <MapPin className="h-4 w-4 mr-2" />
-                      <span>{item.location}</span>
+                      <span className="font-medium">{item.location}</span>
                     </div>
+                    {item.description && (
+                      <p className="text-sm text-muted-foreground mb-4 italic">
+                        {item.description}
+                      </p>
+                    )}
                     <div className="flex flex-wrap gap-2">
                       {item.tags.map((tag, idx) => (
                         <span
