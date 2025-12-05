@@ -366,7 +366,7 @@ export const StarfireAnimation = ({ w, h, animationKey }: AnimationProps) => {
       >
         <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-100 via-orange-500 to-red-800 drop-shadow-[0_4px_15px_rgba(0,0,0,0.9)]"
           style={{ fontFamily: "'Cinzel', serif", textShadow: "0 0 40px rgba(255,100,0,0.5)" }}>
-          KORIAND'R
+          STARFIRE
         </h1>
         <motion.div
           className="w-48 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent mx-auto mt-4"

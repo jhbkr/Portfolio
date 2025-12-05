@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
@@ -14,19 +15,20 @@ export default function Header() {
   const [isClient, setIsClient] = useState(false)
   const [currentPath, setCurrentPath] = useState('/')
   const { theme } = useTheme()
+  const router = useRouter()
 
   // Initialisation côté client
   useEffect(() => {
     setIsClient(true)
     setCurrentPath(window.location.pathname)
-    
+
     // Écouter les changements de route
     const handleRouteChange = () => {
       setCurrentPath(window.location.pathname)
     }
-    
+
     window.addEventListener('popstate', handleRouteChange)
-    
+
     return () => {
       window.removeEventListener('popstate', handleRouteChange)
     }
@@ -66,17 +68,17 @@ export default function Header() {
   const scrollToSection = (sectionId: string) => {
     if (!isClient) return
 
-    // Si c'est un lien externe (commence par /), utiliser Next.js Link
+    // Si c'est un lien externe (commence par /), utiliser Next.js router
     if (sectionId.startsWith('/')) {
-      window.location.href = sectionId
+      router.push(sectionId)
       setMobileMenuOpen(false)
       return
     }
-    
+
     // Vérifier si on est sur la page d'accueil ou la page freelance
     const isOnHomePage = currentPath === '/'
     const isOnFreelancePage = currentPath === '/freelance'
-    
+
     // Si on est sur la page freelance et qu'on clique sur une section
     if (isOnFreelancePage) {
       const section = document.getElementById(sectionId)
@@ -90,7 +92,7 @@ export default function Header() {
       }
       return
     }
-    
+
     // Si on est sur la page d'accueil et qu'on clique sur une section
     if (isOnHomePage) {
       const section = document.getElementById(sectionId)
@@ -209,7 +211,7 @@ export default function Header() {
               ← Retour Portfolio
             </Link>
           )}
-          
+
           {navItems.map((item) => (
             <button
               key={item.name}
@@ -243,7 +245,7 @@ export default function Header() {
                 ← Retour Portfolio
               </Link>
             )}
-            
+
             {navItems.map((item) => (
               <button
                 key={item.name}

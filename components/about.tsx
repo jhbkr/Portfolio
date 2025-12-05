@@ -2,17 +2,30 @@
 
 import { useTheme } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
-import { Briefcase, GraduationCap, Languages, User } from "lucide-react"
+import { Briefcase, GraduationCap, Languages, User, ChevronLeft, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export default function About() {
   const { theme } = useTheme()
   const [isClient, setIsClient] = useState(false)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' })
+    }
+  }
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' })
+    }
+  }
 
   const getThemeColor = () => {
     if (!isClient) {
@@ -131,37 +144,64 @@ export default function About() {
           </p>
         </motion.div>
 
-        <div className="overflow-hidden py-8 relative">
-          <div className="flex animate-scroll">
-            {duplicatedSections.map((section, index) => (
-              <div
-                key={`${section.title}-${index}`}
-                className={cn(
-                  "mx-4 p-6 rounded-xl border-2 min-w-[300px] md:min-w-[400px] max-w-[400px]",
-                  "card-glow",
-                  isClient && getThemeBorderColor(),
-                )}
-              >
-                <div className="flex items-center mb-4">
-                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center mr-3", isClient && getThemeColor())}>
-                    {section.icon}
+        <div className="relative">
+          {/* Navigation Arrows */}
+          <button
+            onClick={scrollLeft}
+            className={cn(
+              "absolute left-0 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full border-2 transition-all hover:scale-110 bg-background/80 backdrop-blur-sm",
+              isClient && getThemeBorderColor(),
+              isClient && getThemeTextColor()
+            )}
+            aria-label="Précédent"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+
+          <button
+            onClick={scrollRight}
+            className={cn(
+              "absolute right-0 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full border-2 transition-all hover:scale-110 bg-background/80 backdrop-blur-sm",
+              isClient && getThemeBorderColor(),
+              isClient && getThemeTextColor()
+            )}
+            aria-label="Suivant"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+
+          <div className="overflow-hidden py-8 relative" ref={scrollContainerRef}>
+            <div className="flex animate-scroll">
+              {duplicatedSections.map((section, index) => (
+                <div
+                  key={`${section.title}-${index}`}
+                  className={cn(
+                    "mx-4 p-6 rounded-xl border-2 min-w-[300px] md:min-w-[400px] max-w-[400px]",
+                    "card-glow",
+                    isClient && getThemeBorderColor(),
+                  )}
+                >
+                  <div className="flex items-center mb-4">
+                    <div className={cn("w-10 h-10 rounded-full flex items-center justify-center mr-3", isClient && getThemeColor())}>
+                      {section.icon}
+                    </div>
+                    <h3 className={cn("text-xl font-bold", isClient && getThemeTextColor())}>{section.title}</h3>
                   </div>
-                  <h3 className={cn("text-xl font-bold", isClient && getThemeTextColor())}>{section.title}</h3>
+
+                  <ul className="space-y-2">
+                    {section.content.map((item, idx) => (
+                      <li key={idx} className="text-muted-foreground break-words">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+              ))}
+            </div>
 
-                <ul className="space-y-2">
-                  {section.content.map((item, idx) => (
-                    <li key={idx} className="text-muted-foreground break-words">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-background to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-background to-transparent z-10 pointer-events-none"></div>
           </div>
-
-          <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-background to-transparent z-10"></div>
-          <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-background to-transparent z-10"></div>
         </div>
       </div>
     </section>

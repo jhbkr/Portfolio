@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { useTheme } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence, useAnimation } from "framer-motion"
-import { X } from "lucide-react"
+import { X, ChevronLeft, ChevronRight } from "lucide-react"
 
 type Skill = {
   name: string
@@ -159,6 +159,8 @@ export default function Skills() {
   // Ajout pour scroll infini
   const containerRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
+  const [currentX, setCurrentX] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
   const controls = useAnimation()
 
   useEffect(() => {
@@ -168,20 +170,44 @@ export default function Skills() {
   }, [skills.length])
 
   useEffect(() => {
-    if (width > 0) {
+    if (width > 0 && !isPaused) {
       controls.start({
-        x: -width,
+        x: [currentX, -width],
         transition: {
           x: {
+            duration: ((width - Math.abs(currentX)) / width) * 35,
+            ease: "linear",
             repeat: Infinity,
             repeatType: "loop",
-            duration: 35,
-            ease: "linear",
           },
         },
       })
     }
-  }, [width, controls])
+  }, [width, controls, currentX, isPaused])
+
+  const scrollLeft = async () => {
+    setIsPaused(true)
+    controls.stop()
+    const newX = Math.min(currentX + 400, 0)
+    await controls.start({
+      x: newX,
+      transition: { duration: 0.5, ease: "easeOut" }
+    })
+    setCurrentX(newX)
+    setIsPaused(false)
+  }
+
+  const scrollRight = async () => {
+    setIsPaused(true)
+    controls.stop()
+    const newX = currentX - 400
+    await controls.start({
+      x: newX,
+      transition: { duration: 0.5, ease: "easeOut" }
+    })
+    setCurrentX(newX)
+    setIsPaused(false)
+  }
 
   const getThemeColor = () => {
     if (!mounted) return "bg-primary"
@@ -272,31 +298,58 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        <div className="overflow-hidden py-8 relative">
-          <motion.div
-            className="flex whitespace-nowrap"
-            ref={containerRef}
-            animate={controls}
-            style={{ x: 0 }}
+        <div className="relative">
+          {/* Navigation Arrows */}
+          <button
+            onClick={scrollLeft}
+            className={cn(
+              "absolute left-0 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full border-2 transition-all hover:scale-110 bg-background/80 backdrop-blur-sm",
+              getThemeBorderColor(),
+              getThemeTextColor()
+            )}
+            aria-label="Précédent"
           >
-            {[...skills, ...skills].map((skill, index) => (
-              <div
-                key={`${skill.name}-${index}`}
-                className={cn(
-                  "flex items-center justify-center mx-4 px-6 py-4 rounded-xl border-2 min-w-[180px] cursor-pointer",
-                  "card-glow transition-all duration-300",
-                  getThemeBorderColor(),
-                )}
-                onClick={() => setSelectedSkill(skill)}
-              >
-                <span className="text-3xl mr-3">{skill.icon}</span>
-                <span className={cn("text-xl font-bold", getThemeTextColor())}>{skill.name}</span>
-              </div>
-            ))}
-          </motion.div>
+            <ChevronLeft className="h-6 w-6" />
+          </button>
 
-          <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-background to-transparent z-10"></div>
-          <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-background to-transparent z-10"></div>
+          <button
+            onClick={scrollRight}
+            className={cn(
+              "absolute right-0 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full border-2 transition-all hover:scale-110 bg-background/80 backdrop-blur-sm",
+              getThemeBorderColor(),
+              getThemeTextColor()
+            )}
+            aria-label="Suivant"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+
+          <div className="overflow-hidden py-8 relative">
+            <motion.div
+              className="flex whitespace-nowrap"
+              ref={containerRef}
+              animate={controls}
+              style={{ x: 0 }}
+            >
+              {[...skills, ...skills].map((skill, index) => (
+                <div
+                  key={`${skill.name}-${index}`}
+                  className={cn(
+                    "flex items-center justify-center mx-4 px-6 py-4 rounded-xl border-2 min-w-[180px] cursor-pointer",
+                    "card-glow transition-all duration-300",
+                    getThemeBorderColor(),
+                  )}
+                  onClick={() => setSelectedSkill(skill)}
+                >
+                  <span className="text-3xl mr-3">{skill.icon}</span>
+                  <span className={cn("text-xl font-bold", getThemeTextColor())}>{skill.name}</span>
+                </div>
+              ))}
+            </motion.div>
+
+            <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-background to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-background to-transparent z-10 pointer-events-none"></div>
+          </div>
         </div>
       </div>
 

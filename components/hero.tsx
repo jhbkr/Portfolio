@@ -156,7 +156,7 @@ export default function Hero() {
               & Mobile
             </h1>
             <p className="text-xl text-foreground/80">
-              Je suis Jihad Bakari, passionné par le développement web et mobile, à la recherche d'une alternance en Septembre 2025 pour approfondir mes compétences en Full-Stack.
+              Je suis Jihad Bakari, développeur Full-Stack alternant chez Ski-Planet, passionné par le développement web et mobile. Je travaille sur des migrations de données, du Laravel, du WordPress, du React, ainsi que le développement backend/frontend, la création d'APIs, le seeding de bases de données et l'intégration de solutions helpdesk.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button

@@ -8,7 +8,8 @@ export default function ThemeEffects() {
   const { theme } = useTheme()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isClient, setIsClient] = useState(false)
-  const [hasPlayedIntro, setHasPlayedIntro] = useState(false)
+  const [hasChangedTheme, setHasChangedTheme] = useState(false)
+  const [initialTheme, setInitialTheme] = useState<string | null>(null)
 
   // Premier useEffect - toujours appelé
   useEffect(() => {
@@ -51,33 +52,28 @@ export default function ThemeEffects() {
     }
   }, [theme, isClient])
 
-  // Quatrième useEffect - toujours appelé
+  // Sauvegarder le thème initial
   useEffect(() => {
-    if (!isClient) return
+    if (!isClient || initialTheme !== null) return
+    setInitialTheme(theme as string)
+  }, [isClient, theme, initialTheme])
 
-    // Vérifier si l'intro a déjà été jouée dans cette session
-    if (typeof window !== 'undefined') {
-      const sessionIntroPlayed = sessionStorage.getItem('themeIntroPlayed')
-      if (sessionIntroPlayed) {
-        setHasPlayedIntro(true)
-      }
+  // Détecter le changement de thème par l'utilisateur
+  useEffect(() => {
+    if (!isClient || initialTheme === null) return
+
+    // Si le thème a changé depuis le thème initial, marquer comme changé
+    if (theme !== initialTheme) {
+      setHasChangedTheme(true)
     }
-  }, [isClient])
-
-  // Cinquième useEffect - toujours appelé
-  useEffect(() => {
-    if (!isClient || hasPlayedIntro || typeof window === 'undefined') return
-    
-    // Attendre un peu avant de marquer comme joué pour éviter les rechargements rapides
-    const timer = setTimeout(() => {
-      sessionStorage.setItem('themeIntroPlayed', 'true')
-      setHasPlayedIntro(true)
-    }, 1000)
-    
-    return () => clearTimeout(timer)
-  }, [isClient, hasPlayedIntro])
+  }, [theme, isClient, initialTheme])
 
   if (!isClient) return null
+
+  // Ne pas afficher les effets si l'utilisateur n'a pas encore changé de thème
+  if (!hasChangedTheme) {
+    return null
+  }
 
   // Afficher les effets seulement si on n'est pas sur les thèmes de base
   if (theme === "light" || theme === "dark" || theme === "system") {
