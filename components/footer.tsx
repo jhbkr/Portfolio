@@ -5,9 +5,11 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { Github, Twitter, Linkedin, Instagram } from "lucide-react"
 import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 export default function Footer() {
   const { theme } = useTheme()
+  const currentPath = usePathname()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -16,6 +18,7 @@ export default function Footer() {
 
   const getThemeColor = () => {
     if (!mounted) return "text-primary"
+    if (currentPath === "/cybersecurity") return "text-red-500"
 
     switch (theme) {
       case "robin":
@@ -35,6 +38,7 @@ export default function Footer() {
 
   const getThemeBgColor = () => {
     if (!mounted) return "bg-primary/10"
+    if (currentPath === "/cybersecurity") return "bg-black"
 
     switch (theme) {
       case "robin":
@@ -53,12 +57,12 @@ export default function Footer() {
   }
 
   return (
-    <footer className={cn("py-8 border-t", getThemeBgColor())}>
+    <footer className={cn("py-8 border-t", currentPath === "/cybersecurity" ? "border-red-500/20 bg-black" : getThemeBgColor())}>
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <Link href="/" className={cn("text-xl font-bold", getThemeColor())}>
-              Jihad Bakari Portfolio
+              {currentPath === "/cybersecurity" ? "Jihad Bakari CyberSec" : "Jihad Bakari Portfolio"}
             </Link>
             <p className="text-sm text-muted-foreground mt-1">&copy; {new Date().getFullYear()} All rights reserved</p>
           </div>
@@ -66,16 +70,16 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
             {/* Liens légaux */}
             <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <Link href="/mentions-legales" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/mentions-legales" className={cn("text-muted-foreground transition-colors hover:text-foreground", currentPath === "/cybersecurity" && "hover:text-red-500")}>
                 Mentions légales
               </Link>
-              <Link href="/cgv" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/cgv" className={cn("text-muted-foreground transition-colors hover:text-foreground", currentPath === "/cybersecurity" && "hover:text-red-500")}>
                 CGV
               </Link>
-              <Link href="/politique-confidentialite" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/politique-confidentialite" className={cn("text-muted-foreground transition-colors hover:text-foreground", currentPath === "/cybersecurity" && "hover:text-red-500")}>
                 Politique de confidentialité
               </Link>
-              <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/contact" className={cn("text-muted-foreground transition-colors hover:text-foreground", currentPath === "/cybersecurity" && "hover:text-red-500")}>
                 Contact
               </Link>
             </div>
@@ -84,7 +88,10 @@ export default function Footer() {
             <div className="flex space-x-4">
               <a
                 href="https://github.com/jhbkr"
-                className="w-10 h-10 rounded-full flex items-center justify-center bg-background hover:bg-muted transition-colors"
+                className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center bg-background hover:bg-muted transition-colors border",
+                  currentPath === "/cybersecurity" ? "border-red-500/30 hover:bg-red-500/10 text-red-500" : "border-transparent"
+                )}
                 aria-label="GitHub"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -93,7 +100,10 @@ export default function Footer() {
               </a>
               <a
                 href="https://www.linkedin.com/in/jihad-bakari/"
-                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted hover:bg-muted/80 transition"
+                className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center bg-background hover:bg-muted transition-colors border",
+                  currentPath === "/cybersecurity" ? "border-red-500/30 hover:bg-red-500/10 text-red-500" : "border-transparent"
+                )}
                 aria-label="LinkedIn"
                 target="_blank"
                 rel="noopener noreferrer"

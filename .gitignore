@@ -16,5 +16,7 @@ Thumbs.db
 .env.*.local
 
 # Build
+.next/
 build/
+out/
 coverage/

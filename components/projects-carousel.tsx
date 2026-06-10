@@ -27,11 +27,41 @@ export default function ProjectsCarousel() {
   const [direction, setDirection] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
+  const autoPlayInterval = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  // Auto-play
+  useEffect(() => {
+    if (isAutoPlaying && !isPaused) {
+      autoPlayInterval.current = setInterval(() => {
+        nextProject()
+      }, 5000) // Change every 5 seconds
+    }
+    return () => {
+      if (autoPlayInterval.current) {
+        clearInterval(autoPlayInterval.current)
+      }
+    }
+  }, [isAutoPlaying, isPaused, currentIndex])
+
+  // Navigation clavier
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        prevProject()
+      } else if (e.key === "ArrowRight") {
+        nextProject()
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
 
   const theme = mounted ? rawTheme : "system"
@@ -175,17 +205,37 @@ export default function ProjectsCarousel() {
     <section id="projects" className="py-24 md:py-32">
       <div className="container mx-auto px-4">
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Mes Projets</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Découvrez quelques-uns de mes travaux récents. Faites glisser ou utilisez les flèches pour naviguer entre
-            les projets.
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
+            Découvrez quelques-uns de mes travaux récents. Utilisez les flèches du clavier ou faites glisser pour naviguer.
           </p>
+          <div className="flex items-center justify-center gap-4">
+            <span className={cn("text-sm font-medium", getThemeTextColor())}>
+              {currentIndex + 1} / {projects.length}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+              className={cn(
+                "gap-2 border-2",
+                theme === "robin" && "border-[#FF0000] text-[#FF0000] hover:bg-[#FF0000]/10",
+                theme === "starfire" && "border-[#FF69B4] text-[#FF69B4] hover:bg-[#FF69B4]/10",
+                theme === "cyborg" && "border-[#4169E1] text-[#4169E1] hover:bg-[#4169E1]/10",
+                theme === "beastboy" && "border-[#32CD32] text-[#32CD32] hover:bg-[#32CD32]/10",
+                theme === "raven" && "border-[#663399] text-[#663399] hover:bg-[#663399]/10",
+                theme === "deathstroke" && "border-[#FF8C00] text-[#FF8C00] hover:bg-[#FF8C00]/10",
+              )}
+            >
+              {isAutoPlaying ? "⏸ Pause" : "▶ Auto-Play"}
+            </Button>
+          </div>
         </motion.div>
 
         <div
@@ -193,62 +243,71 @@ export default function ProjectsCarousel() {
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          role="region"
+          aria-label="Carrousel de projets"
+          aria-live="polite"
         >
           <div className="py-8 relative h-[420px] md:h-[540px] flex items-center justify-center">
-            {/* Projets adjacents */}
-            {[currentIndex - 1, currentIndex + 1].map((i, idx) => {
-              const index = (i + projects.length) % projects.length;
-              const project = projects[index];
-              const isPrev = idx === 0;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.95, x: isPrev ? -60 : 60 }}
-                  animate={{ opacity: 0.7, scale: 1, x: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, x: isPrev ? -60 : 60 }}
-                  transition={{ duration: 0.3 }}
-                  className={
-                    isPrev
-                      ? "absolute left-0 top-0 h-full w-1/3 pointer-events-none z-0 -translate-x-2/3"
-                      : "absolute right-0 top-0 h-full w-1/3 pointer-events-none z-0 translate-x-2/3"
-                  }
-                  style={{ filter: 'blur(2.5px)', opacity: 0.7, background: 'rgba(255,255,255,0.15)', boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
-                >
-                  <Card className="overflow-hidden border-2 card-glow relative h-full">
-                    <div className="relative h-72 md:h-96">
-                      {project.title === "Site Portfolio" ? (
-                        <video
-                          src="/images/project/Portfolio.webm"
-                          className="object-cover w-full h-full absolute inset-0"
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          poster="/placeholder.svg?height=300&width=500"
-                        />
-                      ) : project.title === "E-commerce" ? (
-                        <video
-                          src="/images/project/demo.mp4"
-                          className="object-cover w-full h-full absolute inset-0"
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          poster="/placeholder.svg?height=300&width=500"
-                        />
-                      ) : (
-                        <Image
-                          src={project.image || "/placeholder.svg"}
-                          alt={project.title}
-                          fill
-                          className={project.title === "My Snapchat" ? "object-contain" : "object-cover"}
-                        />
-                      )}
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })}
+            {/* Projets adjacents - masqués sur mobile pour performance */}
+            <div className="hidden md:block">
+              {[currentIndex - 1, currentIndex + 1].map((i, idx) => {
+                const index = (i + projects.length) % projects.length;
+                const project = projects[index];
+                const isPrev = idx === 0;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.85, x: isPrev ? -80 : 80 }}
+                    animate={{ opacity: 0.5, scale: 0.9, x: 0 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className={
+                      isPrev
+                        ? "absolute left-0 top-0 h-full w-1/3 pointer-events-none z-0 -translate-x-1/2"
+                        : "absolute right-0 top-0 h-full w-1/3 pointer-events-none z-0 translate-x-1/2"
+                    }
+                    style={{
+                      filter: 'blur(3px) brightness(0.7)',
+                      opacity: 0.4
+                    }}
+                  >
+                    <Card className="overflow-hidden border-2 card-glow relative h-full">
+                      <div className="relative h-72 md:h-96">
+                        {project.title === "Site Portfolio" ? (
+                          <video
+                            src="/images/project/Portfolio.webm"
+                            className="object-cover w-full h-full absolute inset-0"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            poster="/placeholder.svg?height=300&width=500"
+                          />
+                        ) : project.title === "E-commerce" ? (
+                          <video
+                            src="/images/project/demo.mp4"
+                            className="object-cover w-full h-full absolute inset-0"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            poster="/placeholder.svg?height=300&width=500"
+                          />
+                        ) : (
+                          <Image
+                            src={project.image || "/placeholder.svg"}
+                            alt={`Aperçu ${project.title}`}
+                            fill
+                            className={project.title === "My Snapchat" ? "object-contain" : "object-cover"}
+                          />
+                        )}
+                      </div>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
             {/* Projet courant */}
             <AnimatePresence custom={direction} initial={false} mode="wait">
               <motion.div
@@ -412,34 +471,43 @@ export default function ProjectsCarousel() {
           </div>
         </div>
 
-        {/* Indicateurs positionnés en dessous du carrousel */}
+        {/* Indicateurs toujours visibles pour navigation rapide */}
         <motion.div
           className="flex justify-center gap-3 mt-8"
           initial={{ opacity: 0, y: 10 }}
-          animate={{
-            opacity: isTransitioning ? 1 : 0,
-            y: isTransitioning ? 0 : 10
-          }}
-          transition={{ duration: 0.3 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {projects.map((_, index) => (
+          {projects.map((project, index) => (
             <button
               key={index}
               onClick={() => goToProject(index)}
               disabled={isTransitioning}
               className={cn(
-                "w-3 h-3 rounded-full transition-all duration-300 border-2 hover:scale-110",
-                index === currentIndex ? getThemeColor() : "bg-transparent",
-                theme === "robin" && "border-[#FF0000]",
-                theme === "starfire" && "border-[#FF69B4]",
-                theme === "cyborg" && "border-[#4169E1]",
-                theme === "beastboy" && "border-[#32CD32]",
-                theme === "raven" && "border-[#663399]",
-                theme === "deathstroke" && "border-[#FF8C00]",
-                isTransitioning && "cursor-not-allowed"
+                "group relative transition-all duration-300 disabled:cursor-not-allowed",
+                index === currentIndex && "scale-110"
               )}
-              aria-label={`Aller à la diapositive ${index + 1}`}
-            />
+              aria-label={`Aller au projet ${index + 1}: ${project.title}`}
+              aria-current={index === currentIndex ? "true" : "false"}
+            >
+              <div
+                className={cn(
+                  "w-3 h-3 rounded-full transition-all duration-300 border-2",
+                  "group-hover:scale-125 group-hover:shadow-lg",
+                  index === currentIndex ? getThemeColor() + " shadow-md" : "bg-transparent",
+                  theme === "robin" && "border-[#FF0000]",
+                  theme === "starfire" && "border-[#FF69B4]",
+                  theme === "cyborg" && "border-[#4169E1]",
+                  theme === "beastboy" && "border-[#32CD32]",
+                  theme === "raven" && "border-[#663399]",
+                  theme === "deathstroke" && "border-[#FF8C00]"
+                )}
+              />
+              {/* Tooltip au hover */}
+              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-background/90 backdrop-blur-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                {project.title}
+              </span>
+            </button>
           ))}
         </motion.div>
       </div>
